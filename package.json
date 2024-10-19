@@ -1,0 +1,32 @@
+{
+  "name": "@fitquest/api",
+  "version": "1.0.0",
+  "description": "Fitquest application back-end",
+  "main": "index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "tsx watch src/server.ts"
+  },
+  "author": "Matheus Porto",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "5.21.1",
+    "dotenv": "16.4.5",
+    "fastify": "5.0.0",
+    "zod": "3.23.8"
+  },
+  "devDependencies": {
+    "@rocketseat/eslint-config": "2.2.2",
+    "@types/node": "22.7.7",
+    "eslint": "8.57.0",
+    "eslint-plugin-vitest-globals": "1.5.0",
+    "prisma": "5.21.1",
+    "tsx": "4.19.1",
+    "typescript": "5.6.3",
+    "vite-tsconfig-paths": "5.0.1",
+    "vitest": "2.1.3"
+  }
+}
