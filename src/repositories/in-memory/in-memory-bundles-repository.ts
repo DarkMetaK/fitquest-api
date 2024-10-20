@@ -46,7 +46,7 @@ export class InMemoryBundlesRepository implements BundlesRepository {
 
   async create(data: Prisma.BundleCreateInput): Promise<Bundle> {
     const bundle: Bundle = {
-      id: randomUUID(),
+      id: data.id ?? randomUUID(),
       name: data.name,
       description: data.description,
       bannerUrl: data.bannerUrl,

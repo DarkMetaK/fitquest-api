@@ -107,6 +107,7 @@ model Workout {
   availableCurrency   Int         @map("available_currency")
   bannerUrl           String      @map("banner_url")
   type                WorkoutType @default(LEVEL)
+  expiresAt           DateTime?   @map("expires_at")
   createdAt           DateTime    @default(now()) @map("created_at")
 
   steps Step[]
@@ -133,8 +134,10 @@ model Step {
 }
 
 model FinishedWorkout {
-  id         String   @id @default(uuid())
-  finishedAt DateTime @default(now()) @map("finished_at")
+  id                 String   @id @default(uuid())
+  obtainedExperience Int      @map("obtained_experience")
+  obtainedCurrency   Int      @map("obtained_currency")
+  finishedAt         DateTime @default(now()) @map("finished_at")
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
@@ -142,7 +145,6 @@ model FinishedWorkout {
   workout   Workout @relation(fields: [workoutId], references: [id])
   workoutId String  @map("workout_id")
 
-  @@unique([userId, workoutId])
   @@map("finished_workouts")
 }
 
