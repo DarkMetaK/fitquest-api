@@ -52,6 +52,7 @@ export class InMemoryWorkoutsRepository implements WorkoutsRepository {
       type: data.type || 'LEVEL',
       createdAt: new Date(),
       expiresAt: data.expiresAt ? new Date(data.expiresAt) : null,
+      updatedAt: data.updatedAt ? new Date(data.updatedAt) : null,
     }
 
     this.items.push(workout)

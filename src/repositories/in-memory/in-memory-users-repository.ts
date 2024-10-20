@@ -7,6 +7,16 @@ import { UsersRepository } from '../users-repository'
 export class InMemoryUsersRepository implements UsersRepository {
   public items: User[] = []
 
+  async findById(id: string): Promise<User | null> {
+    const user = this.items.find((item) => item.id === id)
+
+    if (!user) {
+      return null
+    }
+
+    return user
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     const user = this.items.find((item) => item.email === email)
 
@@ -28,12 +38,22 @@ export class InMemoryUsersRepository implements UsersRepository {
       height: data.height,
       avatarUrl: data.avatarUrl ?? '',
       role: 'MEMBER',
-      currencyAmount: 0,
-      experienceAmount: 0,
+      currencyAmount: data.currencyAmount ?? 0,
+      experienceAmount: data.experienceAmount ?? 0,
       createdAt: new Date(),
     }
 
     this.items.push(user)
+
+    return user
+  }
+
+  async update(user: User): Promise<User> {
+    const userIndex = this.items.findIndex((item) => item.id === user.id)
+
+    if (userIndex >= 0) {
+      this.items[userIndex] = user
+    }
 
     return user
   }

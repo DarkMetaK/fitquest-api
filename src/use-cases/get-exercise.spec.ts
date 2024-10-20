@@ -16,8 +16,8 @@ describe('Use Case: Get Exercise', () => {
     exercisesRepository.create({
       id: 'exercise-1',
       name: 'Exercise 1',
-      description: '',
       demoUrl: '',
+      duration: 30000,
     })
 
     const { exercise } = await sut.execute({ id: 'exercise-1' })

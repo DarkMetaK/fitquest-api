@@ -81,7 +81,7 @@ enum BodyRegion {
 model Exercise {
   id              String       @id @default(uuid())
   name            String
-  description     String
+  description     String?
   targetedRegions BodyRegion[] @map("targeted_regions")
   demoUrl         String       @map("demo_url")
   videoUrl        String?      @map("video_url")
@@ -109,6 +109,7 @@ model Workout {
   type                WorkoutType @default(LEVEL)
   expiresAt           DateTime?   @map("expires_at")
   createdAt           DateTime    @default(now()) @map("created_at")
+  updatedAt           DateTime?   @updatedAt @map("updated_at")
 
   steps Step[]
 
@@ -121,7 +122,8 @@ model Workout {
 }
 
 model Step {
-  id String @id @default(uuid())
+  id          String @id @default(uuid())
+  description String
 
   exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
   exerciseId String   @map("exercise_id")
@@ -129,7 +131,6 @@ model Step {
   workout   Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
   workoutId String  @map("workout_id")
 
-  @@unique([exerciseId, workoutId])
   @@map("steps")
 }
 
@@ -164,8 +165,9 @@ model Bundle {
 }
 
 model UserBundle {
-  id          String   @id @default(uuid())
-  purchasedAt DateTime @default(now()) @map("purchased_at")
+  id                String   @id @default(uuid())
+  completedWorkouts Int?     @default(0) @map("completed_workouts")
+  purchasedAt       DateTime @default(now()) @map("purchased_at")
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")

@@ -21,7 +21,7 @@ export class InMemoryExercisesRepository implements ExercisesRepository {
     const exercise: Exercise = {
       id: data.id ?? randomUUID(),
       name: data.name,
-      description: data.description,
+      description: data.description ?? '',
       demoUrl: data.demoUrl,
       duration: data.duration ?? null,
       repetitions: data.repetitions ?? null,
