@@ -3,10 +3,33 @@ import { randomUUID } from 'node:crypto'
 import { Prisma, Workout } from '@prisma/client'
 import dayjs from 'dayjs'
 
-import { WorkoutsRepository } from '../workouts-repository'
+import { WorkoutsRepository, WorkoutWithSteps } from '../workouts-repository'
 
 export class InMemoryWorkoutsRepository implements WorkoutsRepository {
   public items: Workout[] = []
+
+  async findById(id: string): Promise<Workout | null> {
+    const workout = this.items.find((item) => item.id === id)
+
+    if (!workout) {
+      return null
+    }
+
+    return workout
+  }
+
+  async findByIdWithSteps(id: string): Promise<WorkoutWithSteps | null> {
+    const workout = this.items.find((item) => item.id === id)
+
+    if (!workout) {
+      return null
+    }
+
+    return {
+      ...workout,
+      steps: [],
+    }
+  }
 
   async findActiveChallenges(): Promise<Workout[]> {
     const challenges = this.items.filter(
