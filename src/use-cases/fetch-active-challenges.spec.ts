@@ -22,7 +22,6 @@ describe('Use Case: Fetch Active Challenges', () => {
 
     workoutsRepository.create({
       name: 'Active challenge',
-      description: '',
       bannerUrl: '',
       availableCurrency: 1000,
       availableExperience: 1000,
@@ -32,7 +31,6 @@ describe('Use Case: Fetch Active Challenges', () => {
 
     workoutsRepository.create({
       name: 'Expired challenge',
-      description: '',
       bannerUrl: '',
       availableCurrency: 1000,
       availableExperience: 1000,

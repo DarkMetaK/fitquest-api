@@ -1,6 +1,6 @@
 import { InMemoryExercisesRepository } from '@/repositories/in-memory/in-memory-exercises-repository'
 
-import { NotFoundError } from './errors/not-found-error'
+import { ResourceNotFoundError } from './errors/resource-not-found-error'
 import { GetExerciseUseCase } from './get-exercise'
 
 let sut: GetExerciseUseCase
@@ -16,7 +16,8 @@ describe('Use Case: Get Exercise', () => {
     exercisesRepository.create({
       id: 'exercise-1',
       name: 'Exercise 1',
-      demoUrl: '',
+      demonstrationUrl: '',
+      estimatedCalories: 500,
       duration: 30000,
     })
 
@@ -32,6 +33,6 @@ describe('Use Case: Get Exercise', () => {
   it('should not be able to get exercise with invalid id', async () => {
     await expect(() =>
       sut.execute({ id: 'non-existing-id' }),
-    ).rejects.toBeInstanceOf(NotFoundError)
+    ).rejects.toBeInstanceOf(ResourceNotFoundError)
   })
 })

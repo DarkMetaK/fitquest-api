@@ -23,11 +23,31 @@ export class InMemoryBundlesRepository implements BundlesRepository {
           const typedKey = key as keyof Bundle
 
           if (orderBy[typedKey] === 'asc') {
-            if (a[typedKey] < b[typedKey]) return -1
-            if (a[typedKey] > b[typedKey]) return 1
+            if (
+              a[typedKey] != null &&
+              b[typedKey] != null &&
+              a[typedKey] < b[typedKey]
+            )
+              return -1
+            if (
+              a[typedKey] != null &&
+              b[typedKey] != null &&
+              a[typedKey] > b[typedKey]
+            )
+              return 1
           } else if (orderBy[typedKey] === 'desc') {
-            if (a[typedKey] > b[typedKey]) return -1
-            if (a[typedKey] < b[typedKey]) return 1
+            if (
+              a[typedKey] != null &&
+              b[typedKey] != null &&
+              a[typedKey] > b[typedKey]
+            )
+              return -1
+            if (
+              a[typedKey] != null &&
+              b[typedKey] != null &&
+              a[typedKey] < b[typedKey]
+            )
+              return 1
           }
         }
         return 0
@@ -48,10 +68,9 @@ export class InMemoryBundlesRepository implements BundlesRepository {
     const bundle: Bundle = {
       id: data.id ?? randomUUID(),
       name: data.name,
-      description: data.description,
+      description: data.description ?? null,
       bannerUrl: data.bannerUrl,
-      price: data.price,
-      isPremium: data.isPremium || false,
+      isPremium: data.isPremium ?? false,
       createdAt: new Date(),
     }
 

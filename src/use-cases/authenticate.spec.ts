@@ -3,7 +3,8 @@ import { hash } from 'bcryptjs'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 
 import { AuthenticateUseCase } from './authenticate'
-import { BadRequestError } from './errors/bad-request-error'
+import { InvalidCredentialsError } from './errors/invalid-credentials-error'
+import { LoginMethodError } from './errors/login-method-error'
 
 let sut: AuthenticateUseCase
 let usersRepository: InMemoryUsersRepository
@@ -19,9 +20,11 @@ describe('Use Case: Authenticate', () => {
       name: 'John Doe',
       email: 'johndoe@example.com',
       passwordHash: await hash('12345678', 6),
-      birthDate: new Date(10, 10, 2000),
+      phone: '12345678',
+      age: 20,
       height: 180,
       weight: 80,
+      goal: 'ENHANCE_HEALTH',
     })
 
     const { user } = await sut.execute({
@@ -37,9 +40,11 @@ describe('Use Case: Authenticate', () => {
       name: 'John Doe',
       email: 'johndoe@example.com',
       passwordHash: '12345678',
-      birthDate: new Date(10, 10, 2000),
+      phone: '12345678',
+      age: 20,
       height: 180,
       weight: 80,
+      goal: 'ENHANCE_HEALTH',
     })
 
     await expect(() =>
@@ -47,16 +52,18 @@ describe('Use Case: Authenticate', () => {
         email: 'johndoe@example.com',
         password: 'incorrect_password',
       }),
-    ).rejects.toBeInstanceOf(BadRequestError)
+    ).rejects.toBeInstanceOf(InvalidCredentialsError)
   })
 
   it(`should not be able to authenticate if account don't have password`, async () => {
     usersRepository.create({
       name: 'John Doe',
       email: 'johndoe@example.com',
-      birthDate: new Date(10, 10, 2000),
+      phone: '12345678',
+      age: 20,
       height: 180,
       weight: 80,
+      goal: 'ENHANCE_HEALTH',
     })
 
     await expect(() =>
@@ -64,6 +71,6 @@ describe('Use Case: Authenticate', () => {
         email: 'johndoe@example.com',
         password: '12345678',
       }),
-    ).rejects.toThrow('User does not have a password, use social login.')
+    ).rejects.toBeInstanceOf(LoginMethodError)
   })
 })

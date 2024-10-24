@@ -21,14 +21,18 @@ export class InMemoryExercisesRepository implements ExercisesRepository {
     const exercise: Exercise = {
       id: data.id ?? randomUUID(),
       name: data.name,
-      description: data.description ?? '',
-      demoUrl: data.demoUrl,
-      duration: data.duration ?? null,
-      repetitions: data.repetitions ?? null,
+      instructions: data.instructions ?? '',
       targetedRegions: Array.isArray(data.targetedRegions)
         ? data.targetedRegions
         : [],
+      estimatedCalories: data.estimatedCalories,
+      demonstrationUrl: data.demonstrationUrl,
+      previewUrl: data.previewUrl ?? null,
       videoUrl: data.videoUrl ?? null,
+      audioUrl: data.audioUrl ?? null,
+      duration: data.duration ?? null,
+      repetitions: data.repetitions ?? null,
+      workoutId: null,
       createdAt: new Date(),
     }
 

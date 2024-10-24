@@ -3,7 +3,7 @@ import { compare } from 'bcryptjs'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 
 import { CreateAccountUseCase } from './create-account'
-import { ConflictError } from './errors/conflict-error'
+import { UserAlreadyExistsError } from './errors/user-already-exists-error'
 
 let sut: CreateAccountUseCase
 let usersRepository: InMemoryUsersRepository
@@ -19,9 +19,11 @@ describe('Use Case: Create Account', () => {
       name: 'John Doe',
       email: 'johndoe@example.com',
       password: '12345678',
-      birthDate: new Date(10, 10, 2000),
+      phone: '12345678',
+      age: 20,
       height: 180,
       weight: 80,
+      goal: 'ENHANCE_HEALTH',
     })
 
     expect(user.id).toEqual(expect.any(String))
@@ -32,9 +34,11 @@ describe('Use Case: Create Account', () => {
       name: 'John Doe',
       email: 'johndoe@example.com',
       password: '12345678',
-      birthDate: new Date(10, 10, 2000),
+      phone: '12345678',
+      age: 20,
       height: 180,
       weight: 80,
+      goal: 'ENHANCE_HEALTH',
     })
 
     const isPasswordCorrectlyHashed = await compare(
@@ -52,9 +56,11 @@ describe('Use Case: Create Account', () => {
       name: 'John Doe',
       email,
       password: '12345678',
-      birthDate: new Date(10, 10, 2000),
+      phone: '12345678',
+      age: 20,
       height: 180,
       weight: 80,
+      goal: 'ENHANCE_HEALTH',
     })
 
     await expect(() =>
@@ -62,10 +68,12 @@ describe('Use Case: Create Account', () => {
         name: 'Jane Doe',
         email,
         password: '12345678',
-        birthDate: new Date(10, 10, 2000),
+        phone: '87654321',
+        age: 20,
         height: 180,
         weight: 80,
+        goal: 'ENHANCE_HEALTH',
       }),
-    ).rejects.toBeInstanceOf(ConflictError)
+    ).rejects.toBeInstanceOf(UserAlreadyExistsError)
   })
 })
