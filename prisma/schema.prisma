@@ -7,62 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  ADMIN
-  MEMBER
-}
-
-model User {
-  id               String   @id @default(uuid())
-  name             String
-  email            String   @unique
-  passwordHash     String?  @map("password_hash")
-  avatarUrl        String?  @map("avatar_url")
-  birthDate        DateTime @map("birth_date")
-  weight           Int
-  height           Int
-  role             Role     @default(MEMBER)
-  experienceAmount Int      @default(0) @map("experience_amount")
-  currencyAmount   Int      @default(0) @map("currency_amount")
-  createdAt        DateTime @default(now()) @map("created_at")
-
-  finishedWorkouts FinishedWorkout[]
-  purchasedBundles UserBundle[]
-  accounts         Account[]
-  tokens           Token[]
-
-  @@map("users")
+enum Goal {
+  LOSE_WEIGHT
+  GAIN_MUSCLE_MASS
+  ENHANCE_HEALTH
+  INCREASE_FLEXIBILITY
 }
 
 enum AccountProvider {
   GOOGLE
 }
 
-model Account {
-  id                String          @id @default(uuid())
-  provider          AccountProvider
-  providerAccountId String          @unique @map("provider_account_id")
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @map("user_id")
-
-  @@unique([provider, userId])
-  @@map("accounts")
-}
-
 enum TokenType {
   PASSWORD_RECOVER
-}
-
-model Token {
-  id        String    @id @default(uuid())
-  type      TokenType
-  createdAt DateTime  @default(now()) @map("created_at")
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @map("user_id")
-
-  @@map("tokens")
 }
 
 enum BodyRegion {
@@ -78,60 +35,152 @@ enum BodyRegion {
   CALVES
 }
 
-model Exercise {
-  id              String       @id @default(uuid())
-  name            String
-  description     String?
-  targetedRegions BodyRegion[] @map("targeted_regions")
-  demoUrl         String       @map("demo_url")
-  videoUrl        String?      @map("video_url")
-  repetitions     Int?
-  duration        Int?
-  createdAt       DateTime     @default(now()) @map("created_at")
-
-  steps Step[]
-
-  @@map("exercises")
+enum WorkoutType {
+  STANDARD
+  CHALLENGE
 }
 
-enum WorkoutType {
-  LEVEL
-  CHALLENGE
+model User {
+  id               String   @id @default(uuid())
+  name             String
+  email            String   @unique
+  phone            String   @unique
+  passwordHash     String?  @map("password_hash")
+  age              Int
+  weight           Int
+  height           Int
+  goal             Goal
+  experienceAmount Int      @default(0) @map("experience_amount")
+  currencyAmount   Int      @default(0) @map("currency_amount")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  finishedWorkouts FinishedWorkout[]
+  accounts         Account[]
+  tokens           Token[]
+  rafflesTickets   UserRaffle[]
+  bingoTickets     UserBingo[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String          @id @default(uuid())
+  provider          AccountProvider
+  providerAccountId String          @unique @map("provider_account_id")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  @@unique([provider, userId])
+  @@map("accounts")
+}
+
+model Token {
+  id        String    @id @default(uuid())
+  type      TokenType
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  @@map("tokens")
+}
+
+model Bingo {
+  id        String   @id @default(uuid())
+  name      String
+  price     Int
+  isPremium Boolean  @default(false) @map("is_premium")
+  latitude  Decimal
+  longitude Decimal
+  date      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+
+  participants UserBingo[]
+
+  @@map("bingos")
+}
+
+model UserBingo {
+  id          String    @id @default(uuid())
+  validatedAt DateTime? @map("validated_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  bingo   Bingo  @relation(fields: [bingoId], references: [id], onDelete: Cascade)
+  bingoId String @map("bingo_id")
+
+  @@map("user_bingos")
+}
+
+model Raffle {
+  id        String   @id @default(uuid())
+  name      String
+  bannerUrl String   @map("banner_url")
+  price     Int
+  isPremium Boolean  @default(true) @map("is_premium")
+  drawAt    DateTime @map("draw_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  participants UserRaffle[]
+
+  @@map("raffles")
+}
+
+model UserRaffle {
+  id        String   @id @default(uuid())
+  hasWon    Boolean? @map("has_won")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  raffle   Raffle @relation(fields: [raffleId], references: [id], onDelete: Cascade)
+  raffleId String @map("raffle_id")
+
+  @@map("user_raffles")
+}
+
+model Exercise {
+  id                String       @id @default(uuid())
+  name              String
+  instructions      String?
+  targetedRegions   BodyRegion[] @map("targeted_regions")
+  estimatedCalories Int          @map("estimated_calories")
+  demonstrationUrl  String       @map("demonstration_url")
+  previewUrl        String?      @map("preview_url")
+  videoUrl          String?      @map("video_url")
+  audioUrl          String?      @map("audio_url")
+  repetitions       Int?
+  duration          Int?
+  createdAt         DateTime     @default(now()) @map("created_at")
+  Workout           Workout?     @relation(fields: [workoutId], references: [id])
+  workoutId         String?
+
+  @@map("exercises")
 }
 
 model Workout {
   id                  String      @id @default(uuid())
   name                String
-  description         String
   availableExperience Int         @map("available_experience")
   availableCurrency   Int         @map("available_currency")
   bannerUrl           String      @map("banner_url")
-  type                WorkoutType @default(LEVEL)
+  type                WorkoutType @default(STANDARD)
   expiresAt           DateTime?   @map("expires_at")
   createdAt           DateTime    @default(now()) @map("created_at")
   updatedAt           DateTime?   @updatedAt @map("updated_at")
 
-  steps Step[]
+  finishedBy FinishedWorkout[]
+
+  exercises Exercise[]
 
   Bundle   Bundle? @relation(fields: [bundleId], references: [id])
   bundleId String? @map("bundle_id")
 
-  finishedBy FinishedWorkout[]
-
   @@map("workouts")
-}
-
-model Step {
-  id          String @id @default(uuid())
-  description String
-
-  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
-  exerciseId String   @map("exercise_id")
-
-  workout   Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
-  workoutId String  @map("workout_id")
-
-  @@map("steps")
 }
 
 model FinishedWorkout {
@@ -152,31 +201,14 @@ model FinishedWorkout {
 model Bundle {
   id          String   @id @default(uuid())
   name        String
-  description String
+  description String?
   bannerUrl   String   @map("banner_url")
-  price       Int
   isPremium   Boolean  @default(true) @map("is_premium")
   createdAt   DateTime @default(now()) @map("created_at")
 
-  workouts    Workout[]
-  purchasedBy UserBundle[]
+  workouts Workout[]
 
-  @@map("bundle")
-}
-
-model UserBundle {
-  id                String   @id @default(uuid())
-  completedWorkouts Int?     @default(0) @map("completed_workouts")
-  purchasedAt       DateTime @default(now()) @map("purchased_at")
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @map("user_id")
-
-  bundle   Bundle @relation(fields: [bundleId], references: [id])
-  bundleId String @map("bundle_id")
-
-  @@unique([userId, bundleId])
-  @@map("user_bundles")
+  @@map("bundles")
 }
 
 // TODO: Premium membership
