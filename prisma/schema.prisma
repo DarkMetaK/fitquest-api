@@ -55,10 +55,15 @@ model User {
   createdAt        DateTime @default(now()) @map("created_at")
 
   finishedWorkouts FinishedWorkout[]
-  accounts         Account[]
-  tokens           Token[]
-  rafflesTickets   UserRaffle[]
-  bingoTickets     UserBingo[]
+
+  accounts Account[]
+
+  tokens Token[]
+
+  rafflesTickets UserRaffle[]
+
+  bingoTickets      UserBingo[]
+  subscribedBundles UserBundle[]
 
   @@map("users")
 }
@@ -68,8 +73,8 @@ model Account {
   provider          AccountProvider
   providerAccountId String          @unique @map("provider_account_id")
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, userId])
   @@map("accounts")
@@ -80,8 +85,8 @@ model Token {
   type      TokenType
   createdAt DateTime  @default(now()) @map("created_at")
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("tokens")
 }
@@ -106,11 +111,11 @@ model UserBingo {
   validatedAt DateTime? @map("validated_at")
   createdAt   DateTime  @default(now()) @map("created_at")
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  bingo   Bingo  @relation(fields: [bingoId], references: [id], onDelete: Cascade)
   bingoId String @map("bingo_id")
+  bingo   Bingo  @relation(fields: [bingoId], references: [id], onDelete: Cascade)
 
   @@map("user_bingos")
 }
@@ -134,11 +139,11 @@ model UserRaffle {
   hasWon    Boolean? @map("has_won")
   createdAt DateTime @default(now()) @map("created_at")
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  raffle   Raffle @relation(fields: [raffleId], references: [id], onDelete: Cascade)
   raffleId String @map("raffle_id")
+  raffle   Raffle @relation(fields: [raffleId], references: [id], onDelete: Cascade)
 
   @@map("user_raffles")
 }
@@ -156,8 +161,9 @@ model Exercise {
   repetitions       Int?
   duration          Int?
   createdAt         DateTime     @default(now()) @map("created_at")
-  Workout           Workout?     @relation(fields: [workoutId], references: [id])
-  workoutId         String?
+
+  workoutId String?
+  workout   Workout? @relation(fields: [workoutId], references: [id])
 
   @@map("exercises")
 }
@@ -177,8 +183,8 @@ model Workout {
 
   exercises Exercise[]
 
-  Bundle   Bundle? @relation(fields: [bundleId], references: [id])
   bundleId String? @map("bundle_id")
+  Bundle   Bundle? @relation(fields: [bundleId], references: [id])
 
   @@map("workouts")
 }
@@ -189,11 +195,11 @@ model FinishedWorkout {
   obtainedCurrency   Int      @map("obtained_currency")
   finishedAt         DateTime @default(now()) @map("finished_at")
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  workout   Workout @relation(fields: [workoutId], references: [id])
   workoutId String  @map("workout_id")
+  workout   Workout @relation(fields: [workoutId], references: [id])
 
   @@map("finished_workouts")
 }
@@ -206,9 +212,25 @@ model Bundle {
   isPremium   Boolean  @default(true) @map("is_premium")
   createdAt   DateTime @default(now()) @map("created_at")
 
-  workouts Workout[]
+  workouts    Workout[]
+  engagements UserBundle[]
 
   @@map("bundles")
+}
+
+model UserBundle {
+  id         String    @id @default(uuid())
+  isActive   Boolean   @default(true) @map("is_active")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  finishedAt DateTime? @map("finished_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  bundle   Bundle @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  bundleId String @map("bundle_id")
+
+  @@map("user_bundles")
 }
 
 // TODO: Premium membership

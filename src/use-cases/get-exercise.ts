@@ -2,7 +2,7 @@ import { Exercise } from '@prisma/client'
 
 import { ExercisesRepository } from '@/repositories/exercises-repository'
 
-import { NotFoundError } from './errors/not-found-error'
+import { ResourceNotFoundError } from './errors/resource-not-found-error'
 
 interface GetExerciseUseCaseRequest {
   id: string
@@ -21,7 +21,7 @@ export class GetExerciseUseCase {
     const exercise = await this.exercisesRepository.findById(id)
 
     if (!exercise) {
-      throw new NotFoundError(`Exercise with id '${id}' not found.`)
+      throw new ResourceNotFoundError(id)
     }
 
     return { exercise }

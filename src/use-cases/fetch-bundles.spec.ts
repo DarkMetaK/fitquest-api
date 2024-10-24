@@ -16,14 +16,12 @@ describe('Use Case: Fetch Bundles', () => {
       name: 'Bundle 1',
       description: '',
       bannerUrl: '',
-      price: 0,
     })
 
     bundlesRepository.create({
       name: 'Bundle 2',
       description: '',
       bannerUrl: '',
-      price: 0,
     })
 
     const { bundles } = await sut.execute({ page: 1, perPage: 10 })
@@ -41,7 +39,6 @@ describe('Use Case: Fetch Bundles', () => {
         name: `Bundle ${i}`,
         description: '',
         bannerUrl: '',
-        price: 0,
       })
     }
 
@@ -53,31 +50,6 @@ describe('Use Case: Fetch Bundles', () => {
         expect.objectContaining({ name: 'Bundle 11' }),
         expect.objectContaining({ name: 'Bundle 20' }),
       ]),
-    )
-  })
-
-  it('should be able to fetch paginated bundles sorted by desc price', async () => {
-    for (let i = 1; i <= 20; i++) {
-      bundlesRepository.create({
-        name: `Bundle ${i}`,
-        description: '',
-        bannerUrl: '',
-        price: i,
-      })
-    }
-
-    const { bundles } = await sut.execute({
-      page: 1,
-      perPage: 10,
-      orderBy: { price: 'desc' },
-    })
-
-    expect(bundles.total).toEqual(20)
-    expect(bundles.data[0]).toEqual(
-      expect.objectContaining({ name: 'Bundle 20' }),
-    )
-    expect(bundles.data[9]).toEqual(
-      expect.objectContaining({ name: 'Bundle 11' }),
     )
   })
 })

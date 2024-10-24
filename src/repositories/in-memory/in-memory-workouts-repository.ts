@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto'
 import { Prisma, Workout } from '@prisma/client'
 import dayjs from 'dayjs'
 
-import { WorkoutsRepository, WorkoutWithSteps } from '../workouts-repository'
+import { WorkoutsRepository, WorkoutWithExercise } from '../workouts-repository'
 
 export class InMemoryWorkoutsRepository implements WorkoutsRepository {
   public items: Workout[] = []
@@ -18,7 +18,7 @@ export class InMemoryWorkoutsRepository implements WorkoutsRepository {
     return workout
   }
 
-  async findByIdWithSteps(id: string): Promise<WorkoutWithSteps | null> {
+  async findByIdWithExercises(id: string): Promise<WorkoutWithExercise | null> {
     const workout = this.items.find((item) => item.id === id)
 
     if (!workout) {
@@ -27,7 +27,7 @@ export class InMemoryWorkoutsRepository implements WorkoutsRepository {
 
     return {
       ...workout,
-      steps: [],
+      exercises: [],
     }
   }
 
@@ -44,15 +44,14 @@ export class InMemoryWorkoutsRepository implements WorkoutsRepository {
     const workout: Workout = {
       id: data.id ?? randomUUID(),
       name: data.name,
-      description: data.description,
       bannerUrl: data.bannerUrl,
       availableCurrency: data.availableCurrency,
       availableExperience: data.availableExperience,
-      bundleId: data.bundleId || randomUUID(),
-      type: data.type || 'LEVEL',
-      createdAt: new Date(),
+      type: data.type ?? 'STANDARD',
+      bundleId: data.bundleId ?? randomUUID(),
       expiresAt: data.expiresAt ? new Date(data.expiresAt) : null,
       updatedAt: data.updatedAt ? new Date(data.updatedAt) : null,
+      createdAt: new Date(),
     }
 
     this.items.push(workout)

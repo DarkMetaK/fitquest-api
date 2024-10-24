@@ -3,7 +3,7 @@ import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-user
 import { InMemoryWorkoutsRepository } from '@/repositories/in-memory/in-memory-workouts-repository'
 
 import { CompleteWorkoutUseCase } from './complete-workout'
-import { BadRequestError } from './errors/bad-request-error'
+import { UnavailableWorkoutError } from './errors/unavailable-workout-error'
 
 let sut: CompleteWorkoutUseCase
 let usersRepository: InMemoryUsersRepository
@@ -33,19 +33,20 @@ describe('Use Case: Complete Workout', () => {
       name: 'John Doe',
       email: 'johndoe@example.com',
       passwordHash: '12345678',
-      birthDate: new Date(10, 10, 2000),
+      phone: '12345678',
+      age: 24,
       height: 180,
       weight: 80,
+      goal: 'ENHANCE_HEALTH',
     })
 
     const workout = await workoutsRepository.create({
       id: 'workout-1',
       name: 'Workout 1',
-      description: '',
       bannerUrl: '',
       availableCurrency: 1000,
       availableExperience: 1000,
-      type: 'LEVEL',
+      type: 'STANDARD',
     })
 
     await sut.execute({
@@ -66,21 +67,22 @@ describe('Use Case: Complete Workout', () => {
       name: 'John Doe',
       email: 'johndoe@example.com',
       passwordHash: '12345678',
-      birthDate: new Date(10, 10, 2000),
+      phone: '12345678',
+      age: 24,
       height: 180,
       weight: 80,
-      currencyAmount: 1000,
-      experienceAmount: 1000,
+      currencyAmount: 0,
+      experienceAmount: 0,
+      goal: 'ENHANCE_HEALTH',
     })
 
     const workout = await workoutsRepository.create({
       id: 'workout-1',
       name: 'Workout 1',
-      description: '',
       bannerUrl: '',
       availableCurrency: 1000,
       availableExperience: 1000,
-      type: 'LEVEL',
+      type: 'STANDARD',
     })
 
     await sut.execute({
@@ -90,8 +92,8 @@ describe('Use Case: Complete Workout', () => {
 
     expect(usersRepository.items[0]).toEqual(
       expect.objectContaining({
-        currencyAmount: 2000,
-        experienceAmount: 2000,
+        currencyAmount: 1000,
+        experienceAmount: 1000,
       }),
     )
   })
@@ -101,21 +103,22 @@ describe('Use Case: Complete Workout', () => {
       name: 'John Doe',
       email: 'johndoe@example.com',
       passwordHash: '12345678',
-      birthDate: new Date(10, 10, 2000),
+      phone: '12345678',
+      age: 24,
       height: 180,
       weight: 80,
-      currencyAmount: 1000,
-      experienceAmount: 1000,
+      currencyAmount: 0,
+      experienceAmount: 0,
+      goal: 'ENHANCE_HEALTH',
     })
 
     const workout = await workoutsRepository.create({
       id: 'workout-1',
       name: 'Workout 1',
-      description: '',
       bannerUrl: '',
       availableCurrency: 1000,
       availableExperience: 1000,
-      type: 'LEVEL',
+      type: 'STANDARD',
     })
 
     await sut.execute({
@@ -130,8 +133,8 @@ describe('Use Case: Complete Workout', () => {
 
     expect(usersRepository.items[0]).toEqual(
       expect.objectContaining({
-        currencyAmount: 2000,
-        experienceAmount: 2000,
+        currencyAmount: 1000,
+        experienceAmount: 1000,
       }),
     )
   })
@@ -143,17 +146,18 @@ describe('Use Case: Complete Workout', () => {
       name: 'John Doe',
       email: 'johndoe@example.com',
       passwordHash: '12345678',
-      birthDate: new Date(10, 10, 2000),
+      phone: '12345678',
+      age: 24,
       height: 180,
       weight: 80,
-      currencyAmount: 1000,
-      experienceAmount: 1000,
+      goal: 'ENHANCE_HEALTH',
+      currencyAmount: 0,
+      experienceAmount: 0,
     })
 
     const workout = await workoutsRepository.create({
       id: 'workout-1',
       name: 'Workout 1',
-      description: '',
       bannerUrl: '',
       availableCurrency: 1000,
       availableExperience: 1000,
@@ -166,7 +170,7 @@ describe('Use Case: Complete Workout', () => {
         userId: user.id,
         workoutId: workout.id,
       }),
-    ).rejects.toBeInstanceOf(BadRequestError)
+    ).rejects.toBeInstanceOf(UnavailableWorkoutError)
   })
 
   it('should reward user only once for a challenge workout after it is updated', async () => {
@@ -176,17 +180,18 @@ describe('Use Case: Complete Workout', () => {
       name: 'John Doe',
       email: 'johndoe@example.com',
       passwordHash: '12345678',
-      birthDate: new Date(10, 10, 2000),
+      phone: '12345678',
+      age: 24,
       height: 180,
       weight: 80,
-      currencyAmount: 2000,
-      experienceAmount: 2000,
+      goal: 'ENHANCE_HEALTH',
+      currencyAmount: 1000,
+      experienceAmount: 1000,
     })
 
     const workout = await workoutsRepository.create({
       id: 'workout-1',
       name: 'Workout 1',
-      description: '',
       bannerUrl: '',
       availableCurrency: 1000,
       availableExperience: 1000,
@@ -199,8 +204,8 @@ describe('Use Case: Complete Workout', () => {
       id: '',
       userId: user.id,
       workoutId: workout.id,
-      obtainedExperience: 0,
-      obtainedCurrency: 0,
+      obtainedExperience: 1000,
+      obtainedCurrency: 1000,
       finishedAt: new Date(2024, 9, 19, 12, 0, 0),
     })
 
@@ -218,8 +223,8 @@ describe('Use Case: Complete Workout', () => {
 
     expect(usersRepository.items[0]).toEqual(
       expect.objectContaining({
-        currencyAmount: 3000,
-        experienceAmount: 3000,
+        currencyAmount: 2000,
+        experienceAmount: 2000,
       }),
     )
   })

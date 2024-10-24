@@ -1,18 +1,19 @@
-import { User } from '@prisma/client'
+import { Goal, User } from '@prisma/client'
 import { hash } from 'bcryptjs'
 
 import { UsersRepository } from '@/repositories/users-repository'
 
-import { ConflictError } from './errors/conflict-error'
+import { UserAlreadyExistsError } from './errors/user-already-exists-error'
 
 interface CreateAccountUseCaseRequest {
   name: string
   email: string
   password: string
-  birthDate: Date
+  phone: string
+  age: number
   weight: number
   height: number
-  avatarUrl?: string
+  goal: Goal
 }
 
 interface CreateAccountUseCaseResponse {
@@ -26,25 +27,32 @@ export class CreateAccountUseCase {
     name,
     email,
     password,
-    birthDate,
+    phone,
+    age,
     weight,
     height,
-    avatarUrl,
+    goal,
   }: CreateAccountUseCaseRequest): Promise<CreateAccountUseCaseResponse> {
     const emailAlreadyInUse = await this.usersRepository.findByEmail(email)
+    const phoneAlreadyInUse = await this.usersRepository.findByPhone(phone)
 
     if (emailAlreadyInUse) {
-      throw new ConflictError('Email already exists.')
+      throw new UserAlreadyExistsError('email')
+    }
+
+    if (phoneAlreadyInUse) {
+      throw new UserAlreadyExistsError('phone')
     }
 
     const user = await this.usersRepository.create({
       name,
       email,
       passwordHash: await hash(password, 6),
-      birthDate,
+      phone,
+      age,
       weight,
       height,
-      avatarUrl,
+      goal,
     })
 
     return { user }

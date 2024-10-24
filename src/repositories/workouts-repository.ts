@@ -1,29 +1,14 @@
 import { Prisma, Workout } from '@prisma/client'
 
-export type WorkoutWithSteps = Prisma.WorkoutGetPayload<{
+export type WorkoutWithExercise = Prisma.WorkoutGetPayload<{
   include: {
-    steps: {
-      select: {
-        exercise: true
-      }
-      include: {
-        exercise: {
-          select: {
-            id: true
-            name: true
-            targetedRegions: true
-            duration: true
-            repetitions: true
-          }
-        }
-      }
-    }
+    exercises: true
   }
 }>
 
 export interface WorkoutsRepository {
   findById(id: string): Promise<Workout | null>
-  findByIdWithSteps(id: string): Promise<WorkoutWithSteps | null>
+  findByIdWithExercises(id: string): Promise<WorkoutWithExercise | null>
   findActiveChallenges(): Promise<Workout[]>
   create(data: Prisma.WorkoutUncheckedCreateInput): Promise<Workout>
 }

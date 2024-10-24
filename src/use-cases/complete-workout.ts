@@ -5,8 +5,8 @@ import { FinishedWorkoutsRepository } from '@/repositories/finished-workouts-rep
 import { UsersRepository } from '@/repositories/users-repository'
 import { WorkoutsRepository } from '@/repositories/workouts-repository'
 
-import { BadRequestError } from './errors/bad-request-error'
-import { NotFoundError } from './errors/not-found-error'
+import { ResourceNotFoundError } from './errors/resource-not-found-error'
+import { UnavailableWorkoutError } from './errors/unavailable-workout-error'
 
 interface CompleteWorkoutUseCaseRequest {
   userId: string
@@ -31,13 +31,13 @@ export class CompleteWorkoutUseCase {
     const user = await this.usersRepository.findById(userId)
 
     if (!user) {
-      throw new NotFoundError(`User with id '${userId}' not found.`)
+      throw new ResourceNotFoundError(userId)
     }
 
     const workout = await this.workoutsRepository.findById(workoutId)
 
     if (!workout) {
-      throw new NotFoundError(`Workout with id '${workoutId}' not found.`)
+      throw new ResourceNotFoundError(workoutId)
     }
 
     const previouslyFinishedWorkouts =
@@ -53,7 +53,7 @@ export class CompleteWorkoutUseCase {
     switch (workout.type) {
       case 'CHALLENGE':
         if (!workout.expiresAt || dayjs().isAfter(workout.expiresAt)) {
-          throw new BadRequestError('This challenge is currently unavailable.')
+          throw new UnavailableWorkoutError()
         }
 
         if (
@@ -64,7 +64,7 @@ export class CompleteWorkoutUseCase {
           user.experienceAmount += workout.availableExperience
         }
         break
-      case 'LEVEL':
+      case 'STANDARD':
         if (isFirstConclusion) {
           user.currencyAmount += workout.availableCurrency
           user.experienceAmount += workout.availableExperience

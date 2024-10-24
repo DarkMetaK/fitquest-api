@@ -3,7 +3,8 @@ import { compare } from 'bcryptjs'
 
 import { UsersRepository } from '@/repositories/users-repository'
 
-import { BadRequestError } from './errors/bad-request-error'
+import { InvalidCredentialsError } from './errors/invalid-credentials-error'
+import { LoginMethodError } from './errors/login-method-error'
 
 interface AuthenticateUseCaseRequest {
   email: string
@@ -24,11 +25,11 @@ export class AuthenticateUseCase {
     const userWithEmail = await this.usersRepository.findByEmail(email)
 
     if (!userWithEmail) {
-      throw new BadRequestError('Invalid credentials.')
+      throw new InvalidCredentialsError()
     }
 
     if (!userWithEmail.passwordHash) {
-      throw new BadRequestError(
+      throw new LoginMethodError(
         'User does not have a password, use social login.',
       )
     }
@@ -36,7 +37,7 @@ export class AuthenticateUseCase {
     const isPasswordValid = await compare(password, userWithEmail.passwordHash)
 
     if (!isPasswordValid) {
-      throw new BadRequestError('Invalid credentials.')
+      throw new InvalidCredentialsError()
     }
 
     return { user: userWithEmail }

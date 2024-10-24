@@ -1,16 +1,16 @@
 import {
   WorkoutsRepository,
-  WorkoutWithSteps,
+  WorkoutWithExercise,
 } from '@/repositories/workouts-repository'
 
-import { NotFoundError } from './errors/not-found-error'
+import { ResourceNotFoundError } from './errors/resource-not-found-error'
 
 interface GetWorkoutUseCaseRequest {
   id: string
 }
 
 interface GetWorkoutUseCaseResponse {
-  workout: WorkoutWithSteps
+  workout: WorkoutWithExercise
 }
 
 export class GetWorkoutUseCase {
@@ -19,10 +19,10 @@ export class GetWorkoutUseCase {
   async execute({
     id,
   }: GetWorkoutUseCaseRequest): Promise<GetWorkoutUseCaseResponse> {
-    const workout = await this.workoutsRepository.findByIdWithSteps(id)
+    const workout = await this.workoutsRepository.findByIdWithExercises(id)
 
     if (!workout) {
-      throw new NotFoundError(`Workout with id '${id}' not found.`)
+      throw new ResourceNotFoundError(id)
     }
 
     return { workout }
