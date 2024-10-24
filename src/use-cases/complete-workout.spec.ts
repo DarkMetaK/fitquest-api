@@ -1,4 +1,5 @@
 import { InMemoryFinishedWorkoutsRepository } from '@/repositories/in-memory/in-memory-finished-workouts-repository'
+import { InMemoryUserBundlesRepository } from '@/repositories/in-memory/in-memory-user-bundles-repository'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 import { InMemoryWorkoutsRepository } from '@/repositories/in-memory/in-memory-workouts-repository'
 
@@ -9,16 +10,19 @@ let sut: CompleteWorkoutUseCase
 let usersRepository: InMemoryUsersRepository
 let workoutsRepository: InMemoryWorkoutsRepository
 let finishedWorkoutsRepository: InMemoryFinishedWorkoutsRepository
+let userBundlesRepository: InMemoryUserBundlesRepository
 
 describe('Use Case: Complete Workout', () => {
   beforeEach(async () => {
     usersRepository = new InMemoryUsersRepository()
     workoutsRepository = new InMemoryWorkoutsRepository()
     finishedWorkoutsRepository = new InMemoryFinishedWorkoutsRepository()
+    userBundlesRepository = new InMemoryUserBundlesRepository()
     sut = new CompleteWorkoutUseCase(
       usersRepository,
       workoutsRepository,
       finishedWorkoutsRepository,
+      userBundlesRepository,
     )
 
     vi.useFakeTimers()
@@ -47,6 +51,16 @@ describe('Use Case: Complete Workout', () => {
       availableCurrency: 1000,
       availableExperience: 1000,
       type: 'STANDARD',
+      bundleId: 'bundle-1',
+    })
+
+    userBundlesRepository.items.push({
+      id: '',
+      bundleId: 'bundle-1',
+      userId: user.id,
+      isActive: true,
+      finishedAt: null,
+      createdAt: new Date(),
     })
 
     await sut.execute({
@@ -83,6 +97,16 @@ describe('Use Case: Complete Workout', () => {
       availableCurrency: 1000,
       availableExperience: 1000,
       type: 'STANDARD',
+      bundleId: 'bundle-1',
+    })
+
+    userBundlesRepository.items.push({
+      id: '',
+      bundleId: 'bundle-1',
+      userId: user.id,
+      isActive: true,
+      finishedAt: null,
+      createdAt: new Date(),
     })
 
     await sut.execute({
@@ -96,6 +120,36 @@ describe('Use Case: Complete Workout', () => {
         experienceAmount: 1000,
       }),
     )
+  })
+
+  it('should not be able to mark a workout as completed if the user does not have the required bundle', async () => {
+    const user = await usersRepository.create({
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      passwordHash: '12345678',
+      phone: '12345678',
+      age: 24,
+      height: 180,
+      weight: 80,
+      goal: 'ENHANCE_HEALTH',
+    })
+
+    const workout = await workoutsRepository.create({
+      id: 'workout-1',
+      name: 'Workout 1',
+      bannerUrl: '',
+      availableCurrency: 1000,
+      availableExperience: 1000,
+      type: 'STANDARD',
+      bundleId: 'bundle-1',
+    })
+
+    await expect(() =>
+      sut.execute({
+        userId: user.id,
+        workoutId: workout.id,
+      }),
+    ).rejects.toBeInstanceOf(UnavailableWorkoutError)
   })
 
   it('should not reward user for subsequent completions of a level workout', async () => {
@@ -119,6 +173,16 @@ describe('Use Case: Complete Workout', () => {
       availableCurrency: 1000,
       availableExperience: 1000,
       type: 'STANDARD',
+      bundleId: 'bundle-1',
+    })
+
+    userBundlesRepository.items.push({
+      id: '',
+      bundleId: 'bundle-1',
+      userId: user.id,
+      isActive: true,
+      finishedAt: null,
+      createdAt: new Date(),
     })
 
     await sut.execute({

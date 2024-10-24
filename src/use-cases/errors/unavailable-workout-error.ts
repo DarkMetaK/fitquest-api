@@ -1,5 +1,5 @@
 export class UnavailableWorkoutError extends Error {
-  constructor() {
-    super('This workout is currently unavailable.')
+  constructor(message?: string) {
+    super(message ?? 'This workout is currently unavailable.')
   }
 }

@@ -230,6 +230,7 @@ model UserBundle {
   bundle   Bundle @relation(fields: [bundleId], references: [id], onDelete: Cascade)
   bundleId String @map("bundle_id")
 
+  @@unique([userId, bundleId])
   @@map("user_bundles")
 }
 

@@ -2,6 +2,7 @@ import { FinishedWorkout } from '@prisma/client'
 import dayjs from 'dayjs'
 
 import { FinishedWorkoutsRepository } from '@/repositories/finished-workouts-repository'
+import { UserBundlesRepository } from '@/repositories/user-bundles-repository'
 import { UsersRepository } from '@/repositories/users-repository'
 import { WorkoutsRepository } from '@/repositories/workouts-repository'
 
@@ -22,6 +23,7 @@ export class CompleteWorkoutUseCase {
     private usersRepository: UsersRepository,
     private workoutsRepository: WorkoutsRepository,
     private finishedWorkoutsRepository: FinishedWorkoutsRepository,
+    private userBundlesRepository: UserBundlesRepository,
   ) {}
 
   async execute({
@@ -47,11 +49,12 @@ export class CompleteWorkoutUseCase {
       )
 
     const isFirstConclusion = previouslyFinishedWorkouts.length === 0
-    const mostRecentConclusion =
-      previouslyFinishedWorkouts[previouslyFinishedWorkouts.length - 1]
 
     switch (workout.type) {
       case 'CHALLENGE':
+        const mostRecentConclusion =
+          previouslyFinishedWorkouts[previouslyFinishedWorkouts.length - 1]
+
         if (!workout.expiresAt || dayjs().isAfter(workout.expiresAt)) {
           throw new UnavailableWorkoutError()
         }
@@ -65,6 +68,18 @@ export class CompleteWorkoutUseCase {
         }
         break
       case 'STANDARD':
+        const bundleSubscription =
+          await this.userBundlesRepository.findByUserIdAndBundleId(
+            userId,
+            workout.bundleId!,
+          )
+
+        if (!bundleSubscription) {
+          throw new UnavailableWorkoutError(
+            'The user is not subscribed to the bundle',
+          )
+        }
+
         if (isFirstConclusion) {
           user.currencyAmount += workout.availableCurrency
           user.experienceAmount += workout.availableExperience
