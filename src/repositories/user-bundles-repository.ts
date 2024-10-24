@@ -5,4 +5,5 @@ export interface UserBundlesRepository {
     userId: string,
     bundleId: string,
   ): Promise<UserBundle | null>
+  create(userId: string, bundleId: string): Promise<UserBundle>
 }

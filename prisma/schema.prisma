@@ -41,18 +41,19 @@ enum WorkoutType {
 }
 
 model User {
-  id               String   @id @default(uuid())
+  id               String    @id @default(uuid())
   name             String
-  email            String   @unique
-  phone            String   @unique
-  passwordHash     String?  @map("password_hash")
+  email            String    @unique
+  phone            String    @unique
+  passwordHash     String?   @map("password_hash")
   age              Int
   weight           Int
   height           Int
   goal             Goal
-  experienceAmount Int      @default(0) @map("experience_amount")
-  currencyAmount   Int      @default(0) @map("currency_amount")
-  createdAt        DateTime @default(now()) @map("created_at")
+  experienceAmount Int       @default(0) @map("experience_amount")
+  currencyAmount   Int       @default(0) @map("currency_amount")
+  premiumExpiresAt DateTime? @map("premium_expires_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
 
   finishedWorkouts FinishedWorkout[]
 

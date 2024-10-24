@@ -50,6 +50,9 @@ export class InMemoryUsersRepository implements UsersRepository {
       goal: data.goal,
       currencyAmount: data.currencyAmount ?? 0,
       experienceAmount: data.experienceAmount ?? 0,
+      premiumExpiresAt: data.premiumExpiresAt
+        ? new Date(data.premiumExpiresAt)
+        : null,
       createdAt: new Date(),
     }
 

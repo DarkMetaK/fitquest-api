@@ -9,6 +9,16 @@ import { BundlesRepository } from '../bundles-repository'
 export class InMemoryBundlesRepository implements BundlesRepository {
   public items: Bundle[] = []
 
+  async findById(id: string): Promise<Bundle | null> {
+    const bundle = this.items.find((item) => item.id === id)
+
+    if (!bundle) {
+      return null
+    }
+
+    return bundle
+  }
+
   async findMany({
     page,
     perPage,
