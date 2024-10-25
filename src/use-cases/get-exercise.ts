@@ -1,8 +1,7 @@
-import { Exercise } from '@prisma/client'
+import { ExercisesRepository } from '@/adapters/repositories/exercises-repository'
+import { Exercise } from '@/entities/exercise'
 
-import { ExercisesRepository } from '@/repositories/exercises-repository'
-
-import { ResourceNotFoundError } from './errors/resource-not-found-error'
+import { ResourceNotFoundError } from '../core/errors/resource-not-found-error'
 
 interface GetExerciseUseCaseRequest {
   id: string

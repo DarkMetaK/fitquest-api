@@ -1,6 +1,5 @@
-import { Workout } from '@prisma/client'
-
-import { WorkoutsRepository } from '@/repositories/workouts-repository'
+import { WorkoutsRepository } from '@/adapters/repositories/workouts-repository'
+import { Workout } from '@/entities/workout'
 
 interface FetchActiveChallengesUseCaseResponse {
   activechallenges: Workout[]

@@ -1,25 +1,32 @@
-import { InMemoryWorkoutsRepository } from '@/repositories/in-memory/in-memory-workouts-repository'
+import { makeWorkout } from 'test/factories/make-workout'
+import { InMemoryExercisesRepository } from 'test/in-memory/in-memory-exercises-repository'
+import { InMemoryWorkoutsRepository } from 'test/in-memory/in-memory-workouts-repository'
 
-import { ResourceNotFoundError } from './errors/resource-not-found-error'
+import { UniqueEntityId } from '@/core/entities/unique-entity-id'
+
+import { ResourceNotFoundError } from '../core/errors/resource-not-found-error'
 import { GetWorkoutUseCase } from './get-workout'
 
 let sut: GetWorkoutUseCase
+let exercisesRepository: InMemoryExercisesRepository
 let workoutsRepository: InMemoryWorkoutsRepository
 
 describe('Use Case: Get Workout', () => {
   beforeEach(async () => {
-    workoutsRepository = new InMemoryWorkoutsRepository()
+    exercisesRepository = new InMemoryExercisesRepository()
+    workoutsRepository = new InMemoryWorkoutsRepository(exercisesRepository)
     sut = new GetWorkoutUseCase(workoutsRepository)
   })
 
   it('should be able to get workout by id', async () => {
-    workoutsRepository.create({
-      id: 'workout-1',
-      name: 'Workout 1',
-      bannerUrl: '',
-      availableCurrency: 1000,
-      availableExperience: 1000,
-    })
+    workoutsRepository.create(
+      makeWorkout(
+        {
+          name: 'Workout 1',
+        },
+        new UniqueEntityId('workout-1'),
+      ),
+    )
 
     const { workout } = await sut.execute({ id: 'workout-1' })
 

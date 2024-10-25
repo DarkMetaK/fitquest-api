@@ -1,6 +1,9 @@
-import { InMemoryExercisesRepository } from '@/repositories/in-memory/in-memory-exercises-repository'
+import { makeExercise } from 'test/factories/make-exercise'
+import { InMemoryExercisesRepository } from 'test/in-memory/in-memory-exercises-repository'
 
-import { ResourceNotFoundError } from './errors/resource-not-found-error'
+import { UniqueEntityId } from '@/core/entities/unique-entity-id'
+
+import { ResourceNotFoundError } from '../core/errors/resource-not-found-error'
 import { GetExerciseUseCase } from './get-exercise'
 
 let sut: GetExerciseUseCase
@@ -13,13 +16,14 @@ describe('Use Case: Get Exercise', () => {
   })
 
   it('should be able to get exercise by id', async () => {
-    exercisesRepository.create({
-      id: 'exercise-1',
-      name: 'Exercise 1',
-      demonstrationUrl: '',
-      estimatedCalories: 500,
-      duration: 30000,
-    })
+    exercisesRepository.create(
+      makeExercise(
+        {
+          name: 'Exercise 1',
+        },
+        new UniqueEntityId('exercise-1'),
+      ),
+    )
 
     const { exercise } = await sut.execute({ id: 'exercise-1' })
 

@@ -1,16 +1,14 @@
-import {
-  WorkoutsRepository,
-  WorkoutWithExercise,
-} from '@/repositories/workouts-repository'
+import { WorkoutsRepository } from '@/adapters/repositories/workouts-repository'
+import { WorkoutDetails } from '@/entities/value-objects/workout-details'
 
-import { ResourceNotFoundError } from './errors/resource-not-found-error'
+import { ResourceNotFoundError } from '../core/errors/resource-not-found-error'
 
 interface GetWorkoutUseCaseRequest {
   id: string
 }
 
 interface GetWorkoutUseCaseResponse {
-  workout: WorkoutWithExercise
+  workout: WorkoutDetails
 }
 
 export class GetWorkoutUseCase {
@@ -19,7 +17,7 @@ export class GetWorkoutUseCase {
   async execute({
     id,
   }: GetWorkoutUseCaseRequest): Promise<GetWorkoutUseCaseResponse> {
-    const workout = await this.workoutsRepository.findByIdWithExercises(id)
+    const workout = await this.workoutsRepository.findByIdWithDetails(id)
 
     if (!workout) {
       throw new ResourceNotFoundError(id)
