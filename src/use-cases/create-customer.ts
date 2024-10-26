@@ -1,5 +1,4 @@
-import { hash } from 'bcryptjs'
-
+import { HashGenerator } from '@/adapters/gateways/cryptography/hash-generator'
 import { CustomersRepository } from '@/adapters/repositories/customers-repository'
 import { Customer } from '@/entities/customer'
 
@@ -16,7 +15,10 @@ interface CreateCustomerUseCaseResponse {
 }
 
 export class CreateCustomerUseCase {
-  constructor(private customersRepository: CustomersRepository) {}
+  constructor(
+    private customersRepository: CustomersRepository,
+    private hashGenerator: HashGenerator,
+  ) {}
 
   async execute({
     name,
@@ -32,7 +34,7 @@ export class CreateCustomerUseCase {
     const customer = Customer.create({
       name,
       email,
-      passwordHash: await hash(password, 6),
+      passwordHash: await this.hashGenerator.hash(password),
     })
 
     await this.customersRepository.create(customer)

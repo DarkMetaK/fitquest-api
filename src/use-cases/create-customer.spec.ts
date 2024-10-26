@@ -1,4 +1,4 @@
-import { compare } from 'bcryptjs'
+import { FakeHasher } from 'test/gateways/cryptography/fake-hasher'
 import { InMemoryCustomersMetadataRepository } from 'test/in-memory/in-memory-customers-metadata-repository'
 import { InMemoryCustomersRepository } from 'test/in-memory/in-memory-customers-repository'
 
@@ -8,6 +8,7 @@ import { CreateCustomerUseCase } from './create-customer'
 let sut: CreateCustomerUseCase
 let customersRepository: InMemoryCustomersRepository
 let customersMetadataRepository: InMemoryCustomersMetadataRepository
+let fakeHasher: FakeHasher
 
 describe('Use Case: Create Customer', () => {
   beforeEach(async () => {
@@ -15,7 +16,10 @@ describe('Use Case: Create Customer', () => {
     customersRepository = new InMemoryCustomersRepository(
       customersMetadataRepository,
     )
-    sut = new CreateCustomerUseCase(customersRepository)
+
+    fakeHasher = new FakeHasher()
+
+    sut = new CreateCustomerUseCase(customersRepository, fakeHasher)
   })
 
   it('should be able to create a new customer', async () => {
@@ -29,18 +33,15 @@ describe('Use Case: Create Customer', () => {
   })
 
   it('should hash customer password upon registration', async () => {
-    const { customer } = await sut.execute({
+    await sut.execute({
       name: 'John Doe',
       email: 'johndoe@example.com',
       password: '12345678',
     })
 
-    const isPasswordCorrectlyHashed = await compare(
-      '12345678',
-      customer.passwordHash!,
-    )
+    const hashedPassword = await fakeHasher.hash('12345678')
 
-    expect(isPasswordCorrectlyHashed).toBe(true)
+    expect(customersRepository.items[0].passwordHash).toEqual(hashedPassword)
   })
 
   it('should not be able to register with the same email twice', async () => {

@@ -38,26 +38,22 @@ export class InMemoryCustomersRepository implements CustomersRepository {
       item.customerId.equals(new UniqueEntityId(id)),
     )
 
-    if (!metadata) {
-      throw new Error(
-        `Metadata for customer id"${customer.id.toString()}" does not exist.`,
-      )
-    }
-
     return CustomerWithMetadata.create({
       customerId: customer.id.toString(),
-      metadataId: metadata.id.toString(),
       name: customer.name,
       email: customer.email,
       passwordHash: customer.passwordHash,
-      phone: metadata.phone,
-      age: metadata.age,
-      weight: metadata.weight,
-      height: metadata.height,
-      goal: metadata.goal,
-      experienceAmount: metadata.experienceAmount,
-      currencyAmount: metadata.currencyAmount,
-      premiumExpiresAt: metadata.premiumExpiresAt,
+      metadata: metadata && {
+        metadataId: metadata.id.toString(),
+        phone: metadata.phone,
+        age: metadata.age,
+        weight: metadata.weight,
+        height: metadata.height,
+        goal: metadata.goal,
+        experienceAmount: metadata.experienceAmount,
+        currencyAmount: metadata.currencyAmount,
+        premiumExpiresAt: metadata.premiumExpiresAt,
+      },
       createdAt: customer.createdAt,
     })
   }
@@ -85,26 +81,22 @@ export class InMemoryCustomersRepository implements CustomersRepository {
       item.customerId.equals(customer.id),
     )
 
-    if (!metadata) {
-      throw new Error(
-        `Metadata for customer id"${customer.id.toString()}" does not exist.`,
-      )
-    }
-
     return CustomerWithMetadata.create({
       customerId: customer.id.toString(),
-      metadataId: metadata.id.toString(),
       name: customer.name,
       email: customer.email,
       passwordHash: customer.passwordHash,
-      phone: metadata.phone,
-      age: metadata.age,
-      weight: metadata.weight,
-      height: metadata.height,
-      goal: metadata.goal,
-      experienceAmount: metadata.experienceAmount,
-      currencyAmount: metadata.currencyAmount,
-      premiumExpiresAt: metadata.premiumExpiresAt,
+      metadata: metadata && {
+        metadataId: metadata.id.toString(),
+        phone: metadata.phone,
+        age: metadata.age,
+        weight: metadata.weight,
+        height: metadata.height,
+        goal: metadata.goal,
+        experienceAmount: metadata.experienceAmount,
+        currencyAmount: metadata.currencyAmount,
+        premiumExpiresAt: metadata.premiumExpiresAt,
+      },
       createdAt: customer.createdAt,
     })
   }
@@ -130,18 +122,20 @@ export class InMemoryCustomersRepository implements CustomersRepository {
 
     return CustomerWithMetadata.create({
       customerId: customer.id.toString(),
-      metadataId: metadata.id.toString(),
       name: customer.name,
       email: customer.email,
       passwordHash: customer.passwordHash,
-      phone: metadata.phone,
-      age: metadata.age,
-      weight: metadata.weight,
-      height: metadata.height,
-      goal: metadata.goal,
-      experienceAmount: metadata.experienceAmount,
-      currencyAmount: metadata.currencyAmount,
-      premiumExpiresAt: metadata.premiumExpiresAt,
+      metadata: metadata && {
+        metadataId: metadata.id.toString(),
+        phone: metadata.phone,
+        age: metadata.age,
+        weight: metadata.weight,
+        height: metadata.height,
+        goal: metadata.goal,
+        experienceAmount: metadata.experienceAmount,
+        currencyAmount: metadata.currencyAmount,
+        premiumExpiresAt: metadata.premiumExpiresAt,
+      },
       createdAt: customer.createdAt,
     })
   }
@@ -171,16 +165,36 @@ export class InMemoryCustomersRepository implements CustomersRepository {
       item.customerId.equals(customerId),
     )
 
-    this.metadataRepository.items[metadataIndex] = CustomerMetadata.create({
-      customerId,
-      phone: customer.phone,
-      age: customer.age,
-      weight: customer.weight,
-      height: customer.height,
-      goal: customer.goal,
-      experienceAmount: customer.experienceAmount,
-      currencyAmount: customer.currencyAmount,
-      premiumExpiresAt: customer.premiumExpiresAt,
-    })
+    if (metadataIndex === -1 && customer.metadata) {
+      this.metadataRepository.items.push(
+        CustomerMetadata.create({
+          customerId,
+          phone: customer.metadata.phone,
+          age: customer.metadata.age,
+          weight: customer.metadata.weight,
+          height: customer.metadata.height,
+          goal: customer.metadata.goal,
+          experienceAmount: customer.experienceAmount,
+          currencyAmount: customer.currencyAmount,
+          premiumExpiresAt: customer.premiumExpiresAt,
+        }),
+      )
+
+      return
+    }
+
+    if (metadataIndex >= 0 && customer.metadata) {
+      this.metadataRepository.items[metadataIndex] = CustomerMetadata.create({
+        customerId,
+        phone: customer.metadata.phone,
+        age: customer.metadata.age,
+        weight: customer.metadata.weight,
+        height: customer.metadata.height,
+        goal: customer.metadata.goal,
+        experienceAmount: customer.experienceAmount,
+        currencyAmount: customer.currencyAmount,
+        premiumExpiresAt: customer.premiumExpiresAt,
+      })
+    }
   }
 }

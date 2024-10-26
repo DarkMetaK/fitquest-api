@@ -2,18 +2,20 @@ import { ValueObject } from '../../core/entities/value-object'
 
 export interface CustomerWithMetadataProps {
   customerId: string
-  metadataId: string
   name: string
   email: string
   passwordHash?: string | null
-  phone: string
-  age: number
-  weight: number
-  height: number
-  goal: string
-  experienceAmount: number
-  currencyAmount: number
-  premiumExpiresAt?: Date | null
+  metadata?: {
+    metadataId: string
+    phone: string
+    age: number
+    weight: number
+    height: number
+    goal: string
+    experienceAmount: number
+    currencyAmount: number
+    premiumExpiresAt?: Date | null
+  }
   createdAt: Date
 }
 
@@ -26,8 +28,12 @@ export class CustomerWithMetadata extends ValueObject<CustomerWithMetadataProps>
     return this.props.customerId
   }
 
+  get metadata() {
+    return this.props.metadata
+  }
+
   get metadataId() {
-    return this.props.metadataId
+    return this.props.metadata?.metadataId
   }
 
   get name() {
@@ -43,43 +49,47 @@ export class CustomerWithMetadata extends ValueObject<CustomerWithMetadataProps>
   }
 
   get phone() {
-    return this.props.phone
+    return this.props.metadata?.phone
   }
 
   get age() {
-    return this.props.age
+    return this.props.metadata?.age
   }
 
   get weight() {
-    return this.props.weight
+    return this.props.metadata?.weight
   }
 
   get height() {
-    return this.props.height
+    return this.props.metadata?.height
   }
 
   get goal() {
-    return this.props.goal
+    return this.props.metadata?.goal
   }
 
   get experienceAmount() {
-    return this.props.experienceAmount
+    return this.props.metadata?.experienceAmount ?? 0
   }
 
   set experienceAmount(value: number) {
-    this.props.experienceAmount = value
+    if (this.props.metadata) {
+      this.props.metadata.experienceAmount = value
+    }
   }
 
   get currencyAmount() {
-    return this.props.currencyAmount
+    return this.props.metadata?.currencyAmount ?? 0
   }
 
   set currencyAmount(value: number) {
-    this.props.currencyAmount = value
+    if (this.props.metadata) {
+      this.props.metadata.currencyAmount = value
+    }
   }
 
   get premiumExpiresAt() {
-    return this.props.premiumExpiresAt
+    return this.props.metadata?.premiumExpiresAt
   }
 
   get createdAt() {

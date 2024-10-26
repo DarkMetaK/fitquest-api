@@ -1,8 +1,8 @@
-import { PrismaCustomerMapper } from '@/adapters/mappers/prisma-customer-mapper'
-import { PrismaCustomerWithMetadataMapper } from '@/adapters/mappers/prisma-customer-with-metadata-mapper'
 import { CustomersRepository } from '@/adapters/repositories/customers-repository'
 import { Customer } from '@/entities/customer'
 import { CustomerWithMetadata } from '@/entities/value-objects/customer-with-metadata'
+import { PrismaCustomerMapper } from '@/infra/database/prisma/mappers/prisma-customer-mapper'
+import { PrismaCustomerWithMetadataMapper } from '@/infra/database/prisma/mappers/prisma-customer-with-metadata-mapper'
 import { prisma } from '@/infra/libs/prisma'
 
 export class PrismaCustomersRepository implements CustomersRepository {
@@ -111,7 +111,7 @@ export class PrismaCustomersRepository implements CustomersRepository {
     await prisma.user.update({
       data: {
         ...rest,
-        metadata: {
+        metadata: metadata && {
           connectOrCreate: {
             where: {
               id: metadata.id,
