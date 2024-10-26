@@ -30,13 +30,9 @@ export class PrismaCustomersRepository implements CustomersRepository {
       return null
     }
 
-    if (!customer.metadata) {
-      return null
-    }
-
     return PrismaCustomerWithMetadataMapper.toDomain({
       ...customer,
-      metadata: customer.metadata,
+      metadata: customer.metadata ?? undefined,
     })
   }
 
@@ -66,13 +62,9 @@ export class PrismaCustomersRepository implements CustomersRepository {
       return null
     }
 
-    if (!customer.metadata) {
-      return null
-    }
-
     return PrismaCustomerWithMetadataMapper.toDomain({
       ...customer,
-      metadata: customer.metadata,
+      metadata: customer.metadata ?? undefined,
     })
   }
 

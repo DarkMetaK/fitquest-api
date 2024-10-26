@@ -31,6 +31,7 @@ export class AuthenticateWithPasswordUseCase {
     if (!customerWithEmail) {
       throw new InvalidCredentialsError()
     }
+
     if (!customerWithEmail.passwordHash) {
       throw new LoginMethodError(
         'User does not have a password, use social login.',

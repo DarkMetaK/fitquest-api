@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker'
-import { hashSync } from 'bcryptjs'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { Customer, CustomerProps } from '@/entities/customer'
@@ -14,7 +13,7 @@ export function makeCustomer(
     {
       name: faker.person.fullName(),
       email: faker.internet.email(),
-      passwordHash: hashSync(faker.internet.password(), 6),
+      passwordHash: faker.internet.password(),
       ...override,
     },
     id,
@@ -29,9 +28,9 @@ export async function makePrismaCustomer(
 ) {
   const customer = makeCustomer(data, id)
 
-  await prisma.user.create({
+  const prismaCustomer = await prisma.user.create({
     data: PrismaCustomerMapper.toPrisma(customer),
   })
 
-  return customer
+  return prismaCustomer
 }

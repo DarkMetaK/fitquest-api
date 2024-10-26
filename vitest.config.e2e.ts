@@ -3,10 +3,15 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
-    include: ['**/*.e2e-spec.ts'],
     globals: true,
     root: './',
-    setupFiles: ['./test/setup-e2e.ts'],
+    include: ['**/*.e2e-spec.ts'],
+    environmentMatchGlobs: [
+      [
+        '**/*.e2e-spec.ts',
+        './prisma/vitest-environment-prisma/prisma-test-environment.ts',
+      ],
+    ],
   },
   plugins: [tsconfigPaths()],
 })
