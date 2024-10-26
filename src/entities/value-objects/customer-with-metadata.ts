@@ -2,6 +2,7 @@ import { ValueObject } from '../../core/entities/value-object'
 
 export interface CustomerWithMetadataProps {
   customerId: string
+  metadataId: string
   name: string
   email: string
   passwordHash?: string | null
@@ -12,7 +13,7 @@ export interface CustomerWithMetadataProps {
   goal: string
   experienceAmount: number
   currencyAmount: number
-  premiumExpiresAt?: Date
+  premiumExpiresAt?: Date | null
   createdAt: Date
 }
 
@@ -23,6 +24,10 @@ export class CustomerWithMetadata extends ValueObject<CustomerWithMetadataProps>
 
   get customerId() {
     return this.props.customerId
+  }
+
+  get metadataId() {
+    return this.props.metadataId
   }
 
   get name() {

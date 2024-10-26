@@ -10,7 +10,7 @@ export interface CustomerMetadataProps {
   goal: string
   experienceAmount: number
   currencyAmount: number
-  premiumExpiresAt?: Date
+  premiumExpiresAt?: Date | null
 }
 
 export class CustomerMetadata extends Entity<CustomerMetadataProps> {

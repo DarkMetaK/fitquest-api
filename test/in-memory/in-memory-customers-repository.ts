@@ -46,6 +46,7 @@ export class InMemoryCustomersRepository implements CustomersRepository {
 
     return CustomerWithMetadata.create({
       customerId: customer.id.toString(),
+      metadataId: metadata.id.toString(),
       name: customer.name,
       email: customer.email,
       passwordHash: customer.passwordHash,
@@ -92,6 +93,7 @@ export class InMemoryCustomersRepository implements CustomersRepository {
 
     return CustomerWithMetadata.create({
       customerId: customer.id.toString(),
+      metadataId: metadata.id.toString(),
       name: customer.name,
       email: customer.email,
       passwordHash: customer.passwordHash,
@@ -128,6 +130,7 @@ export class InMemoryCustomersRepository implements CustomersRepository {
 
     return CustomerWithMetadata.create({
       customerId: customer.id.toString(),
+      metadataId: metadata.id.toString(),
       name: customer.name,
       email: customer.email,
       passwordHash: customer.passwordHash,
