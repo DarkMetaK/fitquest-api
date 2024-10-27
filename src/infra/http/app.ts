@@ -4,6 +4,7 @@ import { ZodError } from 'zod'
 
 import { env } from '../env'
 import { authRoutes } from './controllers/auth/routes'
+import { customerRoutes } from './controllers/customer/routes'
 
 export const app = fastify()
 
@@ -29,3 +30,4 @@ app.setErrorHandler((error, _request, reply) => {
 })
 
 app.register(authRoutes)
+app.register(customerRoutes)

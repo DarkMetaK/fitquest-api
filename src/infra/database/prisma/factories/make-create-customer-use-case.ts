@@ -5,11 +5,11 @@ import { PrismaCustomersRepository } from '../repositories/prisma-customers-repo
 
 export class makeCreateCustomerUseCase {
   static create(): CreateCustomerUseCase {
-    const customerRepository = new PrismaCustomersRepository()
+    const customersRepository = new PrismaCustomersRepository()
     const hashGenerator = new BcryptHasher()
 
     const createCustomerUseCase = new CreateCustomerUseCase(
-      customerRepository,
+      customersRepository,
       hashGenerator,
     )
 
