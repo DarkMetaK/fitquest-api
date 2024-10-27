@@ -20,6 +20,16 @@ export class InMemoryCustomersMetadataRepository
     return metadata
   }
 
+  async findByPhone(phone: string): Promise<CustomerMetadata | null> {
+    const metadata = this.items.find((item) => item.phone === phone)
+
+    if (!metadata) {
+      return null
+    }
+
+    return metadata
+  }
+
   async create(metadata: CustomerMetadata): Promise<void> {
     this.items.push(metadata)
   }

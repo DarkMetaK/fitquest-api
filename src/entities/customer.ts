@@ -40,4 +40,18 @@ export class Customer extends Entity<CustomerProps> {
   get createdAt() {
     return this.props.createdAt
   }
+
+  update(props: Partial<Optional<CustomerProps, 'createdAt'>>) {
+    if (props.name) {
+      this.props.name = props.name
+    }
+
+    if (props.email) {
+      this.props.email = props.email
+    }
+
+    if (props.passwordHash) {
+      this.props.passwordHash = props.passwordHash
+    }
+  }
 }

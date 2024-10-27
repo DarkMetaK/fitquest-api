@@ -5,17 +5,17 @@ import { InvalidCredentialsError } from '@/core/errors/invalid-credentials-error
 import { LoginMethodError } from '@/core/errors/login-method-error'
 import { makeAuthenticateWithPasswordUseCase } from '@/infra/database/prisma/factories/make-authenticate-with-password-use-case'
 
+const authenticateWithPasswordBodySchema = z.object({
+  email: z
+    .string({ message: 'Email is required.' })
+    .email({ message: 'Invalid email.' }),
+  password: z.string({ message: 'Password is required.' }),
+})
+
 export async function authenticateWithPasswordController(
   request: FastifyRequest,
   reply: FastifyReply,
 ) {
-  const authenticateWithPasswordBodySchema = z.object({
-    email: z
-      .string({ message: 'Email is required.' })
-      .email({ message: 'Invalid email.' }),
-    password: z.string({ message: 'Password is required.' }),
-  })
-
   const { email, password } = authenticateWithPasswordBodySchema.parse(
     request.body,
   )

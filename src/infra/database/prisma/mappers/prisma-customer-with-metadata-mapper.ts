@@ -7,7 +7,7 @@ import {
 import { CustomerWithMetadata } from '@/entities/value-objects/customer-with-metadata'
 
 type PrismaCustomerWithMetadata = PrismaUser & {
-  metadata?: PrismaMetadata
+  metadata: PrismaMetadata
 }
 
 export class PrismaCustomerWithMetadataMapper {
@@ -17,17 +17,15 @@ export class PrismaCustomerWithMetadataMapper {
       name: raw.name,
       email: raw.email,
       passwordHash: raw.passwordHash,
-      metadata: raw.metadata && {
-        metadataId: raw.metadata.id,
-        phone: raw.metadata.phone,
-        age: raw.metadata.age,
-        weight: raw.metadata.weight,
-        height: raw.metadata.height,
-        goal: raw.metadata.goal,
-        experienceAmount: raw.metadata.experienceAmount,
-        currencyAmount: raw.metadata.currencyAmount,
-        premiumExpiresAt: raw.metadata.premiumExpiresAt,
-      },
+      metadataId: raw.metadata.id,
+      phone: raw.metadata.phone,
+      age: raw.metadata.age,
+      weight: raw.metadata.weight,
+      height: raw.metadata.height,
+      goal: raw.metadata.goal,
+      experienceAmount: raw.metadata.experienceAmount,
+      currencyAmount: raw.metadata.currencyAmount,
+      premiumExpiresAt: raw.metadata.premiumExpiresAt,
       createdAt: raw.createdAt,
     })
 
@@ -40,17 +38,17 @@ export class PrismaCustomerWithMetadataMapper {
       name: customer.name,
       email: customer.email,
       passwordHash: customer.passwordHash ?? null,
-      metadata: customer.metadata && {
-        id: customer.metadata.metadataId,
+      metadata: {
+        id: customer.metadataId,
         userId: customer.customerId,
-        phone: customer.metadata.phone,
-        age: customer.metadata.age,
-        weight: customer.metadata.weight,
-        height: customer.metadata.height,
-        goal: customer.metadata.goal as Goal,
-        experienceAmount: customer.metadata.experienceAmount,
-        currencyAmount: customer.metadata.currencyAmount,
-        premiumExpiresAt: customer.metadata.premiumExpiresAt ?? null,
+        phone: customer.phone,
+        age: customer.age,
+        weight: customer.weight,
+        height: customer.height,
+        goal: Goal[customer.goal as keyof typeof Goal],
+        experienceAmount: customer.experienceAmount,
+        currencyAmount: customer.currencyAmount,
+        premiumExpiresAt: customer.premiumExpiresAt ?? null,
       },
       createdAt: customer.createdAt,
     }

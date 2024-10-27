@@ -55,4 +55,38 @@ export class CustomerMetadata extends Entity<CustomerMetadataProps> {
   get premiumExpiresAt() {
     return this.props.premiumExpiresAt
   }
+
+  update(props: Partial<Omit<CustomerMetadataProps, 'customerId'>>) {
+    if (props.phone) {
+      this.props.phone = props.phone
+    }
+
+    if (props.age) {
+      this.props.age = props.age
+    }
+
+    if (props.weight) {
+      this.props.weight = props.weight
+    }
+
+    if (props.height) {
+      this.props.height = props.height
+    }
+
+    if (props.goal) {
+      this.props.goal = props.goal
+    }
+
+    if (props.experienceAmount) {
+      this.props.experienceAmount = props.experienceAmount
+    }
+
+    if (props.currencyAmount) {
+      this.props.currencyAmount = props.currencyAmount
+    }
+
+    if (props.premiumExpiresAt) {
+      this.props.premiumExpiresAt = props.premiumExpiresAt
+    }
+  }
 }

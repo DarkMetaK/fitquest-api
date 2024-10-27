@@ -26,6 +26,7 @@ describe('Use Case: Authenticate', () => {
 
     sut = new AuthenticateWithPasswordUseCase(
       customersRepository,
+      customersMetadataRepository,
       fakeHasher,
       encrypter,
     )

@@ -1,8 +1,7 @@
 import { HashGenerator } from '@/adapters/gateways/cryptography/hash-generator'
 import { CustomersRepository } from '@/adapters/repositories/customers-repository'
+import { EmailAlreadyTakenError } from '@/core/errors/email-already-taken-error'
 import { Customer } from '@/entities/customer'
-
-import { UserAlreadyExistsError } from '../core/errors/user-already-exists-error'
 
 interface CreateCustomerUseCaseRequest {
   name: string
@@ -28,7 +27,7 @@ export class CreateCustomerUseCase {
     const emailAlreadyInUse = await this.customersRepository.findByEmail(email)
 
     if (emailAlreadyInUse) {
-      throw new UserAlreadyExistsError('email')
+      throw new EmailAlreadyTakenError()
     }
 
     const customer = Customer.create({

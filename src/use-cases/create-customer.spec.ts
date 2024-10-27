@@ -2,7 +2,8 @@ import { FakeHasher } from 'test/gateways/cryptography/fake-hasher'
 import { InMemoryCustomersMetadataRepository } from 'test/in-memory/in-memory-customers-metadata-repository'
 import { InMemoryCustomersRepository } from 'test/in-memory/in-memory-customers-repository'
 
-import { UserAlreadyExistsError } from '../core/errors/user-already-exists-error'
+import { EmailAlreadyTakenError } from '@/core/errors/email-already-taken-error'
+
 import { CreateCustomerUseCase } from './create-customer'
 
 let sut: CreateCustomerUseCase
@@ -29,7 +30,13 @@ describe('Use Case: Create Customer', () => {
       password: '12345678',
     })
 
-    expect(customer.id.toString()).toEqual(expect.any(String))
+    expect(customer).toBeTruthy()
+    expect(customersRepository.items[0]).toEqual(
+      expect.objectContaining({
+        name: 'John Doe',
+        email: 'johndoe@example.com',
+      }),
+    )
   })
 
   it('should hash customer password upon registration', async () => {
@@ -59,6 +66,6 @@ describe('Use Case: Create Customer', () => {
         email,
         password: '12345678',
       }),
-    ).rejects.toBeInstanceOf(UserAlreadyExistsError)
+    ).rejects.toBeInstanceOf(EmailAlreadyTakenError)
   })
 })

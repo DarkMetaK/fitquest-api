@@ -1,5 +1,6 @@
 import { Encrypter } from '@/adapters/gateways/cryptography/encrypter'
 import { HashComparer } from '@/adapters/gateways/cryptography/hash-comparer'
+import { CustomersMetadataRepository } from '@/adapters/repositories/customers-metadata-repository'
 import { CustomersRepository } from '@/adapters/repositories/customers-repository'
 
 import { InvalidCredentialsError } from '../core/errors/invalid-credentials-error'
@@ -17,6 +18,7 @@ interface AuthenticateWithPasswordUseCaseResponse {
 export class AuthenticateWithPasswordUseCase {
   constructor(
     private customersRepository: CustomersRepository,
+    private customersMetadataRepository: CustomersMetadataRepository,
     private hashComparer: HashComparer,
     private encrypter: Encrypter,
   ) {}
@@ -25,8 +27,7 @@ export class AuthenticateWithPasswordUseCase {
     email,
     password,
   }: AuthenticateWithPasswordUseCaseRequest): Promise<AuthenticateWithPasswordUseCaseResponse> {
-    const customerWithEmail =
-      await this.customersRepository.findByEmailWithMetadata(email)
+    const customerWithEmail = await this.customersRepository.findByEmail(email)
 
     if (!customerWithEmail) {
       throw new InvalidCredentialsError()
@@ -47,9 +48,13 @@ export class AuthenticateWithPasswordUseCase {
       throw new InvalidCredentialsError()
     }
 
+    const metadata = await this.customersMetadataRepository.findByCustomerId(
+      customerWithEmail.id.toString(),
+    )
+
     const accessToken = await this.encrypter.encrypt({
-      sub: customerWithEmail.customerId,
-      hasFinishedRegistration: !!customerWithEmail.metadata,
+      sub: customerWithEmail.id,
+      hasFinishedRegistration: !!metadata,
     })
 
     return { accessToken }

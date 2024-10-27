@@ -1,9 +1,11 @@
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { Customer } from '@/entities/customer'
-import { CustomerMetadata } from '@/entities/customer-metadata'
 import { CustomerWithMetadata } from '@/entities/value-objects/customer-with-metadata'
 
-import { CustomersRepository } from '../../src/adapters/repositories/customers-repository'
+import {
+  CustomersRepository,
+  UpdateCustomerDTO,
+} from '../../src/adapters/repositories/customers-repository'
 import { InMemoryCustomersMetadataRepository } from './in-memory-customers-metadata-repository'
 
 export class InMemoryCustomersRepository implements CustomersRepository {
@@ -38,22 +40,24 @@ export class InMemoryCustomersRepository implements CustomersRepository {
       item.customerId.equals(new UniqueEntityId(id)),
     )
 
+    if (!metadata) {
+      return null
+    }
+
     return CustomerWithMetadata.create({
       customerId: customer.id.toString(),
       name: customer.name,
       email: customer.email,
       passwordHash: customer.passwordHash,
-      metadata: metadata && {
-        metadataId: metadata.id.toString(),
-        phone: metadata.phone,
-        age: metadata.age,
-        weight: metadata.weight,
-        height: metadata.height,
-        goal: metadata.goal,
-        experienceAmount: metadata.experienceAmount,
-        currencyAmount: metadata.currencyAmount,
-        premiumExpiresAt: metadata.premiumExpiresAt,
-      },
+      metadataId: metadata.id.toString(),
+      phone: metadata.phone,
+      age: metadata.age,
+      weight: metadata.weight,
+      height: metadata.height,
+      goal: metadata.goal,
+      experienceAmount: metadata.experienceAmount,
+      currencyAmount: metadata.currencyAmount,
+      premiumExpiresAt: metadata.premiumExpiresAt,
       createdAt: customer.createdAt,
     })
   }
@@ -81,22 +85,24 @@ export class InMemoryCustomersRepository implements CustomersRepository {
       item.customerId.equals(customer.id),
     )
 
+    if (!metadata) {
+      return null
+    }
+
     return CustomerWithMetadata.create({
       customerId: customer.id.toString(),
       name: customer.name,
       email: customer.email,
       passwordHash: customer.passwordHash,
-      metadata: metadata && {
-        metadataId: metadata.id.toString(),
-        phone: metadata.phone,
-        age: metadata.age,
-        weight: metadata.weight,
-        height: metadata.height,
-        goal: metadata.goal,
-        experienceAmount: metadata.experienceAmount,
-        currencyAmount: metadata.currencyAmount,
-        premiumExpiresAt: metadata.premiumExpiresAt,
-      },
+      metadataId: metadata.id.toString(),
+      phone: metadata.phone,
+      age: metadata.age,
+      weight: metadata.weight,
+      height: metadata.height,
+      goal: metadata.goal,
+      experienceAmount: metadata.experienceAmount,
+      currencyAmount: metadata.currencyAmount,
+      premiumExpiresAt: metadata.premiumExpiresAt,
       createdAt: customer.createdAt,
     })
   }
@@ -125,17 +131,15 @@ export class InMemoryCustomersRepository implements CustomersRepository {
       name: customer.name,
       email: customer.email,
       passwordHash: customer.passwordHash,
-      metadata: metadata && {
-        metadataId: metadata.id.toString(),
-        phone: metadata.phone,
-        age: metadata.age,
-        weight: metadata.weight,
-        height: metadata.height,
-        goal: metadata.goal,
-        experienceAmount: metadata.experienceAmount,
-        currencyAmount: metadata.currencyAmount,
-        premiumExpiresAt: metadata.premiumExpiresAt,
-      },
+      metadataId: metadata.id.toString(),
+      phone: metadata.phone,
+      age: metadata.age,
+      weight: metadata.weight,
+      height: metadata.height,
+      goal: metadata.goal,
+      experienceAmount: metadata.experienceAmount,
+      currencyAmount: metadata.currencyAmount,
+      premiumExpiresAt: metadata.premiumExpiresAt,
       createdAt: customer.createdAt,
     })
   }
@@ -144,57 +148,21 @@ export class InMemoryCustomersRepository implements CustomersRepository {
     this.items.push(customer)
   }
 
-  async update(customer: CustomerWithMetadata): Promise<void> {
-    const customerId = new UniqueEntityId(customer.customerId)
-
+  async update(customer: UpdateCustomerDTO): Promise<void> {
     const customerIndex = this.items.findIndex((item) =>
-      item.id.equals(customerId),
+      item.id.equals(new UniqueEntityId(customer.customerId)),
     )
 
-    this.items[customerIndex] = Customer.create(
-      {
-        name: customer.name,
-        email: customer.email,
-        passwordHash: customer.passwordHash,
-        createdAt: customer.createdAt,
-      },
-      customerId,
-    )
+    const updatedCustomer = this.items[customerIndex]
+    updatedCustomer.update(customer)
 
-    const metadataIndex = this.metadataRepository.items.findIndex((item) =>
-      item.customerId.equals(customerId),
-    )
+    const metadataIndex = this.metadataRepository.items.findIndex((item) => {
+      return item.customerId.equals(new UniqueEntityId(customer.customerId))
+    })
 
-    if (metadataIndex === -1 && customer.metadata) {
-      this.metadataRepository.items.push(
-        CustomerMetadata.create({
-          customerId,
-          phone: customer.metadata.phone,
-          age: customer.metadata.age,
-          weight: customer.metadata.weight,
-          height: customer.metadata.height,
-          goal: customer.metadata.goal,
-          experienceAmount: customer.experienceAmount,
-          currencyAmount: customer.currencyAmount,
-          premiumExpiresAt: customer.premiumExpiresAt,
-        }),
-      )
-
-      return
-    }
-
-    if (metadataIndex >= 0 && customer.metadata) {
-      this.metadataRepository.items[metadataIndex] = CustomerMetadata.create({
-        customerId,
-        phone: customer.metadata.phone,
-        age: customer.metadata.age,
-        weight: customer.metadata.weight,
-        height: customer.metadata.height,
-        goal: customer.metadata.goal,
-        experienceAmount: customer.experienceAmount,
-        currencyAmount: customer.currencyAmount,
-        premiumExpiresAt: customer.premiumExpiresAt,
-      })
+    if (metadataIndex >= 0) {
+      const updatedMetadata = this.metadataRepository.items[metadataIndex]
+      updatedMetadata.update(customer)
     }
   }
 }

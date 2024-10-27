@@ -1,4 +1,9 @@
-import { CustomersRepository } from '@/adapters/repositories/customers-repository'
+import { Goal } from '@prisma/client'
+
+import {
+  CustomersRepository,
+  UpdateCustomerDTO,
+} from '@/adapters/repositories/customers-repository'
 import { Customer } from '@/entities/customer'
 import { CustomerWithMetadata } from '@/entities/value-objects/customer-with-metadata'
 import { PrismaCustomerMapper } from '@/infra/database/prisma/mappers/prisma-customer-mapper'
@@ -30,9 +35,13 @@ export class PrismaCustomersRepository implements CustomersRepository {
       return null
     }
 
+    if (!customer.metadata) {
+      return null
+    }
+
     return PrismaCustomerWithMetadataMapper.toDomain({
       ...customer,
-      metadata: customer.metadata ?? undefined,
+      metadata: customer.metadata,
     })
   }
 
@@ -62,29 +71,13 @@ export class PrismaCustomersRepository implements CustomersRepository {
       return null
     }
 
-    return PrismaCustomerWithMetadataMapper.toDomain({
-      ...customer,
-      metadata: customer.metadata ?? undefined,
-    })
-  }
-
-  async findByPhone(phone: string): Promise<CustomerWithMetadata | null> {
-    const metadata = await prisma.customerMetadata.findUnique({
-      where: { phone },
-      include: {
-        user: true,
-      },
-    })
-
-    if (!metadata) {
+    if (!customer.metadata) {
       return null
     }
 
-    const { user, ...rest } = metadata
-
     return PrismaCustomerWithMetadataMapper.toDomain({
-      ...user,
-      metadata: rest,
+      ...customer,
+      metadata: customer.metadata,
     })
   }
 
@@ -96,24 +89,36 @@ export class PrismaCustomersRepository implements CustomersRepository {
     })
   }
 
-  async update(customer: CustomerWithMetadata): Promise<void> {
-    const { metadata, ...rest } =
-      PrismaCustomerWithMetadataMapper.toPrisma(customer)
+  async update(customer: UpdateCustomerDTO): Promise<void> {
+    const { name, email, passwordHash, ...metadata } = customer
 
     await prisma.user.update({
       data: {
-        ...rest,
-        metadata: metadata && {
-          connectOrCreate: {
+        name,
+        email,
+        passwordHash,
+        metadata: {
+          update: {
             where: {
-              id: metadata.id,
+              userId: customer.customerId,
             },
-            create: metadata,
+            data: {
+              age: metadata.age,
+              weight: metadata.weight,
+              height: metadata.height,
+              goal: metadata.goal
+                ? (Goal[metadata.goal as keyof typeof Goal] as Goal)
+                : undefined,
+              phone: metadata.phone,
+              currencyAmount: metadata.currencyAmount,
+              experienceAmount: metadata.experienceAmount,
+              premiumExpiresAt: metadata.premiumExpiresAt,
+            },
           },
         },
       },
       where: {
-        id: rest.id,
+        id: customer.customerId,
       },
     })
   }
