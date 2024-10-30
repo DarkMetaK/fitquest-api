@@ -7,3 +7,9 @@ declare module '@fastify/jwt' {
     }
   }
 }
+
+declare module 'fastify' {
+  export interface FastifyRequest {
+    getCurrentUserId(): Promise<string>
+  }
+}

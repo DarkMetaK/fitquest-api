@@ -1,7 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-import { EmailAlreadyTakenError } from '@/core/errors/email-already-taken-error'
 import { makeCreateCustomerUseCase } from '@/infra/database/prisma/factories/make-create-customer-use-case'
 
 const createCustomerBodySchema = z.object({
@@ -20,21 +19,13 @@ export async function createCustomerController(
 ) {
   const { name, email, password } = createCustomerBodySchema.parse(request.body)
 
-  try {
-    const useCase = makeCreateCustomerUseCase.create()
+  const useCase = makeCreateCustomerUseCase.create()
 
-    await useCase.execute({
-      name,
-      email,
-      password,
-    })
+  await useCase.execute({
+    name,
+    email,
+    password,
+  })
 
-    return reply.status(201).send()
-  } catch (error) {
-    if (error instanceof EmailAlreadyTakenError) {
-      return reply.status(409).send({ message: error.message })
-    }
-
-    throw error
-  }
+  return reply.status(201).send()
 }

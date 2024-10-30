@@ -8,7 +8,7 @@ export async function getActiveChallengesController(
   request: FastifyRequest,
   reply: FastifyReply,
 ) {
-  await request.jwtVerify()
+  await request.getCurrentUserId()
 
   const useCase = makeFetchActiveChallengesUseCase.create()
 

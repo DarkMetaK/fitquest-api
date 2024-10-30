@@ -1,7 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-import { PhoneAlreadyTakenError } from '@/core/errors/phone-already-taken-error'
 import { makeVerifyPhoneAvailabilityUseCase } from '@/infra/database/prisma/factories/make-verify-phone-availability-use-case'
 
 const authenticateWithPasswordBodySchema = z.object({
@@ -16,19 +15,11 @@ export async function verifyPhoneAvailabilityController(
 ) {
   const { phone } = authenticateWithPasswordBodySchema.parse(request.body)
 
-  try {
-    const useCase = makeVerifyPhoneAvailabilityUseCase.create()
+  const useCase = makeVerifyPhoneAvailabilityUseCase.create()
 
-    await useCase.execute({
-      phone,
-    })
+  await useCase.execute({
+    phone,
+  })
 
-    return reply.status(200).send()
-  } catch (error) {
-    if (error instanceof PhoneAlreadyTakenError) {
-      return reply.status(409).send({ message: error.message })
-    }
-
-    throw error
-  }
+  return reply.status(200).send()
 }

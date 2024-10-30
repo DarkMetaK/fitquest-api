@@ -1,8 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-import { CustomerAlreadyHasMetadataError } from '@/core/errors/customer-already-has-metadata-error'
-import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { makeCreateCustomerMetadataUseCase } from '@/infra/database/prisma/factories/make-create-customer-metadata-use-case'
 
 const registerCustomerMetadataBodySchema = z.object({
@@ -31,35 +29,22 @@ export async function registerCustomerMetadataController(
   request: FastifyRequest,
   reply: FastifyReply,
 ) {
-  await request.jwtVerify()
-  const userId = request.user.sub
+  const userId = await request.getCurrentUserId()
 
   const { age, goal, height, phone, weight, weeklyStreakGoal } =
     registerCustomerMetadataBodySchema.parse(request.body)
 
-  try {
-    const useCase = makeCreateCustomerMetadataUseCase.create()
+  const useCase = makeCreateCustomerMetadataUseCase.create()
 
-    await useCase.execute({
-      customerId: userId,
-      phone,
-      age,
-      height,
-      weight,
-      goal,
-      weeklyStreakGoal,
-    })
+  await useCase.execute({
+    customerId: userId,
+    phone,
+    age,
+    height,
+    weight,
+    goal,
+    weeklyStreakGoal,
+  })
 
-    return reply.status(201).send()
-  } catch (error) {
-    if (error instanceof ResourceNotFoundError) {
-      return reply.status(404).send({ message: error.message })
-    }
-
-    if (error instanceof CustomerAlreadyHasMetadataError) {
-      return reply.status(400).send({ message: error.message })
-    }
-
-    throw error
-  }
+  return reply.status(201).send()
 }
