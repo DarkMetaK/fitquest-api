@@ -27,6 +27,7 @@ describe('Authenticate with password (E2E)', () => {
     expect(response.statusCode).toBe(200)
     expect(response.body).toEqual({
       access_token: expect.any(String),
+      hasFinishedRegistration: false,
     })
   })
 })

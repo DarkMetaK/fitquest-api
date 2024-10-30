@@ -23,6 +23,7 @@ export class PrismaCustomerWithMetadataMapper {
       weight: raw.metadata.weight,
       height: raw.metadata.height,
       goal: raw.metadata.goal,
+      weeklyStreakGoal: raw.metadata.weeklyStreakGoal,
       experienceAmount: raw.metadata.experienceAmount,
       currencyAmount: raw.metadata.currencyAmount,
       premiumExpiresAt: raw.metadata.premiumExpiresAt,
@@ -34,7 +35,7 @@ export class PrismaCustomerWithMetadataMapper {
 
   static toPrisma(customer: CustomerWithMetadata): PrismaCustomerWithMetadata {
     return {
-      id: customer.customerId,
+      id: customer.customerId, // Verify if id from metadata is the same from user!!
       name: customer.name,
       email: customer.email,
       passwordHash: customer.passwordHash ?? null,
@@ -46,6 +47,7 @@ export class PrismaCustomerWithMetadataMapper {
         weight: customer.weight,
         height: customer.height,
         goal: Goal[customer.goal as keyof typeof Goal],
+        weeklyStreakGoal: customer.weeklyStreakGoal,
         experienceAmount: customer.experienceAmount,
         currencyAmount: customer.currencyAmount,
         premiumExpiresAt: customer.premiumExpiresAt ?? null,

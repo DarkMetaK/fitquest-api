@@ -22,6 +22,7 @@ enum TokenType {
   PASSWORD_RECOVER
 }
 
+// CORE, LEGS, TRICEPS
 enum BodyRegion {
   HEAD
   NECK

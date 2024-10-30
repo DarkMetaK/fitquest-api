@@ -17,8 +17,10 @@ export class PrismaCustomerMetadataMapper {
         weight: raw.weight,
         height: raw.height,
         goal: raw.goal,
+        weeklyStreakGoal: raw.weeklyStreakGoal,
         currencyAmount: raw.currencyAmount,
         experienceAmount: raw.experienceAmount,
+        premiumExpiresAt: raw.premiumExpiresAt,
       },
       new UniqueEntityId(raw.id),
     )
@@ -37,6 +39,7 @@ export class PrismaCustomerMetadataMapper {
       height: customerMetadata.height,
       weight: customerMetadata.weight,
       goal: Goal[customerMetadata.goal as keyof typeof Goal],
+      weeklyStreakGoal: customerMetadata.weeklyStreakGoal,
       currencyAmount: customerMetadata.currencyAmount,
       experienceAmount: customerMetadata.experienceAmount,
       premiumExpiresAt: customerMetadata.premiumExpiresAt,
