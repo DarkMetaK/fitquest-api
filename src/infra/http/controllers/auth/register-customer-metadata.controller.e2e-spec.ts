@@ -23,7 +23,6 @@ describe('Register customer metadata (E2E)', () => {
     const user = await makePrismaCustomer()
     const accessToken = await jwt.encrypt({
       sub: user.id.toString(),
-      hasFinishedRegistration: false,
     })
 
     const response = await request(app.server)
@@ -35,6 +34,7 @@ describe('Register customer metadata (E2E)', () => {
         weight: 70,
         height: 175,
         goal: 'LOSE_WEIGHT',
+        weeklyStreakGoal: 3,
       })
 
     expect(response.statusCode).toEqual(201)

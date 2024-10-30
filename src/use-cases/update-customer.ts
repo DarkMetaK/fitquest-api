@@ -11,6 +11,7 @@ interface UpdateCustomerUseCaseRequest {
   weight?: number
   height?: number
   goal?: string
+  weeklyStreakGoal?: number
 }
 
 export class UpdateCustomerUseCase {
@@ -28,6 +29,7 @@ export class UpdateCustomerUseCase {
     weight,
     height,
     goal,
+    weeklyStreakGoal,
   }: UpdateCustomerUseCaseRequest): Promise<void> {
     const customer = await this.customersRepository.findById(customerId)
 
@@ -48,6 +50,7 @@ export class UpdateCustomerUseCase {
       weight,
       height,
       goal,
+      weeklyStreakGoal,
     })
   }
 }

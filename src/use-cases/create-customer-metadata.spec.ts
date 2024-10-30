@@ -36,6 +36,7 @@ describe('Use Case: Create Customer Metadata', () => {
       weight: 80,
       height: 180,
       goal: 'LOSE_WEIGHT',
+      weeklyStreakGoal: 3,
     })
 
     expect(customerMetadata.id.toString).toBeTruthy()
@@ -59,6 +60,7 @@ describe('Use Case: Create Customer Metadata', () => {
       weight: 80,
       height: 180,
       goal: 'LOSE_WEIGHT',
+      weeklyStreakGoal: 3,
     })
 
     await expect(() =>
@@ -69,6 +71,7 @@ describe('Use Case: Create Customer Metadata', () => {
         weight: 80,
         height: 180,
         goal: 'LOSE_WEIGHT',
+        weeklyStreakGoal: 3,
       }),
     ).rejects.toBeInstanceOf(CustomerAlreadyHasMetadataError)
   })

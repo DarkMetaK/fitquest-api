@@ -25,7 +25,6 @@ describe('Get current customer (E2E)', () => {
     })
     const accessToken = await jwt.encrypt({
       sub: user.id.toString(),
-      hasFinishedRegistration: false,
     })
 
     const response = await request(app.server)

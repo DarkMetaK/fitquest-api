@@ -12,6 +12,7 @@ interface CreateCustomerMetadataUseCaseRequest {
   weight: number
   height: number
   goal: string
+  weeklyStreakGoal: number
   currencyAmount?: number
   experienceAmount?: number
 }
@@ -33,6 +34,7 @@ export class CreateCustomerMetadataUseCase {
     weight,
     height,
     goal,
+    weeklyStreakGoal,
     currencyAmount = 0,
     experienceAmount = 0,
   }: CreateCustomerMetadataUseCaseRequest): Promise<CreateCustomerMetadataUseCaseResponse> {
@@ -56,6 +58,7 @@ export class CreateCustomerMetadataUseCase {
       weight,
       height,
       goal,
+      weeklyStreakGoal,
       currencyAmount, // In case user has some special voucher it won't be 0
       experienceAmount,
     })

@@ -13,6 +13,7 @@ interface AuthenticateWithPasswordUseCaseRequest {
 
 interface AuthenticateWithPasswordUseCaseResponse {
   accessToken: string
+  hasFinishedRegistration: boolean
 }
 
 export class AuthenticateWithPasswordUseCase {
@@ -53,10 +54,9 @@ export class AuthenticateWithPasswordUseCase {
     )
 
     const accessToken = await this.encrypter.encrypt({
-      sub: customerWithEmail.id,
-      hasFinishedRegistration: !!metadata,
+      sub: customerWithEmail.id.toString(),
     })
 
-    return { accessToken }
+    return { accessToken, hasFinishedRegistration: !!metadata }
   }
 }

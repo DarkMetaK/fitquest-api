@@ -21,6 +21,10 @@ const registerCustomerMetadataBodySchema = z.object({
     ],
     { message: 'Invalid goal.' },
   ),
+  weeklyStreakGoal: z
+    .number({ message: 'Weekly streak goal is required.' })
+    .min(1, { message: 'Weekly streak goal must be greater than 0.' })
+    .max(7, { message: 'Weekly streak goal must be less than 8.' }),
 })
 
 export async function registerCustomerMetadataController(
@@ -30,7 +34,7 @@ export async function registerCustomerMetadataController(
   await request.jwtVerify()
   const userId = request.user.sub
 
-  const { age, goal, height, phone, weight } =
+  const { age, goal, height, phone, weight, weeklyStreakGoal } =
     registerCustomerMetadataBodySchema.parse(request.body)
 
   try {
@@ -43,6 +47,7 @@ export async function registerCustomerMetadataController(
       height,
       weight,
       goal,
+      weeklyStreakGoal,
     })
 
     return reply.status(201).send()

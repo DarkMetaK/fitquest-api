@@ -24,6 +24,7 @@ export function makeCustomerMetadata(
         'ENHANCE_HEALTH',
         'INCREASE_FLEXIBILITY',
       ]),
+      weeklyStreakGoal: faker.number.int({ min: 1, max: 7 }),
       phone: faker.phone.number(),
       ...override,
     },

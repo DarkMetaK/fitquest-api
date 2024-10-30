@@ -8,6 +8,7 @@ export interface CustomerMetadataProps {
   weight: number
   height: number
   goal: string
+  weeklyStreakGoal: number
   experienceAmount: number
   currencyAmount: number
   premiumExpiresAt?: Date | null
@@ -44,6 +45,10 @@ export class CustomerMetadata extends Entity<CustomerMetadataProps> {
     return this.props.goal
   }
 
+  get weeklyStreakGoal() {
+    return this.props.weeklyStreakGoal
+  }
+
   get experienceAmount() {
     return this.props.experienceAmount
   }
@@ -75,6 +80,10 @@ export class CustomerMetadata extends Entity<CustomerMetadataProps> {
 
     if (props.goal) {
       this.props.goal = props.goal
+    }
+
+    if (props.weeklyStreakGoal) {
+      this.props.weeklyStreakGoal = props.weeklyStreakGoal
     }
 
     if (props.experienceAmount) {

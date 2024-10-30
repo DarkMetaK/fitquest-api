@@ -11,6 +11,7 @@ export interface CustomerWithMetadataProps {
   weight: number
   height: number
   goal: string
+  weeklyStreakGoal: number
   experienceAmount: number
   currencyAmount: number
   premiumExpiresAt?: Date | null
@@ -72,6 +73,10 @@ export class CustomerWithMetadata extends ValueObject<CustomerWithMetadataProps>
 
   get goal() {
     return this.props.goal
+  }
+
+  get weeklyStreakGoal() {
+    return this.props.weeklyStreakGoal
   }
 
   get experienceAmount() {

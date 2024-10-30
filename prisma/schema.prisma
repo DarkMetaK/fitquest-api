@@ -63,6 +63,7 @@ model CustomerMetadata {
   weight           Int
   height           Int
   goal             Goal
+  weeklyStreakGoal Int       @default(0) @map("weekly_streak_goal")
   experienceAmount Int       @default(0) @map("experience_amount")
   currencyAmount   Int       @default(0) @map("currency_amount")
   premiumExpiresAt DateTime? @map("premium_expires_at")

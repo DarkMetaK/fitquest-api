@@ -23,13 +23,14 @@ export async function authenticateWithPasswordController(
   try {
     const useCase = makeAuthenticateWithPasswordUseCase.create()
 
-    const { accessToken } = await useCase.execute({
+    const { accessToken, hasFinishedRegistration } = await useCase.execute({
       email,
       password,
     })
 
     return reply.status(200).send({
       access_token: accessToken,
+      hasFinishedRegistration,
     })
   } catch (error) {
     if (error instanceof InvalidCredentialsError) {
