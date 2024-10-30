@@ -11,6 +11,7 @@ interface GetWorkoutUseCaseResponse {
   workout: WorkoutDetails
 }
 
+// TODO: Block when user dont has required bundle
 export class GetWorkoutUseCase {
   constructor(private workoutsRepository: WorkoutsRepository) {}
 
