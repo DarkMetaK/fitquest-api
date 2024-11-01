@@ -1,7 +1,5 @@
 import { makeBundle } from 'test/factories/make-bundle'
 import { InMemoryBundlesRepository } from 'test/in-memory/in-memory-bundles-repository'
-import { InMemoryExercisesRepository } from 'test/in-memory/in-memory-exercises-repository'
-import { InMemoryWorkoutsRepository } from 'test/in-memory/in-memory-workouts-repository'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 
@@ -9,15 +7,11 @@ import { ResourceNotFoundError } from '../core/errors/resource-not-found-error'
 import { GetBundleUseCase } from './get-bundle'
 
 let sut: GetBundleUseCase
-let exercisesRepository: InMemoryExercisesRepository
-let workoutsRepository: InMemoryWorkoutsRepository
 let bundlesRepository: InMemoryBundlesRepository
 
 describe('Use Case: Get Bundle', () => {
   beforeEach(async () => {
-    exercisesRepository = new InMemoryExercisesRepository()
-    workoutsRepository = new InMemoryWorkoutsRepository(exercisesRepository)
-    bundlesRepository = new InMemoryBundlesRepository(workoutsRepository)
+    bundlesRepository = new InMemoryBundlesRepository()
     sut = new GetBundleUseCase(bundlesRepository)
   })
 

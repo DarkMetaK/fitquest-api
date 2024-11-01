@@ -64,11 +64,13 @@ export class InMemoryWorkoutsRepository implements WorkoutsRepository {
     )
 
     return WorkoutDetails.create({
+      workoutId: workout.id,
       name: workout.name,
       availableExperience: workout.availableExperience,
       availableCurrency: workout.availableCurrency,
       bannerUrl: workout.bannerUrl,
       type: workout.type,
+      bundleId: workout.bundleId,
       steps,
       expiresAt: workout.expiresAt,
       updatedAt: workout.updatedAt,

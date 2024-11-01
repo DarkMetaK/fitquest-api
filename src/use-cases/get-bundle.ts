@@ -1,5 +1,5 @@
 import { BundlesRepository } from '@/adapters/repositories/bundles-repository'
-import { BundleWithWorkouts } from '@/entities/value-objects/bundle-with-workouts'
+import { Bundle } from '@/entities/bundle'
 
 import { ResourceNotFoundError } from '../core/errors/resource-not-found-error'
 
@@ -8,7 +8,7 @@ interface GetBundleUseCaseRequest {
 }
 
 interface GetBundleUseCaseResponse {
-  bundle: BundleWithWorkouts
+  bundle: Bundle
 }
 
 export class GetBundleUseCase {
@@ -17,7 +17,7 @@ export class GetBundleUseCase {
   async execute({
     id,
   }: GetBundleUseCaseRequest): Promise<GetBundleUseCaseResponse> {
-    const bundle = await this.bundlesRepository.findByIdWithWorkouts(id)
+    const bundle = await this.bundlesRepository.findById(id)
 
     if (!bundle) {
       throw new ResourceNotFoundError(id)

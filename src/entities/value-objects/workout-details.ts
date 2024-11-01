@@ -19,11 +19,13 @@ interface StepWithExercise {
 }
 
 export interface WorkoutDetailsProps {
+  workoutId: UniqueEntityId
   name: string
   availableExperience: number
   availableCurrency: number
   bannerUrl: string
   type: string
+  bundleId?: UniqueEntityId | null
   steps: StepWithExercise[]
   expiresAt?: Date | null
   updatedAt?: Date | null
@@ -33,6 +35,10 @@ export interface WorkoutDetailsProps {
 export class WorkoutDetails extends ValueObject<WorkoutDetailsProps> {
   static create(props: WorkoutDetailsProps) {
     return new WorkoutDetails(props)
+  }
+
+  get workoutId() {
+    return this.props.workoutId
   }
 
   get name() {
@@ -53,6 +59,10 @@ export class WorkoutDetails extends ValueObject<WorkoutDetailsProps> {
 
   get type() {
     return this.props.type
+  }
+
+  get bundleId() {
+    return this.props.bundleId
   }
 
   get steps() {
