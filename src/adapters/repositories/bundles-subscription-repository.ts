@@ -1,7 +1,9 @@
 import { BundleSubscription } from '@/entities/bundle-subscription'
 
 export interface BundlesSubscriptionRepository {
-  findAllByCustomerId(customerId: string): Promise<BundleSubscription[]>
+  findByActiveAndCustomerId(
+    customerId: string,
+  ): Promise<BundleSubscription | null>
 
   create(bundle: BundleSubscription): Promise<void>
 }

@@ -1,54 +1,51 @@
 import { BundlesRepository } from '@/adapters/repositories/bundles-repository'
 import { BundlesSubscriptionRepository } from '@/adapters/repositories/bundles-subscription-repository'
 import { CustomersRepository } from '@/adapters/repositories/customers-repository'
-import { ActiveSubscriptionError } from '@/core/errors/active-subscription-error'
-import { BundleSubscription } from '@/entities/bundle-subscription'
+import { Bundle } from '@/entities/bundle'
 
 import { ResourceNotFoundError } from '../core/errors/resource-not-found-error'
 
-interface SubscribeBundleUseCaseRequest {
+interface GetCustomerActiveBundleUseCaseRequest {
   customerId: string
-  bundleId: string
 }
 
-export class SubscribeBundleUseCase {
+interface GetCustomerActiveBundleUseCaseResponse {
+  activeBundle: Bundle | null
+}
+
+export class GetCustomerActiveBundleUseCase {
   constructor(
     private customersRepository: CustomersRepository,
-    private bundlesRepository: BundlesRepository,
     private bundlesSubscriptionRepository: BundlesSubscriptionRepository,
+    private bundlesRepository: BundlesRepository,
   ) {}
 
   async execute({
     customerId,
-    bundleId,
-  }: SubscribeBundleUseCaseRequest): Promise<void> {
+  }: GetCustomerActiveBundleUseCaseRequest): Promise<GetCustomerActiveBundleUseCaseResponse> {
     const customer = await this.customersRepository.findById(customerId)
 
     if (!customer) {
       throw new ResourceNotFoundError(customerId)
     }
 
-    const bundle = await this.bundlesRepository.findById(bundleId)
-
-    if (!bundle) {
-      throw new ResourceNotFoundError(bundleId)
-    }
-
-    const hasActiveSubscription =
+    const bundleSubscription =
       await this.bundlesSubscriptionRepository.findByActiveAndCustomerId(
         customerId,
       )
 
-    if (hasActiveSubscription) {
-      throw new ActiveSubscriptionError()
+    if (!bundleSubscription) {
+      return { activeBundle: null }
     }
 
-    const subscription = BundleSubscription.create({
-      customerId: customer.id,
-      bundleId: bundle.id,
-      isActive: true,
-    })
+    const bundle = await this.bundlesRepository.findById(
+      bundleSubscription.bundleId.toString(),
+    )
 
-    await this.bundlesSubscriptionRepository.create(subscription)
+    if (!bundle) {
+      throw new ResourceNotFoundError(bundleSubscription.bundleId.toString())
+    }
+
+    return { activeBundle: bundle }
   }
 }

@@ -7,12 +7,19 @@ export class InMemoryBundlesSubscriptionRepository
 {
   public items: BundleSubscription[] = []
 
-  async findAllByCustomerId(customerId: string): Promise<BundleSubscription[]> {
-    const bundles = this.items.filter((item) =>
-      item.customerId.equals(new UniqueEntityId(customerId)),
+  async findByActiveAndCustomerId(
+    customerId: string,
+  ): Promise<BundleSubscription | null> {
+    const subscription = this.items.find(
+      (item) =>
+        item.isActive && item.customerId.equals(new UniqueEntityId(customerId)),
     )
 
-    return bundles
+    if (!subscription) {
+      return null
+    }
+
+    return subscription
   }
 
   async create(bundle: BundleSubscription): Promise<void> {
