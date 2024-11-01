@@ -10,6 +10,7 @@ export interface WorkoutProps {
   availableCurrency: number
   bannerUrl: string
   type: string
+  bundleId?: UniqueEntityId | null
   steps: WorkoutStep[]
   expiresAt?: Date | null
   updatedAt?: Date | null
@@ -51,6 +52,10 @@ export class Workout extends Entity<WorkoutProps> {
 
   get type() {
     return this.props.type
+  }
+
+  get bundleId() {
+    return this.props.bundleId
   }
 
   get steps() {
