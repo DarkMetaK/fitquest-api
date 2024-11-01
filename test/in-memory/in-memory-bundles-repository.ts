@@ -17,6 +17,10 @@ export class InMemoryBundlesRepository implements BundlesRepository {
     return bundle
   }
 
+  async findAll(): Promise<Bundle[]> {
+    return this.items
+  }
+
   async create(bundle: Bundle): Promise<void> {
     this.items.push(bundle)
   }

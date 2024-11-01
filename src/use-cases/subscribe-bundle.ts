@@ -11,6 +11,7 @@ interface SubscribeBundleUseCaseRequest {
   bundleId: string
 }
 
+// TODO: Premium bundles should not be available for subscription
 export class SubscribeBundleUseCase {
   constructor(
     private customersRepository: CustomersRepository,
