@@ -69,6 +69,23 @@ export class WorkoutDetails extends ValueObject<WorkoutDetailsProps> {
     return this.props.steps
   }
 
+  get estimatedTime() {
+    return this.props.steps.reduce((acc, step) => {
+      if (step.duration) {
+        return acc + step.duration
+      }
+
+      return acc
+    }, 0)
+  }
+
+  get estimatedCalories() {
+    return this.props.steps.reduce(
+      (acc, step) => acc + step.estimatedCalories,
+      0,
+    )
+  }
+
   get expiresAt() {
     return this.props.expiresAt
   }

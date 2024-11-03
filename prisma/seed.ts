@@ -3,11 +3,13 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function seed() {
+  await prisma.user.deleteMany()
+  await prisma.workoutStep.deleteMany()
   await prisma.exercise.deleteMany()
+  await prisma.workout.deleteMany()
   await prisma.bundle.deleteMany()
   await prisma.finishedWorkout.deleteMany()
   await prisma.bundleSubscription.deleteMany()
-  await prisma.workoutStep.deleteMany()
 
   const uploadsUrl = 'http://localhost:3333/uploads'
 
@@ -16,8 +18,11 @@ async function seed() {
       name: 'Pushups',
       instructions: 'Pushups are a great exercise for your chest and triceps.',
       estimatedCalories: 100,
-      duration: 10,
+      duration: 100,
+      repetitions: 10,
       targetedRegions: ['CHEST', 'ARMS'],
+      previewUrl:
+        'https://images.squarespace-cdn.com/content/v1/58501b0cf5e23149e5589e12/1585601917653-J791ZN5ZWSK565NIZSS1/1_WZmDgcJO40Va5mVgdfbz7g%402x.jpeg?format=750w',
       demonstrationUrl: `${uploadsUrl}/abdutora.gif`,
       videoUrl: 'https://www.youtube.com/watch?v=lkvSelJ0tQ8',
     },
@@ -28,8 +33,11 @@ async function seed() {
       name: 'Squats',
       instructions: 'Squats are great for your legs and glutes.',
       estimatedCalories: 150,
-      duration: 15,
+      duration: 150,
+      repetitions: 15,
       targetedRegions: ['GLUTES'],
+      previewUrl:
+        'https://images.squarespace-cdn.com/content/v1/58501b0cf5e23149e5589e12/1585601917653-J791ZN5ZWSK565NIZSS1/1_WZmDgcJO40Va5mVgdfbz7g%402x.jpeg?format=750w',
       demonstrationUrl: `${uploadsUrl}/abdutora.gif`,
       videoUrl: 'https://www.youtube.com/watch?v=ultWZbUMPL8',
     },
@@ -40,8 +48,10 @@ async function seed() {
       name: 'Plank',
       instructions: 'Planks are great for your core.',
       estimatedCalories: 50,
-      duration: 5,
+      duration: 60,
       targetedRegions: ['CHEST', 'ARMS'],
+      previewUrl:
+        'https://images.squarespace-cdn.com/content/v1/58501b0cf5e23149e5589e12/1585601917653-J791ZN5ZWSK565NIZSS1/1_WZmDgcJO40Va5mVgdfbz7g%402x.jpeg?format=750w',
       demonstrationUrl: `${uploadsUrl}/abdutora.gif`,
       videoUrl: 'https://www.youtube.com/watch?v=pSHjTRCQxIw',
     },
@@ -52,8 +62,11 @@ async function seed() {
       name: 'Crunches',
       instructions: 'Crunches are great for your abs.',
       estimatedCalories: 70,
-      duration: 7,
+      duration: 70,
+      repetitions: 7,
       targetedRegions: ['ABS'],
+      previewUrl:
+        'https://images.squarespace-cdn.com/content/v1/58501b0cf5e23149e5589e12/1585601917653-J791ZN5ZWSK565NIZSS1/1_WZmDgcJO40Va5mVgdfbz7g%402x.jpeg?format=750w',
       demonstrationUrl: `${uploadsUrl}/abdutora.gif`,
       videoUrl: 'https://www.youtube.com/watch?v=MKmrqcoCZ-M',
     },
@@ -107,7 +120,7 @@ async function seed() {
       bannerUrl: `${uploadsUrl}/banner-desafio-1.jpg`,
       availableCurrency: 50,
       availableExperience: 50,
-      expiresAt: new Date(2024, 9, 31),
+      expiresAt: new Date(2024, 10, 30),
     },
   })
 
@@ -118,7 +131,7 @@ async function seed() {
       bannerUrl: `${uploadsUrl}/banner-desafio-2.jpg`,
       availableCurrency: 50,
       availableExperience: 50,
-      expiresAt: new Date(2024, 9, 31),
+      expiresAt: new Date(2024, 10, 30),
     },
   })
 

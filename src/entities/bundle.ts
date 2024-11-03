@@ -1,8 +1,8 @@
-import { Workout } from '@prisma/client'
-
 import { Entity } from '@/core/entities/entity'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { Optional } from '@/core/types/optional'
+
+import { Workout } from './workout'
 
 export interface BundleProps {
   name: string

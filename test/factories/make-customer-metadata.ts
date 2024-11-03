@@ -5,6 +5,8 @@ import {
   CustomerMetadata,
   CustomerMetadataProps,
 } from '@/entities/customer-metadata'
+import { PrismaCustomerMetadataMapper } from '@/infra/database/prisma/mappers/prisma-customer-metadata-mapper'
+import { prisma } from '@/infra/libs/prisma'
 
 export function makeCustomerMetadata(
   override: Partial<CustomerMetadataProps> = {},
@@ -32,4 +34,17 @@ export function makeCustomerMetadata(
   )
 
   return customer
+}
+
+export async function makePrismaCustomerMetadata(
+  data: Partial<CustomerMetadataProps> = {},
+  id?: UniqueEntityId,
+) {
+  const metadata = makeCustomerMetadata(data, id)
+
+  const prismaMetadata = await prisma.customerMetadata.create({
+    data: PrismaCustomerMetadataMapper.toPrisma(metadata),
+  })
+
+  return prismaMetadata
 }

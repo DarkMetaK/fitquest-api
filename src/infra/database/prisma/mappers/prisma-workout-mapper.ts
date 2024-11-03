@@ -10,7 +10,7 @@ import { Workout } from '@/entities/workout'
 
 import { PrismaWorkoutStepsMapper } from './prisma-workout-steps.mapper'
 
-type PrismaWorkoutWithSteps = PrismaWorkout & {
+export type PrismaWorkoutWithSteps = PrismaWorkout & {
   steps: WorkoutStep[]
 }
 
@@ -26,6 +26,7 @@ export class PrismaWorkoutMapper {
         createdAt: raw.createdAt,
         updatedAt: raw.updatedAt,
         expiresAt: raw.expiresAt,
+        bundleId: raw.bundleId ? new UniqueEntityId(raw.bundleId) : undefined,
         steps: raw.steps.map(PrismaWorkoutStepsMapper.toDomain),
       },
       new UniqueEntityId(raw.id),
@@ -45,6 +46,7 @@ export class PrismaWorkoutMapper {
       createdAt: workout.createdAt,
       updatedAt: workout.updatedAt,
       expiresAt: workout.expiresAt,
+      bundleId: workout.bundleId?.toString(),
       steps: {
         create: workout.steps.map(PrismaWorkoutStepsMapper.toPrisma),
       },

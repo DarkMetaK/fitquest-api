@@ -1,9 +1,11 @@
 import dayjs from 'dayjs'
 
+import { BundlesSubscriptionRepository } from '@/adapters/repositories/bundles-subscription-repository'
 import { CustomersRepository } from '@/adapters/repositories/customers-repository'
 import { FinishedWorkoutsRepository } from '@/adapters/repositories/finished-workouts-repository'
 import { WorkoutsRepository } from '@/adapters/repositories/workouts-repository'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
+import { CustomerNotSubscribedToBundleError } from '@/core/errors/customer-not-subscribed-to-bundle-error'
 import { FinishedWorkout } from '@/entities/finished-workout'
 import { CustomerWithMetadata } from '@/entities/value-objects/customer-with-metadata'
 import { Workout } from '@/entities/workout'
@@ -44,6 +46,7 @@ export class CompleteWorkoutUseCase {
     private customersRepository: CustomersRepository,
     private workoutsRepository: WorkoutsRepository,
     private finishedWorkoutsRepository: FinishedWorkoutsRepository,
+    private bundlesSubscriptionRepository: BundlesSubscriptionRepository,
   ) {}
 
   async execute({
@@ -134,6 +137,15 @@ export class CompleteWorkoutUseCase {
     workout,
     isFirstConclusion,
   }: HandleStandardProps) {
+    const isSubscribed =
+      await this.bundlesSubscriptionRepository.findByActiveAndCustomerId(
+        customer.customerId.toString(),
+      )
+
+    if (!isSubscribed || !workout.bundleId?.equals(isSubscribed.bundleId)) {
+      throw new CustomerNotSubscribedToBundleError()
+    }
+
     if (isFirstConclusion) {
       this.assignRewards({ customer, workout })
     }

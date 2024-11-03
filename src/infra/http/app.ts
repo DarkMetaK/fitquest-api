@@ -7,6 +7,7 @@ import fastify from 'fastify'
 
 import { env } from '../env'
 import { authRoutes } from './controllers/auth/routes'
+import { bundleRoutes } from './controllers/bundle/routes'
 import { customerRoutes } from './controllers/customer/routes'
 import { workoutRoutes } from './controllers/workout/routes'
 import { errorHandler } from './error-handler'
@@ -31,3 +32,4 @@ app.setErrorHandler(errorHandler)
 app.register(authRoutes)
 app.register(customerRoutes)
 app.register(workoutRoutes)
+app.register(bundleRoutes)

@@ -137,6 +137,7 @@ model Workout {
   @@map("workouts")
 }
 
+// Todo delete cascade
 model WorkoutStep {
   id    String @id @default(uuid())
   order Int

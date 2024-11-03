@@ -1,7 +1,9 @@
+import { makeBundleSubscription } from 'test/factories/make-bundle-subscription'
 import { makeCustomer } from 'test/factories/make-customer'
 import { makeCustomerMetadata } from 'test/factories/make-customer-metadata'
 import { makeFinishedWorkout } from 'test/factories/make-finished-workout'
 import { makeWorkout } from 'test/factories/make-workout'
+import { InMemoryBundlesSubscriptionRepository } from 'test/in-memory/in-memory-bundles-subscription-repository'
 import { InMemoryCustomersMetadataRepository } from 'test/in-memory/in-memory-customers-metadata-repository'
 import { InMemoryCustomersRepository } from 'test/in-memory/in-memory-customers-repository'
 import { InMemoryExercisesRepository } from 'test/in-memory/in-memory-exercises-repository'
@@ -9,6 +11,7 @@ import { InMemoryFinishedWorkoutsRepository } from 'test/in-memory/in-memory-fin
 import { InMemoryWorkoutsRepository } from 'test/in-memory/in-memory-workouts-repository'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
+import { CustomerNotSubscribedToBundleError } from '@/core/errors/customer-not-subscribed-to-bundle-error'
 
 import { UnavailableWorkoutError } from '../core/errors/unavailable-workout-error'
 import { CompleteWorkoutUseCase } from './complete-workout'
@@ -19,6 +22,7 @@ let customersRepository: InMemoryCustomersRepository
 let exercisesRepository: InMemoryExercisesRepository
 let workoutsRepository: InMemoryWorkoutsRepository
 let finishedWorkoutsRepository: InMemoryFinishedWorkoutsRepository
+let bundlesSubscriptionRepository: InMemoryBundlesSubscriptionRepository
 
 describe('Use Case: Complete Workout', () => {
   beforeEach(async () => {
@@ -29,11 +33,13 @@ describe('Use Case: Complete Workout', () => {
     exercisesRepository = new InMemoryExercisesRepository()
     workoutsRepository = new InMemoryWorkoutsRepository(exercisesRepository)
     finishedWorkoutsRepository = new InMemoryFinishedWorkoutsRepository()
+    bundlesSubscriptionRepository = new InMemoryBundlesSubscriptionRepository()
 
     sut = new CompleteWorkoutUseCase(
       customersRepository,
       workoutsRepository,
       finishedWorkoutsRepository,
+      bundlesSubscriptionRepository,
     )
 
     vi.useFakeTimers()
@@ -54,10 +60,18 @@ describe('Use Case: Complete Workout', () => {
       }),
     )
 
+    await bundlesSubscriptionRepository.create(
+      makeBundleSubscription({
+        bundleId: new UniqueEntityId('bundle-1'),
+        customerId: new UniqueEntityId('user-1'),
+      }),
+    )
+
     await workoutsRepository.create(
       makeWorkout(
         {
           type: 'STANDARD',
+          bundleId: new UniqueEntityId('bundle-1'),
         },
         new UniqueEntityId('workout-1'),
       ),
@@ -89,12 +103,20 @@ describe('Use Case: Complete Workout', () => {
       }),
     )
 
+    await bundlesSubscriptionRepository.create(
+      makeBundleSubscription({
+        bundleId: new UniqueEntityId('bundle-1'),
+        customerId: new UniqueEntityId('user-1'),
+      }),
+    )
+
     await workoutsRepository.create(
       makeWorkout(
         {
           type: 'STANDARD',
           availableCurrency: 1000,
           availableExperience: 1000,
+          bundleId: new UniqueEntityId('bundle-1'),
         },
         new UniqueEntityId('workout-1'),
       ),
@@ -114,7 +136,7 @@ describe('Use Case: Complete Workout', () => {
     )
   })
 
-  it('should not reward user for subsequent completions of a level workout', async () => {
+  it('should not allow user to complete a workout if they are not subscribed to the required bundle.', async () => {
     await customersRepository.create(
       makeCustomer({}, new UniqueEntityId('user-1')),
     )
@@ -133,6 +155,47 @@ describe('Use Case: Complete Workout', () => {
           type: 'STANDARD',
           availableCurrency: 1000,
           availableExperience: 1000,
+          bundleId: new UniqueEntityId('bundle-1'),
+        },
+        new UniqueEntityId('workout-1'),
+      ),
+    )
+
+    await expect(() =>
+      sut.execute({
+        customerId: 'user-1',
+        workoutId: 'workout-1',
+      }),
+    ).rejects.toBeInstanceOf(CustomerNotSubscribedToBundleError)
+  })
+
+  it('should not reward user for subsequent completions of a level workout', async () => {
+    await customersRepository.create(
+      makeCustomer({}, new UniqueEntityId('user-1')),
+    )
+
+    await customersMetadataRepository.create(
+      makeCustomerMetadata({
+        customerId: new UniqueEntityId('user-1'),
+        currencyAmount: 0,
+        experienceAmount: 0,
+      }),
+    )
+
+    await bundlesSubscriptionRepository.create(
+      makeBundleSubscription({
+        bundleId: new UniqueEntityId('bundle-1'),
+        customerId: new UniqueEntityId('user-1'),
+      }),
+    )
+
+    await workoutsRepository.create(
+      makeWorkout(
+        {
+          type: 'STANDARD',
+          availableCurrency: 1000,
+          availableExperience: 1000,
+          bundleId: new UniqueEntityId('bundle-1'),
         },
         new UniqueEntityId('workout-1'),
       ),

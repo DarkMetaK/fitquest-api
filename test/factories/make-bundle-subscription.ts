@@ -5,6 +5,8 @@ import {
   BundleSubscription,
   BundleSubscriptionProps,
 } from '@/entities/bundle-subscription'
+import { PrismaBundleSubscriptionMapper } from '@/infra/database/prisma/mappers/prisma-bundle-subscription-mapper'
+import { prisma } from '@/infra/libs/prisma'
 
 export function makeBundleSubscription(
   override: Partial<BundleSubscriptionProps> = {},
@@ -21,4 +23,17 @@ export function makeBundleSubscription(
   )
 
   return subscription
+}
+
+export async function makePrismaBundleSubscription(
+  data: Partial<BundleSubscriptionProps> = {},
+  id?: UniqueEntityId,
+) {
+  const subscription = makeBundleSubscription(data, id)
+
+  const prismaBundleSubscription = await prisma.bundleSubscription.create({
+    data: PrismaBundleSubscriptionMapper.toPrisma(subscription),
+  })
+
+  return prismaBundleSubscription
 }
