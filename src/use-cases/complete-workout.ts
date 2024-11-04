@@ -12,7 +12,6 @@ import { Workout } from '@/entities/workout'
 
 import { ResourceNotFoundError } from '../core/errors/resource-not-found-error'
 import { UnavailableWorkoutError } from '../core/errors/unavailable-workout-error'
-import { ProvideActivityUseCase } from './provide-activity'
 
 interface CompleteWorkoutUseCaseRequest {
   customerId: string
@@ -48,7 +47,6 @@ export class CompleteWorkoutUseCase {
     private workoutsRepository: WorkoutsRepository,
     private finishedWorkoutsRepository: FinishedWorkoutsRepository,
     private bundlesSubscriptionRepository: BundlesSubscriptionRepository,
-    private provideActivityUseCase: ProvideActivityUseCase,
   ) {}
 
   async execute({
@@ -156,11 +154,5 @@ export class CompleteWorkoutUseCase {
   private async assignRewards({ customer, workout }: HandleAssignRewardsProps) {
     customer.currencyAmount += workout.availableCurrency
     customer.experienceAmount += workout.availableExperience
-
-    // TODO: Change this to PUB/SUB pattern
-    await this.provideActivityUseCase.execute({
-      customerId: customer.customerId.toString(),
-      activityType: 'STREAK',
-    })
   }
 }

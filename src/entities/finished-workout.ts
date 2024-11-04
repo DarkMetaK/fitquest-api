@@ -1,6 +1,7 @@
-import { Entity } from '@/core/entities/entity'
+import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { Optional } from '@/core/types/optional'
+import { WorkoutCompletedEvent } from '@/events/publishers/workout-completed-event'
 
 export interface FinishedWorkoutProps {
   userId: UniqueEntityId
@@ -10,12 +11,12 @@ export interface FinishedWorkoutProps {
   finishedAt: Date
 }
 
-export class FinishedWorkout extends Entity<FinishedWorkoutProps> {
+export class FinishedWorkout extends AggregateRoot<FinishedWorkoutProps> {
   static create(
     props: Optional<FinishedWorkoutProps, 'finishedAt'>,
     id?: UniqueEntityId,
   ) {
-    const step = new FinishedWorkout(
+    const finishedWorkout = new FinishedWorkout(
       {
         ...props,
         finishedAt: props.finishedAt ?? new Date(),
@@ -23,7 +24,13 @@ export class FinishedWorkout extends Entity<FinishedWorkoutProps> {
       id,
     )
 
-    return step
+    const isNewRegister = !id
+
+    if (isNewRegister) {
+      finishedWorkout.addDomainEvent(new WorkoutCompletedEvent(finishedWorkout))
+    }
+
+    return finishedWorkout
   }
 
   get userId() {

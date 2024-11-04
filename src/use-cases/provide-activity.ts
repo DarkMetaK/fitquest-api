@@ -7,7 +7,7 @@ import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { CustomerActivity } from '@/entities/customer-activity'
 import { Streak } from '@/entities/streak'
 
-interface ProvideActivityUseCaseRequest {
+export interface ProvideActivityUseCaseRequest {
   customerId: string
   activityType: 'STREAK' | 'REST' | 'INACTIVE'
 }

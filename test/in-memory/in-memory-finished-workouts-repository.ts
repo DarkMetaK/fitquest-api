@@ -1,4 +1,5 @@
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
+import { DomainEvents } from '@/core/events/domain-events'
 import { FinishedWorkout } from '@/entities/finished-workout'
 
 import { FinishedWorkoutsRepository } from '../../src/adapters/repositories/finished-workouts-repository'
@@ -23,5 +24,7 @@ export class InMemoryFinishedWorkoutsRepository
 
   async create(finishedWorkout: FinishedWorkout): Promise<void> {
     this.items.push(finishedWorkout)
+
+    DomainEvents.dispatchEventsForAggregate(finishedWorkout.id)
   }
 }

@@ -4,7 +4,6 @@ import { makeCustomerMetadata } from 'test/factories/make-customer-metadata'
 import { makeFinishedWorkout } from 'test/factories/make-finished-workout'
 import { makeWorkout } from 'test/factories/make-workout'
 import { InMemoryBundlesSubscriptionRepository } from 'test/in-memory/in-memory-bundles-subscription-repository'
-import { InMemoryCustomerActivitiesRepository } from 'test/in-memory/in-memory-customer-activities-repository'
 import { InMemoryCustomersMetadataRepository } from 'test/in-memory/in-memory-customers-metadata-repository'
 import { InMemoryCustomersRepository } from 'test/in-memory/in-memory-customers-repository'
 import { InMemoryExercisesRepository } from 'test/in-memory/in-memory-exercises-repository'
@@ -17,7 +16,6 @@ import { CustomerNotSubscribedToBundleError } from '@/core/errors/customer-not-s
 
 import { UnavailableWorkoutError } from '../core/errors/unavailable-workout-error'
 import { CompleteWorkoutUseCase } from './complete-workout'
-import { ProvideActivityUseCase } from './provide-activity'
 
 let sut: CompleteWorkoutUseCase
 let streaksRepository: InMemoryStreaksRepository
@@ -27,9 +25,6 @@ let exercisesRepository: InMemoryExercisesRepository
 let workoutsRepository: InMemoryWorkoutsRepository
 let finishedWorkoutsRepository: InMemoryFinishedWorkoutsRepository
 let bundlesSubscriptionRepository: InMemoryBundlesSubscriptionRepository
-
-let customerActivitiesRepository: InMemoryCustomerActivitiesRepository
-let provideActivityUseCase: ProvideActivityUseCase
 
 describe('Use Case: Complete Workout', () => {
   beforeEach(async () => {
@@ -44,19 +39,11 @@ describe('Use Case: Complete Workout', () => {
     finishedWorkoutsRepository = new InMemoryFinishedWorkoutsRepository()
     bundlesSubscriptionRepository = new InMemoryBundlesSubscriptionRepository()
 
-    customerActivitiesRepository = new InMemoryCustomerActivitiesRepository()
-    provideActivityUseCase = new ProvideActivityUseCase(
-      customersMetadataRepository,
-      customerActivitiesRepository,
-      streaksRepository,
-    )
-
     sut = new CompleteWorkoutUseCase(
       customersRepository,
       workoutsRepository,
       finishedWorkoutsRepository,
       bundlesSubscriptionRepository,
-      provideActivityUseCase,
     )
 
     vi.useFakeTimers()
@@ -325,53 +312,6 @@ describe('Use Case: Complete Workout', () => {
         customerId: new UniqueEntityId('user-1'),
         currencyAmount: 2000,
         experienceAmount: 2000,
-      }),
-    )
-  })
-
-  it('should increase user streak if they complete the first workout of the day', async () => {
-    vi.setSystemTime(new Date(2024, 10, 3, 0, 0, 0))
-
-    await customersRepository.create(
-      makeCustomer({}, new UniqueEntityId('user-1')),
-    )
-
-    await customersMetadataRepository.create(
-      makeCustomerMetadata({
-        customerId: new UniqueEntityId('user-1'),
-        weeklyStreakGoal: 3,
-      }),
-    )
-
-    await bundlesSubscriptionRepository.create(
-      makeBundleSubscription({
-        bundleId: new UniqueEntityId('bundle-1'),
-        customerId: new UniqueEntityId('user-1'),
-      }),
-    )
-
-    await workoutsRepository.create(
-      makeWorkout(
-        {
-          type: 'STANDARD',
-          bundleId: new UniqueEntityId('bundle-1'),
-        },
-        new UniqueEntityId('workout-1'),
-      ),
-    )
-
-    await sut.execute({
-      customerId: 'user-1',
-      workoutId: 'workout-1',
-    })
-
-    console.log(streaksRepository.items)
-
-    expect(streaksRepository.items[0]).toEqual(
-      expect.objectContaining({
-        customerId: new UniqueEntityId('user-1'),
-        currentStreak: 1,
-        maximumStreak: 1,
       }),
     )
   })
