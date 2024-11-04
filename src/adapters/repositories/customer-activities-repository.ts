@@ -6,5 +6,11 @@ export interface CustomerActivitiesRepository {
     date: Date,
   ): Promise<CustomerActivity | null>
 
+  findManyByCustomerIdAndDatePeriod(
+    customerId: string,
+    from: Date,
+    until: Date,
+  ): Promise<CustomerActivity[]>
+
   create(customerActivity: CustomerActivity): Promise<void>
 }

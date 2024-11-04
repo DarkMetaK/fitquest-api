@@ -1,6 +1,11 @@
+import dayjs from 'dayjs'
+import isBetween from 'dayjs/plugin/isBetween'
+
 import { CustomerActivitiesRepository } from '@/adapters/repositories/customer-activities-repository'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { CustomerActivity } from '@/entities/customer-activity'
+
+dayjs.extend(isBetween)
 
 export class InMemoryCustomerActivitiesRepository
   implements CustomerActivitiesRepository
@@ -22,6 +27,20 @@ export class InMemoryCustomerActivitiesRepository
     }
 
     return activity
+  }
+
+  async findManyByCustomerIdAndDatePeriod(
+    customerId: string,
+    from: Date,
+    until: Date,
+  ): Promise<CustomerActivity[]> {
+    const activities = this.items.filter(
+      (activity) =>
+        activity.customerId.equals(new UniqueEntityId(customerId)) &&
+        dayjs(activity.date).isBetween(from, until, undefined, '[]'),
+    )
+
+    return activities
   }
 
   async create(customerActivity: CustomerActivity): Promise<void> {
