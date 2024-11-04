@@ -7,11 +7,12 @@ import { WorkoutsRepository } from '@/adapters/repositories/workouts-repository'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { CustomerNotSubscribedToBundleError } from '@/core/errors/customer-not-subscribed-to-bundle-error'
 import { FinishedWorkout } from '@/entities/finished-workout'
-import { CustomerWithMetadata } from '@/entities/value-objects/customer-with-metadata'
+import { CustomerDetails } from '@/entities/value-objects/customer-details'
 import { Workout } from '@/entities/workout'
 
 import { ResourceNotFoundError } from '../core/errors/resource-not-found-error'
 import { UnavailableWorkoutError } from '../core/errors/unavailable-workout-error'
+import { ProvideActivityUseCase } from './provide-activity'
 
 interface CompleteWorkoutUseCaseRequest {
   customerId: string
@@ -23,21 +24,21 @@ interface CompleteWorkoutUseCaseResponse {
 }
 
 interface HandleChallengeProps {
-  customer: CustomerWithMetadata
+  customer: CustomerDetails
   workout: Workout
   previouslyFinishedWorkouts: FinishedWorkout[]
   isFirstConclusion: boolean
 }
 
 interface HandleStandardProps {
-  customer: CustomerWithMetadata
+  customer: CustomerDetails
   workout: Workout
   customerId: string
   isFirstConclusion: boolean
 }
 
 interface HandleAssignRewardsProps {
-  customer: CustomerWithMetadata
+  customer: CustomerDetails
   workout: Workout
 }
 
@@ -47,6 +48,7 @@ export class CompleteWorkoutUseCase {
     private workoutsRepository: WorkoutsRepository,
     private finishedWorkoutsRepository: FinishedWorkoutsRepository,
     private bundlesSubscriptionRepository: BundlesSubscriptionRepository,
+    private provideActivityUseCase: ProvideActivityUseCase,
   ) {}
 
   async execute({
@@ -151,8 +153,14 @@ export class CompleteWorkoutUseCase {
     }
   }
 
-  private assignRewards({ customer, workout }: HandleAssignRewardsProps) {
+  private async assignRewards({ customer, workout }: HandleAssignRewardsProps) {
     customer.currencyAmount += workout.availableCurrency
     customer.experienceAmount += workout.availableExperience
+
+    // TODO: Change this to PUB/SUB pattern
+    await this.provideActivityUseCase.execute({
+      customerId: customer.customerId.toString(),
+      activityType: 'STREAK',
+    })
   }
 }

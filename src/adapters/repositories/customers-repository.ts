@@ -1,20 +1,21 @@
 import { Customer } from '@/entities/customer'
-import { CustomerWithMetadata } from '@/entities/value-objects/customer-with-metadata'
+import { CustomerDetails } from '@/entities/value-objects/customer-details'
 
 export type UpdateCustomerDTO = Partial<
-  Omit<CustomerWithMetadata, 'customerId' | 'metadataId'>
+  Omit<CustomerDetails, 'customerId' | 'metadataId'>
 > & {
   customerId: string
+  passwordHash?: string
 }
 
 export interface CustomersRepository {
   findById(id: string): Promise<Customer | null>
 
-  findByIdWithMetadata(id: string): Promise<CustomerWithMetadata | null>
+  findByIdWithMetadata(id: string): Promise<CustomerDetails | null>
 
   findByEmail(email: string): Promise<Customer | null>
 
-  findByEmailWithMetadata(email: string): Promise<CustomerWithMetadata | null>
+  findByEmailWithMetadata(email: string): Promise<CustomerDetails | null>
 
   create(customer: Customer): Promise<void>
 

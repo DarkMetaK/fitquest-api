@@ -3,21 +3,25 @@ import { makeCustomerMetadata } from 'test/factories/make-customer-metadata'
 import { FakeHasher } from 'test/gateways/cryptography/fake-hasher'
 import { InMemoryCustomersMetadataRepository } from 'test/in-memory/in-memory-customers-metadata-repository'
 import { InMemoryCustomersRepository } from 'test/in-memory/in-memory-customers-repository'
+import { InMemoryStreaksRepository } from 'test/in-memory/in-memory-streaks-repository'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 
 import { UpdateCustomerUseCase } from './update-customer'
 
 let sut: UpdateCustomerUseCase
+let streaksRepository: InMemoryStreaksRepository
 let customersMetadataRepository: InMemoryCustomersMetadataRepository
 let customersRepository: InMemoryCustomersRepository
 let fakeHasher: FakeHasher
 
 describe('Use Case: Update Customer', () => {
   beforeEach(async () => {
+    streaksRepository = new InMemoryStreaksRepository()
     customersMetadataRepository = new InMemoryCustomersMetadataRepository()
     customersRepository = new InMemoryCustomersRepository(
       customersMetadataRepository,
+      streaksRepository,
     )
 
     fakeHasher = new FakeHasher()

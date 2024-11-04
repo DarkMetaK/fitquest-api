@@ -5,12 +5,14 @@ import { InMemoryBundlesRepository } from 'test/in-memory/in-memory-bundles-repo
 import { InMemoryBundlesSubscriptionRepository } from 'test/in-memory/in-memory-bundles-subscription-repository'
 import { InMemoryCustomersMetadataRepository } from 'test/in-memory/in-memory-customers-metadata-repository'
 import { InMemoryCustomersRepository } from 'test/in-memory/in-memory-customers-repository'
+import { InMemoryStreaksRepository } from 'test/in-memory/in-memory-streaks-repository'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 
 import { GetCustomerActiveBundleUseCase } from './get-customer-active-bundle'
 
 let sut: GetCustomerActiveBundleUseCase
+let streaksRepository: InMemoryStreaksRepository
 let customersMetadataRepository: InMemoryCustomersMetadataRepository
 let customersRepository: InMemoryCustomersRepository
 let bundlesSubscriptionRepository: InMemoryBundlesSubscriptionRepository
@@ -18,9 +20,11 @@ let bundlesRepository: InMemoryBundlesRepository
 
 describe('Use Case: Get Customer Active Bundle', () => {
   beforeEach(async () => {
+    streaksRepository = new InMemoryStreaksRepository()
     customersMetadataRepository = new InMemoryCustomersMetadataRepository()
     customersRepository = new InMemoryCustomersRepository(
       customersMetadataRepository,
+      streaksRepository,
     )
     bundlesSubscriptionRepository = new InMemoryBundlesSubscriptionRepository()
     bundlesRepository = new InMemoryBundlesRepository()

@@ -22,7 +22,6 @@ enum TokenType {
   PASSWORD_RECOVER
 }
 
-// CORE, LEGS, TRICEPS
 enum BodyRegion {
   HEAD
   NECK
@@ -34,11 +33,20 @@ enum BodyRegion {
   GLUTES
   THIGHS
   CALVES
+  CORE
+  LEGS
+  TRICEPS
 }
 
 enum WorkoutType {
   STANDARD
   CHALLENGE
+}
+
+enum ActivityType {
+  WORKOUT
+  REST
+  INACTIVE
 }
 
 model User {
@@ -48,11 +56,13 @@ model User {
   passwordHash String?  @map("password_hash")
   createdAt    DateTime @default(now()) @map("created_at")
 
-  metadata           CustomerMetadata?
-  finishedWorkouts   FinishedWorkout[]
-  accounts           Account[]
-  tokens             Token[]
-  BundleSubscription BundleSubscription[]
+  metadata         CustomerMetadata?
+  finishedWorkouts FinishedWorkout[]
+  accounts         Account[]
+  tokens           Token[]
+  subscriptions    BundleSubscription[]
+  streak           Streak?
+  activities       UserActivity[]
 
   @@map("users")
 }
@@ -68,6 +78,10 @@ model CustomerMetadata {
   experienceAmount Int       @default(0) @map("experience_amount")
   currencyAmount   Int       @default(0) @map("currency_amount")
   premiumExpiresAt DateTime? @map("premium_expires_at")
+
+  totalWorkouts  Int @default(0) @map("total_workouts")
+  totalExercises Int @default(0) @map("total_exercises")
+  totalCalories  Int @default(0) @map("total_calories")
 
   userId String @unique @map("user_id")
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -137,16 +151,15 @@ model Workout {
   @@map("workouts")
 }
 
-// Todo delete cascade
 model WorkoutStep {
   id    String @id @default(uuid())
   order Int
 
   exerciseId String   @map("exercise_id")
-  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
 
   workoutId String  @map("workout_id")
-  workout   Workout @relation(fields: [workoutId], references: [id])
+  workout   Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
 }
 
 model FinishedWorkout {
@@ -191,6 +204,32 @@ model BundleSubscription {
   bundle   Bundle @relation(fields: [bundleId], references: [id], onDelete: Cascade)
 
   @@map("user_bundles")
+}
+
+model Streak {
+  id                String   @id @default(uuid())
+  currentStreak     Int      @default(0) @map("current_streak")
+  maximumStreak     Int      @default(0) @map("maximum_streak")
+  streakGoal        Int      @default(0) @map("streak_goal")
+  weekStartDate     DateTime @map("week_start_date")
+  remainingRestDays Int      @default(0) @map("remaining_rest_days")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("streaks")
+}
+
+model UserActivity {
+  id           String       @id @default(uuid())
+  date         DateTime     @map("date")
+  activityType ActivityType @map("activity_type")
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_activities")
 }
 
 // TODO: Raffles

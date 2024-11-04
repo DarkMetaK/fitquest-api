@@ -3,12 +3,14 @@ import { FakeEncrypter } from 'test/gateways/cryptography/fake-encrypter'
 import { FakeHasher } from 'test/gateways/cryptography/fake-hasher'
 import { InMemoryCustomersMetadataRepository } from 'test/in-memory/in-memory-customers-metadata-repository'
 import { InMemoryCustomersRepository } from 'test/in-memory/in-memory-customers-repository'
+import { InMemoryStreaksRepository } from 'test/in-memory/in-memory-streaks-repository'
 
 import { InvalidCredentialsError } from '../core/errors/invalid-credentials-error'
 import { LoginMethodError } from '../core/errors/login-method-error'
 import { AuthenticateWithPasswordUseCase } from './authenticate-with-password'
 
 let sut: AuthenticateWithPasswordUseCase
+let streaksRepository: InMemoryStreaksRepository
 let customersRepository: InMemoryCustomersRepository
 let customersMetadataRepository: InMemoryCustomersMetadataRepository
 let fakeHasher: FakeHasher
@@ -16,9 +18,11 @@ let encrypter: FakeEncrypter
 
 describe('Use Case: Authenticate', () => {
   beforeEach(async () => {
+    streaksRepository = new InMemoryStreaksRepository()
     customersMetadataRepository = new InMemoryCustomersMetadataRepository()
     customersRepository = new InMemoryCustomersRepository(
       customersMetadataRepository,
+      streaksRepository,
     )
 
     fakeHasher = new FakeHasher()

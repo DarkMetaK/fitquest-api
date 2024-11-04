@@ -1,6 +1,7 @@
 import { makeCustomer } from 'test/factories/make-customer'
 import { InMemoryCustomersMetadataRepository } from 'test/in-memory/in-memory-customers-metadata-repository'
 import { InMemoryCustomersRepository } from 'test/in-memory/in-memory-customers-repository'
+import { InMemoryStreaksRepository } from 'test/in-memory/in-memory-streaks-repository'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { CustomerAlreadyHasMetadataError } from '@/core/errors/customer-already-has-metadata-error'
@@ -8,14 +9,17 @@ import { CustomerAlreadyHasMetadataError } from '@/core/errors/customer-already-
 import { CreateCustomerMetadataUseCase } from './create-customer-metadata'
 
 let sut: CreateCustomerMetadataUseCase
+let streaksRepository: InMemoryStreaksRepository
 let customersRepository: InMemoryCustomersRepository
 let customersMetadataRepository: InMemoryCustomersMetadataRepository
 
 describe('Use Case: Create Customer Metadata', () => {
   beforeEach(async () => {
+    streaksRepository = new InMemoryStreaksRepository()
     customersMetadataRepository = new InMemoryCustomersMetadataRepository()
     customersRepository = new InMemoryCustomersRepository(
       customersMetadataRepository,
+      streaksRepository,
     )
 
     sut = new CreateCustomerMetadataUseCase(

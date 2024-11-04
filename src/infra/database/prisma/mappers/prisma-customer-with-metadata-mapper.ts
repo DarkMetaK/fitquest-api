@@ -4,15 +4,15 @@ import {
   User as PrismaUser,
 } from '@prisma/client'
 
-import { CustomerWithMetadata } from '@/entities/value-objects/customer-with-metadata'
+import { CustomerDetails } from '@/entities/value-objects/customer-details'
 
-type PrismaCustomerWithMetadata = PrismaUser & {
+type PrismaCustomerDetails = PrismaUser & {
   metadata: PrismaMetadata
 }
 
-export class PrismaCustomerWithMetadataMapper {
-  static toDomain(raw: PrismaCustomerWithMetadata): CustomerWithMetadata {
-    const customer = CustomerWithMetadata.create({
+export class PrismaCustomerDetailsMapper {
+  static toDomain(raw: PrismaCustomerDetails): CustomerDetails {
+    const customer = CustomerDetails.create({
       customerId: raw.id,
       name: raw.name,
       email: raw.email,
@@ -33,7 +33,7 @@ export class PrismaCustomerWithMetadataMapper {
     return customer
   }
 
-  static toPrisma(customer: CustomerWithMetadata): PrismaCustomerWithMetadata {
+  static toPrisma(customer: CustomerDetails): PrismaCustomerDetails {
     return {
       id: customer.customerId, // Verify if id from metadata is the same from user!!
       name: customer.name,

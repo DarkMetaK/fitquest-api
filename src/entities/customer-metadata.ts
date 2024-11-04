@@ -1,5 +1,6 @@
 import { Entity } from '@/core/entities/entity'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
+import { Optional } from '@/core/types/optional'
 
 export interface CustomerMetadataProps {
   customerId: UniqueEntityId
@@ -11,12 +12,29 @@ export interface CustomerMetadataProps {
   weeklyStreakGoal: number
   experienceAmount: number
   currencyAmount: number
+  totalWorkouts: number
+  totalExercises: number
+  totalCalories: number
   premiumExpiresAt?: Date | null
 }
 
 export class CustomerMetadata extends Entity<CustomerMetadataProps> {
-  static create(props: CustomerMetadataProps, id?: UniqueEntityId) {
-    const metadata = new CustomerMetadata(props, id)
+  static create(
+    props: Optional<
+      CustomerMetadataProps,
+      'totalWorkouts' | 'totalExercises' | 'totalCalories'
+    >,
+    id?: UniqueEntityId,
+  ) {
+    const metadata = new CustomerMetadata(
+      {
+        ...props,
+        totalWorkouts: props.totalWorkouts ?? 0,
+        totalExercises: props.totalExercises ?? 0,
+        totalCalories: props.totalCalories ?? 0,
+      },
+      id,
+    )
 
     return metadata
   }
@@ -57,6 +75,18 @@ export class CustomerMetadata extends Entity<CustomerMetadataProps> {
     return this.props.currencyAmount
   }
 
+  get totalWorkouts() {
+    return this.props.totalWorkouts
+  }
+
+  get totalExercises() {
+    return this.props.totalExercises
+  }
+
+  get totalCalories() {
+    return this.props.totalCalories
+  }
+
   get premiumExpiresAt() {
     return this.props.premiumExpiresAt
   }
@@ -92,6 +122,14 @@ export class CustomerMetadata extends Entity<CustomerMetadataProps> {
 
     if (props.currencyAmount) {
       this.props.currencyAmount = props.currencyAmount
+    }
+
+    if (props.totalWorkouts) {
+      this.props.totalWorkouts = props.totalWorkouts
+    }
+
+    if (props.totalExercises) {
+      this.props.totalExercises = props.totalExercises
     }
 
     if (props.premiumExpiresAt) {

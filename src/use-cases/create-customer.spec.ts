@@ -1,21 +1,25 @@
 import { FakeHasher } from 'test/gateways/cryptography/fake-hasher'
 import { InMemoryCustomersMetadataRepository } from 'test/in-memory/in-memory-customers-metadata-repository'
 import { InMemoryCustomersRepository } from 'test/in-memory/in-memory-customers-repository'
+import { InMemoryStreaksRepository } from 'test/in-memory/in-memory-streaks-repository'
 
 import { EmailAlreadyTakenError } from '@/core/errors/email-already-taken-error'
 
 import { CreateCustomerUseCase } from './create-customer'
 
 let sut: CreateCustomerUseCase
+let streaksRepository: InMemoryStreaksRepository
 let customersRepository: InMemoryCustomersRepository
 let customersMetadataRepository: InMemoryCustomersMetadataRepository
 let fakeHasher: FakeHasher
 
 describe('Use Case: Create Customer', () => {
   beforeEach(async () => {
+    streaksRepository = new InMemoryStreaksRepository()
     customersMetadataRepository = new InMemoryCustomersMetadataRepository()
     customersRepository = new InMemoryCustomersRepository(
       customersMetadataRepository,
+      streaksRepository,
     )
 
     fakeHasher = new FakeHasher()

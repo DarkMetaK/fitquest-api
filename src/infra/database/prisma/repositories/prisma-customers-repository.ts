@@ -5,9 +5,9 @@ import {
   UpdateCustomerDTO,
 } from '@/adapters/repositories/customers-repository'
 import { Customer } from '@/entities/customer'
-import { CustomerWithMetadata } from '@/entities/value-objects/customer-with-metadata'
+import { CustomerDetails } from '@/entities/value-objects/customer-details'
 import { PrismaCustomerMapper } from '@/infra/database/prisma/mappers/prisma-customer-mapper'
-import { PrismaCustomerWithMetadataMapper } from '@/infra/database/prisma/mappers/prisma-customer-with-metadata-mapper'
+import { PrismaCustomerDetailsMapper } from '@/infra/database/prisma/mappers/prisma-customer-with-metadata-mapper'
 import { prisma } from '@/infra/libs/prisma'
 
 export class PrismaCustomersRepository implements CustomersRepository {
@@ -23,7 +23,7 @@ export class PrismaCustomersRepository implements CustomersRepository {
     return PrismaCustomerMapper.toDomain(customer)
   }
 
-  async findByIdWithMetadata(id: string): Promise<CustomerWithMetadata | null> {
+  async findByIdWithMetadata(id: string): Promise<CustomerDetails | null> {
     const customer = await prisma.user.findUnique({
       where: { id },
       include: {
@@ -39,7 +39,7 @@ export class PrismaCustomersRepository implements CustomersRepository {
       return null
     }
 
-    return PrismaCustomerWithMetadataMapper.toDomain({
+    return PrismaCustomerDetailsMapper.toDomain({
       ...customer,
       metadata: customer.metadata,
     })
@@ -59,7 +59,7 @@ export class PrismaCustomersRepository implements CustomersRepository {
 
   async findByEmailWithMetadata(
     email: string,
-  ): Promise<CustomerWithMetadata | null> {
+  ): Promise<CustomerDetails | null> {
     const customer = await prisma.user.findUnique({
       where: { email },
       include: {
@@ -75,7 +75,7 @@ export class PrismaCustomersRepository implements CustomersRepository {
       return null
     }
 
-    return PrismaCustomerWithMetadataMapper.toDomain({
+    return PrismaCustomerDetailsMapper.toDomain({
       ...customer,
       metadata: customer.metadata,
     })

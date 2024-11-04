@@ -1,11 +1,10 @@
 import { ValueObject } from '../../core/entities/value-object'
 
-export interface CustomerWithMetadataProps {
+export interface CustomerDetailsProps {
   customerId: string
-  metadataId: string
   name: string
   email: string
-  passwordHash?: string | null
+  metadataId: string
   phone: string
   age: number
   weight: number
@@ -14,13 +13,17 @@ export interface CustomerWithMetadataProps {
   weeklyStreakGoal: number
   experienceAmount: number
   currencyAmount: number
+  totalWorkouts: number
+  totalExercises: number
+  totalCalories: number
+  highestStreak: number
   premiumExpiresAt?: Date | null
   createdAt: Date
 }
 
-export class CustomerWithMetadata extends ValueObject<CustomerWithMetadataProps> {
-  static create(props: CustomerWithMetadataProps) {
-    return new CustomerWithMetadata(props)
+export class CustomerDetails extends ValueObject<CustomerDetailsProps> {
+  static create(props: CustomerDetailsProps) {
+    return new CustomerDetails(props)
   }
 
   get customerId() {
@@ -35,20 +38,8 @@ export class CustomerWithMetadata extends ValueObject<CustomerWithMetadataProps>
     return this.props.name
   }
 
-  set name(value: string) {
-    this.props.name = value
-  }
-
   get email() {
     return this.props.email
-  }
-
-  get passwordHash() {
-    return this.props.passwordHash ?? ''
-  }
-
-  set passwordHash(value: string) {
-    this.props.passwordHash = value
   }
 
   get phone() {
@@ -95,8 +86,24 @@ export class CustomerWithMetadata extends ValueObject<CustomerWithMetadataProps>
     this.props.currencyAmount = value
   }
 
+  get totalWorkouts() {
+    return this.props.totalWorkouts ?? 0
+  }
+
+  get totalExercises() {
+    return this.props.totalExercises ?? 0
+  }
+
+  get totalCalories() {
+    return this.props.totalCalories ?? 0
+  }
+
   get premiumExpiresAt() {
     return this.props.premiumExpiresAt
+  }
+
+  get highestStreak() {
+    return this.props.highestStreak ?? 0
   }
 
   get createdAt() {
