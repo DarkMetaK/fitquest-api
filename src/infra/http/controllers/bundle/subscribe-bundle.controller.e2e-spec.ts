@@ -2,10 +2,9 @@ import request from 'supertest'
 import { makePrismaBundle } from 'test/factories/make-bundle'
 import { makePrismaCustomer } from 'test/factories/make-customer'
 
+import { app } from '@/infra/app'
 import { JwtEncrypter } from '@/infra/gateways/cryptography/jwt-encrypter'
 import { prisma } from '@/infra/libs/prisma'
-
-import { app } from '../../app'
 
 let jwt: JwtEncrypter
 

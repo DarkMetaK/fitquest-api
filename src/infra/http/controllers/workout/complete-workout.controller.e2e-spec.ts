@@ -6,10 +6,9 @@ import { makePrismaCustomerMetadata } from 'test/factories/make-customer-metadat
 import { makePrismaWorkout } from 'test/factories/make-workout'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
+import { app } from '@/infra/app'
 import { JwtEncrypter } from '@/infra/gateways/cryptography/jwt-encrypter'
 import { prisma } from '@/infra/libs/prisma'
-
-import { app } from '../../app'
 
 let jwt: JwtEncrypter
 

@@ -5,12 +5,15 @@ import fastifyJwt from '@fastify/jwt'
 import fastifyStatic from '@fastify/static'
 import fastify from 'fastify'
 
-import { env } from '../env'
-import { authRoutes } from './controllers/auth/routes'
-import { bundleRoutes } from './controllers/bundle/routes'
-import { customerRoutes } from './controllers/customer/routes'
-import { workoutRoutes } from './controllers/workout/routes'
+import { OnWorkoutCompleted } from '@/events/subscribers/on-workout-completed'
+
+import { makeProvideActivityUseCase } from './database/prisma/factories/make-provide-activity-use-case'
+import { env } from './env'
 import { errorHandler } from './error-handler'
+import { authRoutes } from './http/controllers/auth/routes'
+import { bundleRoutes } from './http/controllers/bundle/routes'
+import { customerRoutes } from './http/controllers/customer/routes'
+import { workoutRoutes } from './http/controllers/workout/routes'
 
 export const app = fastify()
 
@@ -29,6 +32,10 @@ app.register(fastifyStatic, {
 
 app.setErrorHandler(errorHandler)
 
+// Events
+new OnWorkoutCompleted(makeProvideActivityUseCase.create())
+
+// Routes
 app.register(authRoutes)
 app.register(customerRoutes)
 app.register(workoutRoutes)

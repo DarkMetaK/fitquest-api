@@ -16,8 +16,12 @@ type FastifyErrorHandler = FastifyInstance['errorHandler']
 export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
   if (error instanceof ZodError) {
     return reply.status(400).send({
-      message: 'Validation error',
-      errors: error.flatten().fieldErrors,
+      error: error.issues.map((error) => {
+        return {
+          field: error.path[0],
+          message: error.message,
+        }
+      }),
     })
   }
 

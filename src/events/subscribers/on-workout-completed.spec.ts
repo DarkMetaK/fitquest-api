@@ -44,7 +44,6 @@ describe('Event: On Workout Completed', () => {
 
     completeWorkouEventExecuteSpy = vi.spyOn(provideActivityUseCase, 'execute')
 
-    // eslint-disable-next-line no-new
     new OnWorkoutCompleted(provideActivityUseCase)
   })
 

@@ -1,8 +1,7 @@
 import request from 'supertest'
 
+import { app } from '@/infra/app'
 import { prisma } from '@/infra/libs/prisma'
-
-import { app } from '../../app'
 
 describe('Create customer (E2E)', () => {
   beforeAll(async () => {

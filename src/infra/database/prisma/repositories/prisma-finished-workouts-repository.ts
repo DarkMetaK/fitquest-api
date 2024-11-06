@@ -1,4 +1,5 @@
 import { FinishedWorkoutsRepository } from '@/adapters/repositories/finished-workouts-repository'
+import { DomainEvents } from '@/core/events/domain-events'
 import { FinishedWorkout } from '@/entities/finished-workout'
 import { prisma } from '@/infra/libs/prisma'
 
@@ -27,5 +28,7 @@ export class PrismaFinishedWorkoutsRepository
     await prisma.finishedWorkout.create({
       data,
     })
+
+    DomainEvents.dispatchEventsForAggregate(finishedWorkout.id)
   }
 }

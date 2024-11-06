@@ -6,6 +6,8 @@ import { randomUUID } from 'node:crypto'
 import { PrismaClient } from '@prisma/client'
 import { Environment } from 'vitest/environments'
 
+import { DomainEvents } from '@/core/events/domain-events'
+
 function generateDatabaseURL(schema: string) {
   if (!process.env.DATABASE_URL) {
     throw new Error('Please provide a DATABASE_URL environment variable.')
@@ -27,6 +29,9 @@ export default <Environment>{
     const databaseURL = generateDatabaseURL(schema)
 
     process.env.DATABASE_URL = databaseURL
+
+    DomainEvents.shouldRun = false
+
     execSync('npx prisma migrate deploy')
 
     return {

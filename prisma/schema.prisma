@@ -44,7 +44,7 @@ enum WorkoutType {
 }
 
 enum ActivityType {
-  WORKOUT
+  STREAK
   REST
   INACTIVE
 }

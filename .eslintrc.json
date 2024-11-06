@@ -5,6 +5,7 @@
     "simple-import-sort/imports": "error",
     "camelcase": "off",
     "no-useless-constructor": "off",
-    "no-case-declarations": "off"
+    "no-case-declarations": "off",
+    "no-new": "off"
   }
 }

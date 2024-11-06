@@ -1,6 +1,6 @@
 import request from 'supertest'
 
-import { app } from '../../app'
+import { app } from '@/infra/app'
 
 describe('Verify phone availability (E2E)', () => {
   beforeAll(async () => {
