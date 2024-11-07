@@ -1,6 +1,7 @@
 import { makeBundle } from 'test/factories/make-bundle'
 import { makeBundleSubscription } from 'test/factories/make-bundle-subscription'
 import { makeCustomer } from 'test/factories/make-customer'
+import { makeCustomerMetadata } from 'test/factories/make-customer-metadata'
 import { InMemoryBundlesRepository } from 'test/in-memory/in-memory-bundles-repository'
 import { InMemoryBundlesSubscriptionRepository } from 'test/in-memory/in-memory-bundles-subscription-repository'
 import { InMemoryCustomersMetadataRepository } from 'test/in-memory/in-memory-customers-metadata-repository'
@@ -9,6 +10,7 @@ import { InMemoryStreaksRepository } from 'test/in-memory/in-memory-streaks-repo
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { ActiveSubscriptionError } from '@/core/errors/active-subscription-error'
+import { PremiumRequiredError } from '@/core/errors/premium-required-error'
 
 import { SubscribeBundleUseCase } from './subscribe-bundle'
 
@@ -42,6 +44,12 @@ describe('Use Case: Subscribe Bundle', () => {
       makeCustomer({}, new UniqueEntityId('customer-1')),
     )
 
+    customersMetadataRepository.create(
+      makeCustomerMetadata({
+        customerId: new UniqueEntityId('customer-1'),
+      }),
+    )
+
     bundlesRepository.create(
       makeBundle(
         {
@@ -68,6 +76,12 @@ describe('Use Case: Subscribe Bundle', () => {
       makeCustomer({}, new UniqueEntityId('customer-1')),
     )
 
+    customersMetadataRepository.create(
+      makeCustomerMetadata({
+        customerId: new UniqueEntityId('customer-1'),
+      }),
+    )
+
     bundlesRepository.create(
       makeBundle(
         {
@@ -89,5 +103,32 @@ describe('Use Case: Subscribe Bundle', () => {
     await expect(() =>
       sut.execute({ customerId: 'customer-1', bundleId: 'bundle-1' }),
     ).rejects.toBeInstanceOf(ActiveSubscriptionError)
+  })
+
+  it('should not be able to subscribe a customer to a premium bundle if they do not have a premium subscription', async () => {
+    customersRepository.create(
+      makeCustomer({}, new UniqueEntityId('customer-1')),
+    )
+
+    customersMetadataRepository.create(
+      makeCustomerMetadata({
+        customerId: new UniqueEntityId('customer-1'),
+        premiumExpiresAt: null,
+      }),
+    )
+
+    bundlesRepository.create(
+      makeBundle(
+        {
+          name: 'Bundle 1',
+          isPremium: true,
+        },
+        new UniqueEntityId('bundle-1'),
+      ),
+    )
+
+    await expect(() =>
+      sut.execute({ customerId: 'customer-1', bundleId: 'bundle-1' }),
+    ).rejects.toBeInstanceOf(PremiumRequiredError)
   })
 })

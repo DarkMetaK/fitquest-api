@@ -1,7 +1,11 @@
+import dayjs from 'dayjs'
+
 import { BundlesRepository } from '@/adapters/repositories/bundles-repository'
 import { BundlesSubscriptionRepository } from '@/adapters/repositories/bundles-subscription-repository'
 import { CustomersRepository } from '@/adapters/repositories/customers-repository'
+import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { ActiveSubscriptionError } from '@/core/errors/active-subscription-error'
+import { PremiumRequiredError } from '@/core/errors/premium-required-error'
 import { BundleSubscription } from '@/entities/bundle-subscription'
 
 import { ResourceNotFoundError } from '../core/errors/resource-not-found-error'
@@ -11,7 +15,6 @@ interface SubscribeBundleUseCaseRequest {
   bundleId: string
 }
 
-// TODO: Premium bundles should not be available for subscription
 export class SubscribeBundleUseCase {
   constructor(
     private customersRepository: CustomersRepository,
@@ -23,7 +26,8 @@ export class SubscribeBundleUseCase {
     customerId,
     bundleId,
   }: SubscribeBundleUseCaseRequest): Promise<void> {
-    const customer = await this.customersRepository.findById(customerId)
+    const customer =
+      await this.customersRepository.findByIdWithMetadata(customerId)
 
     if (!customer) {
       throw new ResourceNotFoundError(customerId)
@@ -33,6 +37,14 @@ export class SubscribeBundleUseCase {
 
     if (!bundle) {
       throw new ResourceNotFoundError(bundleId)
+    }
+
+    if (
+      bundle.isPremium &&
+      (!customer.premiumExpiresAt ||
+        dayjs(customer.premiumExpiresAt).isBefore(dayjs()))
+    ) {
+      throw new PremiumRequiredError()
     }
 
     const hasActiveSubscription =
@@ -45,7 +57,7 @@ export class SubscribeBundleUseCase {
     }
 
     const subscription = BundleSubscription.create({
-      customerId: customer.id,
+      customerId: new UniqueEntityId(customer.customerId),
       bundleId: bundle.id,
       isActive: true,
     })
