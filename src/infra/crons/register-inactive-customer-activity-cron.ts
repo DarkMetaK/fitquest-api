@@ -24,14 +24,11 @@ export const registerInactiveCustomerActivityCron = cron.schedule(
     })
 
     for (const customer of customersIds) {
-      console.log(customer)
       await provideActivityUseCase.execute({
         customerId: customer.id,
         activityType: 'INACTIVE',
       })
     }
-
-    console.log(await prisma.userActivity.findMany())
   },
   {
     scheduled: false,

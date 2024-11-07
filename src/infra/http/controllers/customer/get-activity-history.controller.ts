@@ -6,9 +6,9 @@ import { makeGetCustomerActivityHistory } from '@/infra/database/prisma/factorie
 
 import { ActivityPresenter } from '../../presenters/activity-presenter'
 
-const getActivityHistoryParamSchema = z.object({
-  from: z.date().optional(),
-  until: z.date().optional(),
+const getActivityHistoryQuerySchema = z.object({
+  from: z.string().optional(),
+  until: z.string().optional(),
 })
 
 export async function getActivityHistoryController(
@@ -17,7 +17,10 @@ export async function getActivityHistoryController(
 ) {
   const userId = await request.getCurrentUserId()
 
-  const { from, until } = getActivityHistoryParamSchema.parse(request.params)
+  const { from: fromString, until: untilString } =
+    getActivityHistoryQuerySchema.parse(request.query)
+  const from = fromString ? dayjs(fromString).toDate() : undefined
+  const until = untilString ? dayjs(untilString).toDate() : undefined
 
   const useCase = makeGetCustomerActivityHistory.create()
 
