@@ -99,7 +99,11 @@ export class CustomerDetails extends ValueObject<CustomerDetailsProps> {
   }
 
   get premiumExpiresAt() {
-    return this.props.premiumExpiresAt
+    return this.props.premiumExpiresAt ?? null
+  }
+
+  set premiumExpiresAt(value: Date | null) {
+    this.props.premiumExpiresAt = value
   }
 
   get highestStreak() {
