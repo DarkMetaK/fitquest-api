@@ -106,8 +106,6 @@ export class CompleteWorkoutUseCase {
 
     await this.finishedWorkoutsRepository.create(finishedWorkout)
 
-    await this.customersRepository.update(customer)
-
     return { finishedWorkout }
   }
 
@@ -154,5 +152,7 @@ export class CompleteWorkoutUseCase {
   private async assignRewards({ customer, workout }: HandleAssignRewardsProps) {
     customer.currencyAmount += workout.availableCurrency
     customer.experienceAmount += workout.availableExperience
+
+    await this.customersRepository.update(customer)
   }
 }

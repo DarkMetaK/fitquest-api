@@ -26,11 +26,17 @@ export class PrismaStreaksRepository implements StreaksRepository {
   }
 
   async update(streak: Streak): Promise<void> {
-    const { id, ...rest } = PrismaStreakMapper.toPrisma(streak)
+    const prismaStreak = PrismaStreakMapper.toPrisma(streak)
 
     await prisma.streak.update({
-      where: { id },
-      data: rest,
+      where: { id: prismaStreak.id },
+      data: {
+        currentStreak: prismaStreak.currentStreak,
+        maximumStreak: prismaStreak.maximumStreak,
+        streakGoal: prismaStreak.streakGoal,
+        weekStartDate: prismaStreak.weekStartDate,
+        remainingRestDays: prismaStreak.remainingRestDays,
+      },
     })
   }
 }

@@ -35,6 +35,8 @@ describe('Complete workout (E2E)', () => {
 
     await makePrismaCustomerMetadata({
       customerId: new UniqueEntityId(user.id),
+      currencyAmount: 0,
+      experienceAmount: 0,
     })
 
     const bundle = await makePrismaBundle()
@@ -48,6 +50,8 @@ describe('Complete workout (E2E)', () => {
       name: 'Workout 1',
       type: 'STANDARD',
       bundleId: new UniqueEntityId(bundle.id),
+      availableCurrency: 10,
+      availableExperience: 10,
     })
 
     const response = await request(app.server)

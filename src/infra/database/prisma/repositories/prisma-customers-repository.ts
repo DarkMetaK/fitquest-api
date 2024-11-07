@@ -90,29 +90,27 @@ export class PrismaCustomersRepository implements CustomersRepository {
   }
 
   async update(customer: UpdateCustomerDTO): Promise<void> {
-    const { name, email, passwordHash, ...metadata } = customer
-
     await prisma.user.update({
       data: {
-        name,
-        email,
-        passwordHash,
+        name: customer.name,
+        email: customer.email,
+        passwordHash: customer.passwordHash,
         metadata: {
           update: {
             where: {
               userId: customer.customerId,
             },
             data: {
-              age: metadata.age,
-              weight: metadata.weight,
-              height: metadata.height,
-              goal: metadata.goal
-                ? (Goal[metadata.goal as keyof typeof Goal] as Goal)
+              age: customer.age,
+              weight: customer.weight,
+              height: customer.height,
+              goal: customer.goal
+                ? (Goal[customer.goal as keyof typeof Goal] as Goal)
                 : undefined,
-              phone: metadata.phone,
-              currencyAmount: metadata.currencyAmount,
-              experienceAmount: metadata.experienceAmount,
-              premiumExpiresAt: metadata.premiumExpiresAt,
+              phone: customer.phone,
+              currencyAmount: customer.currencyAmount,
+              experienceAmount: customer.experienceAmount,
+              premiumExpiresAt: customer.premiumExpiresAt,
             },
           },
         },
