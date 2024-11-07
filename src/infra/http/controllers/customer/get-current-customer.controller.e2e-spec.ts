@@ -22,6 +22,7 @@ describe('Get current customer (E2E)', () => {
       name: 'John Doe',
       email: 'johndoe@example.com',
     })
+
     const accessToken = await jwt.encrypt({
       sub: user.id.toString(),
     })
@@ -29,9 +30,7 @@ describe('Get current customer (E2E)', () => {
     const response = await request(app.server)
       .get('/me')
       .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        phone: '11 99999-9999',
-      })
+      .send()
 
     expect(response.statusCode).toEqual(200)
     expect(response.body).toEqual({

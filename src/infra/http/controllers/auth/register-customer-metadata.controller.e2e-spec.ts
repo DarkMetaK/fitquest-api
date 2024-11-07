@@ -20,6 +20,7 @@ describe('Register customer metadata (E2E)', () => {
 
   test('[POST] /customers/metadata', async () => {
     const user = await makePrismaCustomer()
+
     const accessToken = await jwt.encrypt({
       sub: user.id.toString(),
     })

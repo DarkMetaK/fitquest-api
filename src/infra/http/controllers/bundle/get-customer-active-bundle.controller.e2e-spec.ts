@@ -25,6 +25,7 @@ describe('Get customer active bundle (E2E)', () => {
       name: 'John Doe',
       email: 'johndoe@example.com',
     })
+
     const accessToken = await jwt.encrypt({
       sub: user.id.toString(),
     })
