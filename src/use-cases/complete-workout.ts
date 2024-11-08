@@ -8,7 +8,7 @@ import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { CustomerNotSubscribedToBundleError } from '@/core/errors/customer-not-subscribed-to-bundle-error'
 import { FinishedWorkout } from '@/entities/finished-workout'
 import { CustomerDetails } from '@/entities/value-objects/customer-details'
-import { Workout } from '@/entities/workout'
+import { WorkoutDetails } from '@/entities/value-objects/workout-details'
 
 import { ResourceNotFoundError } from '../core/errors/resource-not-found-error'
 import { UnavailableWorkoutError } from '../core/errors/unavailable-workout-error'
@@ -24,21 +24,21 @@ interface CompleteWorkoutUseCaseResponse {
 
 interface HandleChallengeProps {
   customer: CustomerDetails
-  workout: Workout
+  workout: WorkoutDetails
   previouslyFinishedWorkouts: FinishedWorkout[]
   isFirstConclusion: boolean
 }
 
 interface HandleStandardProps {
   customer: CustomerDetails
-  workout: Workout
+  workout: WorkoutDetails
   customerId: string
   isFirstConclusion: boolean
 }
 
 interface HandleAssignRewardsProps {
   customer: CustomerDetails
-  workout: Workout
+  workout: WorkoutDetails
 }
 
 export class CompleteWorkoutUseCase {
@@ -60,7 +60,7 @@ export class CompleteWorkoutUseCase {
       throw new ResourceNotFoundError(customerId)
     }
 
-    const workout = await this.workoutsRepository.findById(workoutId)
+    const workout = await this.workoutsRepository.findByIdWithDetails(workoutId)
 
     if (!workout) {
       throw new ResourceNotFoundError(workoutId)
@@ -99,12 +99,18 @@ export class CompleteWorkoutUseCase {
 
     const finishedWorkout = FinishedWorkout.create({
       userId: new UniqueEntityId(customerId),
-      workoutId: workout.id,
+      workoutId: workout.workoutId,
       obtainedCurrency: workout.availableCurrency,
       obtainedExperience: workout.availableExperience,
     })
 
     await this.finishedWorkoutsRepository.create(finishedWorkout)
+
+    customer.totalExercises += workout.steps.length
+    customer.totalWorkouts += 1
+    customer.totalCalories += workout.estimatedCalories
+
+    await this.customersRepository.update(customer)
 
     return { finishedWorkout }
   }
@@ -152,7 +158,5 @@ export class CompleteWorkoutUseCase {
   private async assignRewards({ customer, workout }: HandleAssignRewardsProps) {
     customer.currencyAmount += workout.availableCurrency
     customer.experienceAmount += workout.availableExperience
-
-    await this.customersRepository.update(customer)
   }
 }

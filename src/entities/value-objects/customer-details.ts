@@ -4,6 +4,7 @@ export interface CustomerDetailsProps {
   customerId: string
   name: string
   email: string
+  passwordHash?: string | null
   metadataId: string
   phone: string
   age: number
@@ -40,6 +41,10 @@ export class CustomerDetails extends ValueObject<CustomerDetailsProps> {
 
   get email() {
     return this.props.email
+  }
+
+  get passwordHash() {
+    return this.props.passwordHash
   }
 
   get phone() {
@@ -90,12 +95,24 @@ export class CustomerDetails extends ValueObject<CustomerDetailsProps> {
     return this.props.totalWorkouts ?? 0
   }
 
+  set totalWorkouts(value: number) {
+    this.props.totalWorkouts = value
+  }
+
   get totalExercises() {
     return this.props.totalExercises ?? 0
   }
 
+  set totalExercises(value: number) {
+    this.props.totalExercises = value
+  }
+
   get totalCalories() {
     return this.props.totalCalories ?? 0
+  }
+
+  set totalCalories(value: number) {
+    this.props.totalCalories = value
   }
 
   get premiumExpiresAt() {

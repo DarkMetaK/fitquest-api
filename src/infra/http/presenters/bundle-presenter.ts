@@ -6,7 +6,7 @@ export class BundlePresenter {
       id: bundle.id.toString(),
       name: bundle.name,
       description: bundle.description,
-      bannerUrl: bundle.description,
+      bannerUrl: bundle.bannerUrl,
       isPremium: bundle.isPremium,
       workouts: bundle.workouts.map((workout) => {
         return {

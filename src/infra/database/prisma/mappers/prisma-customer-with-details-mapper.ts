@@ -8,6 +8,7 @@ import { CustomerDetails } from '@/entities/value-objects/customer-details'
 
 type PrismaCustomerDetails = PrismaUser & {
   metadata: PrismaMetadata
+  highestStreak?: number | null
 }
 
 export class PrismaCustomerDetailsMapper {
@@ -26,6 +27,10 @@ export class PrismaCustomerDetailsMapper {
       weeklyStreakGoal: raw.metadata.weeklyStreakGoal,
       experienceAmount: raw.metadata.experienceAmount,
       currencyAmount: raw.metadata.currencyAmount,
+      totalCalories: raw.metadata.totalCalories,
+      totalExercises: raw.metadata.totalExercises,
+      totalWorkouts: raw.metadata.totalWorkouts,
+      highestStreak: raw.highestStreak ?? 0,
       premiumExpiresAt: raw.metadata.premiumExpiresAt,
       createdAt: raw.createdAt,
     })
@@ -51,6 +56,9 @@ export class PrismaCustomerDetailsMapper {
         experienceAmount: customer.experienceAmount,
         currencyAmount: customer.currencyAmount,
         premiumExpiresAt: customer.premiumExpiresAt ?? null,
+        totalWorkouts: customer.totalWorkouts,
+        totalExercises: customer.totalExercises,
+        totalCalories: customer.totalCalories,
       },
       createdAt: customer.createdAt,
     }

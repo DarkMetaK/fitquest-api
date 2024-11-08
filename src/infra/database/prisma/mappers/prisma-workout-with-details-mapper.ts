@@ -14,6 +14,8 @@ type PrismaWorkoutWithSteps = Workout & {
 export class PrismaWorkoutWithDetailsMapper {
   static toDomain(raw: PrismaWorkoutWithSteps): WorkoutDetails {
     const workout = WorkoutDetails.create({
+      workoutId: new UniqueEntityId(raw.id),
+      bundleId: raw.bundleId ? new UniqueEntityId(raw.bundleId) : null,
       name: raw.name,
       bannerUrl: raw.bannerUrl,
       type: raw.type,

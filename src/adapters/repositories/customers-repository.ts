@@ -5,7 +5,6 @@ export type UpdateCustomerDTO = Partial<
   Omit<CustomerDetails, 'customerId' | 'metadataId'>
 > & {
   customerId: string
-  passwordHash?: string
 }
 
 export interface CustomersRepository {

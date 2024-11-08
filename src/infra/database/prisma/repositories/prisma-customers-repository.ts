@@ -7,7 +7,7 @@ import {
 import { Customer } from '@/entities/customer'
 import { CustomerDetails } from '@/entities/value-objects/customer-details'
 import { PrismaCustomerMapper } from '@/infra/database/prisma/mappers/prisma-customer-mapper'
-import { PrismaCustomerDetailsMapper } from '@/infra/database/prisma/mappers/prisma-customer-with-metadata-mapper'
+import { PrismaCustomerDetailsMapper } from '@/infra/database/prisma/mappers/prisma-customer-with-details-mapper'
 import { prisma } from '@/infra/libs/prisma'
 
 export class PrismaCustomersRepository implements CustomersRepository {
@@ -28,6 +28,11 @@ export class PrismaCustomersRepository implements CustomersRepository {
       where: { id },
       include: {
         metadata: true,
+        streak: {
+          select: {
+            maximumStreak: true,
+          },
+        },
       },
     })
 
@@ -42,6 +47,7 @@ export class PrismaCustomersRepository implements CustomersRepository {
     return PrismaCustomerDetailsMapper.toDomain({
       ...customer,
       metadata: customer.metadata,
+      highestStreak: customer.streak?.maximumStreak,
     })
   }
 
@@ -64,6 +70,11 @@ export class PrismaCustomersRepository implements CustomersRepository {
       where: { email },
       include: {
         metadata: true,
+        streak: {
+          select: {
+            maximumStreak: true,
+          },
+        },
       },
     })
 
@@ -78,6 +89,7 @@ export class PrismaCustomersRepository implements CustomersRepository {
     return PrismaCustomerDetailsMapper.toDomain({
       ...customer,
       metadata: customer.metadata,
+      highestStreak: customer.streak?.maximumStreak,
     })
   }
 
@@ -111,6 +123,10 @@ export class PrismaCustomersRepository implements CustomersRepository {
               currencyAmount: customer.currencyAmount,
               experienceAmount: customer.experienceAmount,
               premiumExpiresAt: customer.premiumExpiresAt,
+              totalCalories: customer.totalCalories,
+              totalExercises: customer.totalExercises,
+              totalWorkouts: customer.totalWorkouts,
+              weeklyStreakGoal: customer.weeklyStreakGoal,
             },
           },
         },
