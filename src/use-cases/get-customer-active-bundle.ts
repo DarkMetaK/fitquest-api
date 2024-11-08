@@ -1,7 +1,8 @@
 import { BundlesRepository } from '@/adapters/repositories/bundles-repository'
 import { BundlesSubscriptionRepository } from '@/adapters/repositories/bundles-subscription-repository'
 import { CustomersRepository } from '@/adapters/repositories/customers-repository'
-import { Bundle } from '@/entities/bundle'
+import { FinishedWorkoutsRepository } from '@/adapters/repositories/finished-workouts-repository'
+import { CustomerBundle } from '@/entities/value-objects/customer-bundle'
 
 import { ResourceNotFoundError } from '../core/errors/resource-not-found-error'
 
@@ -10,12 +11,13 @@ interface GetCustomerActiveBundleUseCaseRequest {
 }
 
 interface GetCustomerActiveBundleUseCaseResponse {
-  activeBundle: Bundle | null
+  activeBundle: CustomerBundle | null
 }
 
 export class GetCustomerActiveBundleUseCase {
   constructor(
     private customersRepository: CustomersRepository,
+    private finishedWorkoutsRepository: FinishedWorkoutsRepository,
     private bundlesSubscriptionRepository: BundlesSubscriptionRepository,
     private bundlesRepository: BundlesRepository,
   ) {}
@@ -46,6 +48,26 @@ export class GetCustomerActiveBundleUseCase {
       throw new ResourceNotFoundError(bundleSubscription.bundleId.toString())
     }
 
-    return { activeBundle: bundle }
+    const finishedWorkouts =
+      await this.finishedWorkoutsRepository.findByUserIdAndBundleId(
+        customerId,
+        bundle.id.toString(),
+      )
+
+    const activeBundle = CustomerBundle.create({
+      bundleId: bundle.id,
+      customerId: customer.id,
+      name: bundle.name,
+      description: bundle.description,
+      bannerUrl: bundle.bannerUrl,
+      workouts: bundle.workouts,
+      isPremium: bundle.isPremium,
+      finishedWorkouts,
+      createdAt: bundleSubscription.createdAt,
+    })
+
+    return {
+      activeBundle,
+    }
   }
 }

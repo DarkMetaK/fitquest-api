@@ -22,6 +22,22 @@ export class PrismaFinishedWorkoutsRepository
     return finishedWorkouts.map(PrismaFinishedWorkoutMapper.toDomain)
   }
 
+  async findByUserIdAndBundleId(
+    userId: string,
+    bundleId: string,
+  ): Promise<FinishedWorkout[]> {
+    const finishedWorkouts = await prisma.finishedWorkout.findMany({
+      where: {
+        userId,
+        workout: {
+          bundleId,
+        },
+      },
+    })
+
+    return finishedWorkouts.map(PrismaFinishedWorkoutMapper.toDomain)
+  }
+
   async create(finishedWorkout: FinishedWorkout): Promise<void> {
     const data = PrismaFinishedWorkoutMapper.toPrisma(finishedWorkout)
 

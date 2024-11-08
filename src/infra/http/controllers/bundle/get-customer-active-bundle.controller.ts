@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 
 import { makeGetCustomerActiveBundleUseCase } from '@/infra/database/prisma/factories/make-get-customer-active-bundle-use-case'
 
-import { BundlePresenter } from '../../presenters/bundle-presenter'
+import { CustomerBundlePresenter } from '../../presenters/customer-bundle-presenter'
 
 export async function GetCustomerActiveBundleController(
   request: FastifyRequest,
@@ -15,6 +15,8 @@ export async function GetCustomerActiveBundleController(
   const { activeBundle } = await useCase.execute({ customerId: userId })
 
   return reply.status(200).send({
-    activeBundle: activeBundle ? BundlePresenter.toHTTP(activeBundle) : null,
+    activeBundle: activeBundle
+      ? CustomerBundlePresenter.toHTTP(activeBundle)
+      : null,
   })
 }

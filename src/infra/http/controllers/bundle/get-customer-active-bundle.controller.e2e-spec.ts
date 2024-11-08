@@ -2,6 +2,8 @@ import request from 'supertest'
 import { makePrismaBundle } from 'test/factories/make-bundle'
 import { makePrismaBundleSubscription } from 'test/factories/make-bundle-subscription'
 import { makePrismaCustomer } from 'test/factories/make-customer'
+import { makePrismaFinishedWorkout } from 'test/factories/make-finished-workout'
+import { makePrismaWorkout } from 'test/factories/make-workout'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { app } from '@/infra/app'
@@ -39,6 +41,23 @@ describe('Get customer active bundle (E2E)', () => {
       bundleId: new UniqueEntityId(bundle.id),
     })
 
+    const firstWorkout = await makePrismaWorkout({
+      bundleId: new UniqueEntityId(bundle.id),
+      name: 'Workout 1',
+      type: 'STANDARD',
+    })
+
+    await makePrismaWorkout({
+      bundleId: new UniqueEntityId(bundle.id),
+      name: 'Workout 2',
+      type: 'STANDARD',
+    })
+
+    await makePrismaFinishedWorkout({
+      userId: new UniqueEntityId(user.id),
+      workoutId: new UniqueEntityId(firstWorkout.id),
+    })
+
     const response = await request(app.server)
       .get('/bundles/in-progress')
       .set('Authorization', `Bearer ${accessToken}`)
@@ -47,8 +66,10 @@ describe('Get customer active bundle (E2E)', () => {
     expect(response.statusCode).toEqual(200)
     expect(response.body.activeBundle).toEqual(
       expect.objectContaining({
-        id: expect.any(String),
         name: 'Bundle 1',
+        finishedWorkoutsIds: expect.arrayContaining([
+          firstWorkout.id.toString(),
+        ]),
       }),
     )
   })

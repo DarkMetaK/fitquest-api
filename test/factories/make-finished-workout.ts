@@ -5,6 +5,8 @@ import {
   FinishedWorkout,
   FinishedWorkoutProps,
 } from '@/entities/finished-workout'
+import { PrismaFinishedWorkoutMapper } from '@/infra/database/prisma/mappers/prisma-finished-workout-mapper'
+import { prisma } from '@/infra/libs/prisma'
 
 export function makeFinishedWorkout(
   override: Partial<FinishedWorkoutProps> = {},
@@ -14,12 +16,25 @@ export function makeFinishedWorkout(
     {
       userId: new UniqueEntityId(faker.string.uuid()),
       workoutId: new UniqueEntityId(faker.string.uuid()),
-      obtainedCurrency: faker.number.int(),
-      obtainedExperience: faker.number.int(),
+      obtainedCurrency: faker.number.int({ min: 1, max: 1000 }),
+      obtainedExperience: faker.number.int({ min: 1, max: 1000 }),
       ...override,
     },
     id,
   )
 
   return workout
+}
+
+export async function makePrismaFinishedWorkout(
+  data: Partial<FinishedWorkoutProps> = {},
+  id?: UniqueEntityId,
+) {
+  const workout = makeFinishedWorkout(data, id)
+
+  const prismaWorkout = await prisma.finishedWorkout.create({
+    data: PrismaFinishedWorkoutMapper.toPrisma(workout),
+  })
+
+  return prismaWorkout
 }

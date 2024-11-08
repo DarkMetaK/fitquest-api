@@ -26,7 +26,7 @@ app.register(fastifyCors, {
 })
 
 app.register(fastifyStatic, {
-  root: resolve(__dirname, '../../../uploads'),
+  root: resolve(__dirname, '../../uploads'),
   prefix: '/uploads/',
 })
 

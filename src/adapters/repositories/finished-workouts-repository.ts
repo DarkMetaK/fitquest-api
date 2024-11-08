@@ -6,5 +6,10 @@ export interface FinishedWorkoutsRepository {
     workoutId: string,
   ): Promise<FinishedWorkout[]>
 
+  findByUserIdAndBundleId(
+    userId: string,
+    bundleId: string,
+  ): Promise<FinishedWorkout[]>
+
   create(finishedWorkout: FinishedWorkout): Promise<void>
 }
