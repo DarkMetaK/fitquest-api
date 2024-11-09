@@ -29,13 +29,21 @@ describe('Use Case: Buy Raffle Tickets', () => {
       streaksRepository,
     )
     rafflesRepository = new InMemoryRafflesRepository()
-    customerRafflesRepository = new InMemoryCustomersRafflesRepository()
+    customerRafflesRepository = new InMemoryCustomersRafflesRepository(
+      rafflesRepository,
+    )
 
     sut = new PurchaseRaffleTicketsUseCase(
       customersRepository,
       rafflesRepository,
       customerRafflesRepository,
     )
+
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
   })
 
   it('should be able to purchase a certain amount of tickets to draw', async () => {
@@ -130,6 +138,8 @@ describe('Use Case: Buy Raffle Tickets', () => {
   })
 
   it('should not be able to purchase a ticket to a expired raffle', async () => {
+    vi.setSystemTime(new Date(2024, 9, 20, 0, 0, 0))
+
     customersRepository.create(
       makeCustomer({}, new UniqueEntityId('customer-1')),
     )
@@ -145,7 +155,7 @@ describe('Use Case: Buy Raffle Tickets', () => {
       makeRaffle(
         {
           price: 10,
-          expiresAt: new Date('2021-01-01'),
+          expiresAt: new Date(2024, 9, 7, 0, 0, 0),
         },
         new UniqueEntityId('raffle-1'),
       ),

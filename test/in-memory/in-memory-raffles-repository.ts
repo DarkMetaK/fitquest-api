@@ -17,6 +17,10 @@ export class InMemoryRafflesRepository implements RafflesRepository {
     return raffle
   }
 
+  async findManyNotExpired(): Promise<Raffle[]> {
+    return this.items.filter((raffle) => !raffle.isExpired())
+  }
+
   async create(raffle: Raffle): Promise<void> {
     this.items.push(raffle)
   }

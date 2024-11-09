@@ -50,4 +50,8 @@ export class Raffle extends Entity<RaffleProps> {
   get createdAt() {
     return this.props.createdAt
   }
+
+  isExpired() {
+    return this.expiresAt < new Date()
+  }
 }
