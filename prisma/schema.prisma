@@ -63,6 +63,7 @@ model User {
   subscriptions    BundleSubscription[]
   streak           Streak?
   activities       UserActivity[]
+  raffles          CustomerRaffle[]
 
   @@map("users")
 }
@@ -232,62 +233,30 @@ model UserActivity {
   @@map("user_activities")
 }
 
-// TODO: Raffles
-// model Bingo {
-//   id        String   @id @default(uuid())
-//   name      String
-//   price     Int
-//   isPremium Boolean  @default(false) @map("is_premium")
-//   latitude  Decimal
-//   longitude Decimal
-//   date      DateTime
-//   createdAt DateTime @default(now()) @map("created_at")
+model Raffle {
+  id        String   @id @default(uuid())
+  name      String
+  bannerUrl String   @map("banner_url")
+  price     Int
+  isPremium Boolean  @default(true) @map("is_premium")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
 
-//   participants UserBingo[]
+  participants CustomerRaffle[]
 
-//   @@map("bingos")
-// }
+  @@map("raffles")
+}
 
-// model UserBingo {
-//   id          String    @id @default(uuid())
-//   validatedAt DateTime? @map("validated_at")
-//   createdAt   DateTime  @default(now()) @map("created_at")
+model CustomerRaffle {
+  id        String   @id @default(uuid())
+  hasWon    Boolean? @map("has_won")
+  createdAt DateTime @default(now()) @map("created_at")
 
-//   userId String @map("user_id")
-//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  customerId String @map("customer_id")
+  customer   User   @relation(fields: [customerId], references: [id], onDelete: Cascade)
 
-//   bingoId String @map("bingo_id")
-//   bingo   Bingo  @relation(fields: [bingoId], references: [id], onDelete: Cascade)
+  raffleId String @map("raffle_id")
+  raffle   Raffle @relation(fields: [raffleId], references: [id], onDelete: Cascade)
 
-//   @@map("user_bingos")
-// }
-
-// model Raffle {
-//   id        String   @id @default(uuid())
-//   name      String
-//   bannerUrl String   @map("banner_url")
-//   price     Int
-//   isPremium Boolean  @default(true) @map("is_premium")
-//   drawAt    DateTime @map("draw_at")
-//   createdAt DateTime @default(now()) @map("created_at")
-
-//   participants UserRaffle[]
-
-//   @@map("raffles")
-// }
-
-// model UserRaffle {
-//   id        String   @id @default(uuid())
-//   hasWon    Boolean? @map("has_won")
-//   createdAt DateTime @default(now()) @map("created_at")
-
-//   userId String @map("user_id")
-//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-//   raffleId String @map("raffle_id")
-//   raffle   Raffle @relation(fields: [raffleId], references: [id], onDelete: Cascade)
-
-//   @@map("user_raffles")
-// }
-
-// TODO: Premium membership
+  @@map("customer_raffles")
+}
