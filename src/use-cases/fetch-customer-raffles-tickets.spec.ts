@@ -8,18 +8,17 @@ import { InMemoryRafflesRepository } from 'test/in-memory/in-memory-raffles-repo
 import { InMemoryStreaksRepository } from 'test/in-memory/in-memory-streaks-repository'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
-import { UnauthorizedError } from '@/core/errors/unauthorized-error'
 
-import { GetCustomerRaffleTicketUseCase } from './get-customer-raffle-ticket'
+import { FetchCustomerRafflesTicketsUseCase } from './fetch-customer-raffles-tickets'
 
-let sut: GetCustomerRaffleTicketUseCase
+let sut: FetchCustomerRafflesTicketsUseCase
 let streaksRepository: InMemoryStreaksRepository
 let customersRepository: InMemoryCustomersRepository
 let customersMetadataRepository: InMemoryCustomersMetadataRepository
 let rafflesRepository: InMemoryRafflesRepository
 let customerRafflesRepository: InMemoryCustomersRafflesRepository
 
-describe('Use Case: Get Customer Raffle Ticket', () => {
+describe('Use Case: Fetch Customer Raffles Tickets', () => {
   beforeEach(async () => {
     streaksRepository = new InMemoryStreaksRepository()
     customersMetadataRepository = new InMemoryCustomersMetadataRepository()
@@ -32,10 +31,10 @@ describe('Use Case: Get Customer Raffle Ticket', () => {
       rafflesRepository,
     )
 
-    sut = new GetCustomerRaffleTicketUseCase(customerRafflesRepository)
+    sut = new FetchCustomerRafflesTicketsUseCase(customerRafflesRepository)
   })
 
-  it('should be able to get customer raffle ticket details', async () => {
+  it('should be able to get all raffle tickets from customer', async () => {
     customersRepository.create(
       makeCustomer({}, new UniqueEntityId('customer-1')),
     )
@@ -60,50 +59,28 @@ describe('Use Case: Get Customer Raffle Ticket', () => {
       ),
     )
 
-    const { ticket } = await sut.execute({
+    customerRafflesRepository.create(
+      makeCustomerRaffle(
+        {
+          customerId: new UniqueEntityId('customer-1'),
+          raffleId: new UniqueEntityId('raffle-1'),
+        },
+        new UniqueEntityId('ticket-1'),
+      ),
+    )
+
+    const { tickets } = await sut.execute({
       customerId: 'customer-1',
-      ticketId: 'ticket-1',
     })
 
-    expect(ticket).toEqual(
-      expect.objectContaining({
-        name: 'Raffle 1',
-        price: 10,
-        hasWon: null,
-      }),
-    )
-  })
-
-  it('should not be able to get another customer raffle ticket details', async () => {
-    customersRepository.create(
-      makeCustomer({}, new UniqueEntityId('customer-1')),
-    )
-
-    rafflesRepository.create(
-      makeRaffle(
-        {
+    expect(tickets).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
           name: 'Raffle 1',
           price: 10,
-        },
-        new UniqueEntityId('raffle-1'),
-      ),
+          hasWon: null,
+        }),
+      ]),
     )
-
-    customerRafflesRepository.create(
-      makeCustomerRaffle(
-        {
-          customerId: new UniqueEntityId('customer-1'),
-          raffleId: new UniqueEntityId('raffle-1'),
-        },
-        new UniqueEntityId('ticket-1'),
-      ),
-    )
-
-    await expect(() =>
-      sut.execute({
-        customerId: 'customer-2',
-        ticketId: 'ticket-1',
-      }),
-    ).rejects.toBeInstanceOf(UnauthorizedError)
   })
 })

@@ -1,5 +1,4 @@
 import { CustomersRafflesRepository } from '@/adapters/repositories/customers-raffles-repository'
-import { RafflesRepository } from '@/adapters/repositories/raffles-repository'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { UnauthorizedError } from '@/core/errors/unauthorized-error'
 import { CustomerRaffleTicket } from '@/entities/value-objects/customer-raffle-ticket'
@@ -14,46 +13,22 @@ interface GetCustomerRaffleTicketUseCaseResponse {
 }
 
 export class GetCustomerRaffleTicketUseCase {
-  constructor(
-    private rafflesRepository: RafflesRepository,
-    private customerRafflesRepository: CustomersRafflesRepository,
-  ) {}
+  constructor(private customerRafflesRepository: CustomersRafflesRepository) {}
 
   async execute({
     customerId,
     ticketId,
   }: GetCustomerRaffleTicketUseCaseRequest): Promise<GetCustomerRaffleTicketUseCaseResponse> {
-    const customerRaffle =
-      await this.customerRafflesRepository.findById(ticketId)
+    const ticket =
+      await this.customerRafflesRepository.findByIdWithDetails(ticketId)
 
-    if (!customerRaffle) {
+    if (!ticket) {
       throw new ResourceNotFoundError(ticketId)
     }
 
-    if (customerRaffle.customerId.toString() !== customerId) {
+    if (ticket.customerId.toString() !== customerId) {
       throw new UnauthorizedError()
     }
-
-    const raffle = await this.rafflesRepository.findById(
-      customerRaffle.raffleId.toString(),
-    )
-
-    if (!raffle) {
-      throw new ResourceNotFoundError(customerRaffle.raffleId.toString())
-    }
-
-    const ticket = CustomerRaffleTicket.create({
-      ticketId: customerRaffle.id,
-      customerId: customerRaffle.customerId,
-      raffleId: customerRaffle.raffleId,
-      name: raffle.name,
-      bannerUrl: raffle.bannerUrl,
-      price: raffle.price,
-      isPremium: raffle.isPremium,
-      expiresAt: raffle.expiresAt,
-      hasWon: customerRaffle.hasWon,
-      createdAt: customerRaffle.createdAt,
-    })
 
     return {
       ticket,
