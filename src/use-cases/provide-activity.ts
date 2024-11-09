@@ -10,6 +10,7 @@ import { Streak } from '@/entities/streak'
 export interface ProvideActivityUseCaseRequest {
   customerId: string
   activityType: 'STREAK' | 'REST' | 'INACTIVE'
+  date?: Date
 }
 
 export class ProvideActivityUseCase {
@@ -22,8 +23,9 @@ export class ProvideActivityUseCase {
   async execute({
     customerId,
     activityType,
+    date = new Date(),
   }: ProvideActivityUseCaseRequest): Promise<void> {
-    const today = dayjs().startOf('day')
+    const today = dayjs(date).startOf('day')
 
     await this.checkWeeklyReset(customerId)
 
