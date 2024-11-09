@@ -3,16 +3,16 @@ import { InMemoryRafflesRepository } from 'test/in-memory/in-memory-raffles-repo
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 
-import { FetchAvailableRaffles } from './fetch-available-raffles'
+import { FetchAvailableRafflesUseCase } from './fetch-available-raffles'
 
-let sut: FetchAvailableRaffles
+let sut: FetchAvailableRafflesUseCase
 let rafflesRepository: InMemoryRafflesRepository
 
 describe('Use Case: Fetch Available Raffles', () => {
   beforeEach(async () => {
     rafflesRepository = new InMemoryRafflesRepository()
 
-    sut = new FetchAvailableRaffles(rafflesRepository)
+    sut = new FetchAvailableRafflesUseCase(rafflesRepository)
 
     vi.useFakeTimers()
   })

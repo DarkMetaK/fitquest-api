@@ -11,14 +11,14 @@ export async function completeWorkoutController(
   request: FastifyRequest,
   reply: FastifyReply,
 ) {
-  const userId = await request.getCurrentUserId()
+  const customerId = await request.getCurrentUserId()
 
   const { id } = completeWorkoutParamSchema.parse(request.params)
 
   const useCase = makeCompleteWorkoutUseCase.create()
 
   await useCase.execute({
-    customerId: userId,
+    customerId,
     workoutId: id,
   })
 

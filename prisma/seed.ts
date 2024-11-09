@@ -239,6 +239,32 @@ async function seed() {
       },
     ],
   })
+
+  await prisma.raffle.createMany({
+    data: [
+      {
+        name: 'Kit de suplementos',
+        bannerUrl: `${uploadsUrl}/supplements-draw.jpg`,
+        price: 10,
+        isPremium: false,
+        expiresAt: new Date(2024, 10, 30),
+      },
+      {
+        name: 'Kit de roupas',
+        bannerUrl: `${uploadsUrl}/clothes-draw.jpg`,
+        price: 20,
+        isPremium: false,
+        expiresAt: new Date(2024, 10, 30),
+      },
+      {
+        name: 'IPhone 13',
+        bannerUrl: `${uploadsUrl}/iphone-draw.jpg`,
+        price: 30,
+        isPremium: true,
+        expiresAt: new Date(2024, 10, 30),
+      },
+    ],
+  })
 }
 seed().then(() => {
   console.log('Database seeded!')

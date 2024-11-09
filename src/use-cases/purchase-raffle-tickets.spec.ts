@@ -8,7 +8,7 @@ import { InMemoryRafflesRepository } from 'test/in-memory/in-memory-raffles-repo
 import { InMemoryStreaksRepository } from 'test/in-memory/in-memory-streaks-repository'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
-import { ExpireRaffleError } from '@/core/errors/expired-raffle-error'
+import { ExpiredRaffleError } from '@/core/errors/expired-raffle-error'
 import { InsufficientBalanceError } from '@/core/errors/insufficient-balance-error'
 
 import { PurchaseRaffleTicketsUseCase } from './purchase-raffle-tickets'
@@ -167,6 +167,6 @@ describe('Use Case: Buy Raffle Tickets', () => {
         raffleId: 'raffle-1',
         amount: 1,
       }),
-    ).rejects.toBeInstanceOf(ExpireRaffleError)
+    ).rejects.toBeInstanceOf(ExpiredRaffleError)
   })
 })

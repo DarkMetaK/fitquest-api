@@ -1,14 +1,14 @@
 import { RafflesRepository } from '@/adapters/repositories/raffles-repository'
 import { Raffle } from '@/entities/raffle'
 
-interface FetchAvailableRafflesResponse {
+interface FetchAvailableRafflesUseCaseResponse {
   raffles: Raffle[]
 }
 
-export class FetchAvailableRaffles {
+export class FetchAvailableRafflesUseCase {
   constructor(private rafflesRepository: RafflesRepository) {}
 
-  async execute(): Promise<FetchAvailableRafflesResponse> {
+  async execute(): Promise<FetchAvailableRafflesUseCaseResponse> {
     const raffles = await this.rafflesRepository.findManyNotExpired()
 
     return {

@@ -13,6 +13,7 @@ import { errorHandler } from './error-handler'
 import { authRoutes } from './http/controllers/auth/routes'
 import { bundleRoutes } from './http/controllers/bundle/routes'
 import { customerRoutes } from './http/controllers/customer/routes'
+import { raffleRoutes } from './http/controllers/raffle/routes'
 import { workoutRoutes } from './http/controllers/workout/routes'
 
 export const app = fastify()
@@ -40,3 +41,4 @@ app.register(authRoutes)
 app.register(customerRoutes)
 app.register(workoutRoutes)
 app.register(bundleRoutes)
+app.register(raffleRoutes)

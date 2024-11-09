@@ -4,7 +4,7 @@ import { CustomersRafflesRepository } from '@/adapters/repositories/customers-ra
 import { CustomersRepository } from '@/adapters/repositories/customers-repository'
 import { RafflesRepository } from '@/adapters/repositories/raffles-repository'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
-import { ExpireRaffleError } from '@/core/errors/expired-raffle-error'
+import { ExpiredRaffleError } from '@/core/errors/expired-raffle-error'
 import { InsufficientBalanceError } from '@/core/errors/insufficient-balance-error'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { CustomerRaffle } from '@/entities/customer-raffle'
@@ -48,7 +48,7 @@ export class PurchaseRaffleTicketsUseCase {
     const hasEnoughBalance = customer.currencyAmount >= totalPrice
 
     if (dayjs(raffle.expiresAt).isBefore(dayjs())) {
-      throw new ExpireRaffleError()
+      throw new ExpiredRaffleError()
     }
 
     if (!hasEnoughBalance) {

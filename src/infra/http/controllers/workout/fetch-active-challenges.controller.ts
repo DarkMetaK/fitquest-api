@@ -4,7 +4,7 @@ import { makeFetchActiveChallengesUseCase } from '@/infra/database/prisma/factor
 
 import { WorkoutPresenter } from '../../presenters/workout-presenter'
 
-export async function getActiveChallengesController(
+export async function fetchActiveChallengesController(
   request: FastifyRequest,
   reply: FastifyReply,
 ) {
