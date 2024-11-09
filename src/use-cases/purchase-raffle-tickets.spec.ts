@@ -159,20 +159,4 @@ describe('Use Case: Buy Raffle Tickets', () => {
       }),
     ).rejects.toBeInstanceOf(ExpireRaffleError)
   })
-
-  // it('should not be able to authenticate with invalid credentials', async () => {
-  //   customersRepository.create(
-  //     makeCustomer({
-  //       email: 'johndoe@example.com',
-  //       passwordHash: await fakeHasher.hash('12345678'),
-  //     }),
-  //   )
-
-  //   await expect(() =>
-  //     sut.execute({
-  //       email: 'johndoe@example.com',
-  //       password: 'incorrect_password',
-  //     }),
-  //   ).rejects.toBeInstanceOf(InvalidCredentialsError)
-  // })
 })
