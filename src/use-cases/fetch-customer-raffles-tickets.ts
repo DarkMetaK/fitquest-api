@@ -3,6 +3,7 @@ import { CustomerRaffleTicket } from '@/entities/value-objects/customer-raffle-t
 
 interface FetchCustomerRafflesTicketsUseCaseRequest {
   customerId: string
+  raffleId?: string
 }
 
 interface FetchCustomerRafflesTicketsUseCaseResponse {
@@ -14,10 +15,12 @@ export class FetchCustomerRafflesTicketsUseCase {
 
   async execute({
     customerId,
+    raffleId,
   }: FetchCustomerRafflesTicketsUseCaseRequest): Promise<FetchCustomerRafflesTicketsUseCaseResponse> {
     const tickets =
       await this.customerRafflesRepository.findManyByCustomerIdWithDetails(
         customerId,
+        raffleId,
       )
 
     return {

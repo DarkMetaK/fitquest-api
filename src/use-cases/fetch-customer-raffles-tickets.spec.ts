@@ -73,6 +73,61 @@ describe('Use Case: Fetch Customer Raffles Tickets', () => {
       customerId: 'customer-1',
     })
 
+    expect(tickets).toHaveLength(2)
+
+    expect(tickets).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: 'Raffle 1',
+          price: 10,
+          hasWon: null,
+        }),
+      ]),
+    )
+  })
+
+  it('should be able to get all raffle tickets from customer filtering by raffleId', async () => {
+    customersRepository.create(
+      makeCustomer({}, new UniqueEntityId('customer-1')),
+    )
+
+    rafflesRepository.create(
+      makeRaffle(
+        {
+          name: 'Raffle 1',
+          price: 10,
+        },
+        new UniqueEntityId('raffle-1'),
+      ),
+    )
+
+    customerRafflesRepository.create(
+      makeCustomerRaffle(
+        {
+          customerId: new UniqueEntityId('customer-1'),
+          raffleId: new UniqueEntityId('raffle-1'),
+        },
+        new UniqueEntityId('ticket-1'),
+      ),
+    )
+
+    customerRafflesRepository.create(
+      makeCustomerRaffle(
+        {
+          customerId: new UniqueEntityId('customer-1'),
+          raffleId: new UniqueEntityId('raffle-2'),
+        },
+        new UniqueEntityId('ticket-1'),
+      ),
+    )
+
+    const { tickets } = await sut.execute({
+      customerId: 'customer-1',
+      raffleId: 'raffle-1',
+    })
+
+    expect(tickets).toHaveLength(1)
+
     expect(tickets).toEqual(
       expect.arrayContaining([
         expect.objectContaining({

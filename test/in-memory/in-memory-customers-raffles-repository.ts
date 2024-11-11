@@ -66,9 +66,13 @@ export class InMemoryCustomersRafflesRepository
 
   async findManyByCustomerIdWithDetails(
     customerId: string,
+    raffleId?: string,
   ): Promise<CustomerRaffleTicket[]> {
     const customerRaffles = this.items.filter((ticket) =>
-      ticket.customerId.equals(new UniqueEntityId(customerId)),
+      raffleId
+        ? ticket.customerId.equals(new UniqueEntityId(customerId)) &&
+          ticket.raffleId.equals(new UniqueEntityId(raffleId))
+        : ticket.customerId.equals(new UniqueEntityId(customerId)),
     )
 
     const tickets = customerRaffles.map((item) => {

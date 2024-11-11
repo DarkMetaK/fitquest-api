@@ -52,10 +52,12 @@ export class PrismaCustomersRafflesRepository
 
   async findManyByCustomerIdWithDetails(
     customerId: string,
+    raffleId?: string,
   ): Promise<CustomerRaffleTicket[]> {
     const tickets = await prisma.customerRaffle.findMany({
       where: {
         customerId,
+        raffleId,
       },
       include: {
         raffle: true,

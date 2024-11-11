@@ -10,6 +10,7 @@ export interface CustomersRafflesRepository {
 
   findManyByCustomerIdWithDetails(
     customerId: string,
+    raffleId?: string,
   ): Promise<CustomerRaffleTicket[]>
 
   create(customerRaffle: CustomerRaffle): Promise<void>
