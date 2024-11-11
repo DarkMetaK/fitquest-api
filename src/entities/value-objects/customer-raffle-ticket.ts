@@ -8,6 +8,7 @@ export interface CustomerRaffleTicketProps {
   raffleId: UniqueEntityId
   hasWon?: boolean | null
   name: string
+  description: string
   bannerUrl: string
   price: number
   isPremium: boolean
@@ -38,6 +39,10 @@ export class CustomerRaffleTicket extends ValueObject<CustomerRaffleTicketProps>
 
   get name() {
     return this.props.name
+  }
+
+  get description() {
+    return this.props.description
   }
 
   get bannerUrl() {

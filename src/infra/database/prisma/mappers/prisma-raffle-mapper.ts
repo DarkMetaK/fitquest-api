@@ -8,6 +8,7 @@ export class PrismaRaffleMapper {
     const raffle = Raffle.create(
       {
         name: raw.name,
+        description: raw.description,
         bannerUrl: raw.bannerUrl,
         isPremium: raw.isPremium,
         price: raw.price,
@@ -24,6 +25,7 @@ export class PrismaRaffleMapper {
     return {
       id: raffle.id.toString(),
       name: raffle.name,
+      description: raffle.description,
       bannerUrl: raffle.bannerUrl,
       isPremium: raffle.isPremium,
       price: raffle.price,

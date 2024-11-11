@@ -36,6 +36,7 @@ enum BodyRegion {
   CORE
   LEGS
   TRICEPS
+  FULL_BODY
 }
 
 enum WorkoutType {
@@ -234,13 +235,14 @@ model UserActivity {
 }
 
 model Raffle {
-  id        String   @id @default(uuid())
-  name      String
-  bannerUrl String   @map("banner_url")
-  price     Int
-  isPremium Boolean  @default(true) @map("is_premium")
-  expiresAt DateTime @map("expires_at")
-  createdAt DateTime @default(now()) @map("created_at")
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  bannerUrl   String   @map("banner_url")
+  price       Int
+  isPremium   Boolean  @default(true) @map("is_premium")
+  expiresAt   DateTime @map("expires_at")
+  createdAt   DateTime @default(now()) @map("created_at")
 
   participants CustomerRaffle[]
 

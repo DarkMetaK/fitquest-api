@@ -14,6 +14,7 @@ export class PrismaCustomerRaffleTicketMapper {
       customerId: new UniqueEntityId(raw.customerId),
       raffleId: new UniqueEntityId(raw.raffleId),
       name: raw.raffle.name,
+      description: raw.raffle.description,
       bannerUrl: raw.raffle.bannerUrl,
       price: raw.raffle.price,
       isPremium: raw.raffle.isPremium,
@@ -24,22 +25,4 @@ export class PrismaCustomerRaffleTicketMapper {
 
     return ticket
   }
-
-  // static toPrisma(ticket: CustomerRaffleTicket): PrismaCustomerRaffleDetails {
-  //   return {
-  //     id: ticket.ticketId.toString(),
-  //     customerId: ticket.customerId.toString(),
-  //     raffleId: ticket.raffleId.toString(),
-  //     hasWon: ticket.hasWon ?? null,
-  //     createdAt: ticket.createdAt,
-  //     raffle: {
-  //       id: ticket.raffleId.toString(),
-  //       name: ticket.name,
-  //       bannerUrl: ticket.bannerUrl,
-  //       price: ticket.price,
-  //       isPremium: ticket.isPremium,
-  //       expiresAt: ticket.expiresAt,
-  //     },
-  //   }
-  // }
 }

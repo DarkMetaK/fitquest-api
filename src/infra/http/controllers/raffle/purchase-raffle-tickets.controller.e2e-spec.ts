@@ -52,8 +52,6 @@ describe('Purchase raffle tickets (E2E)', () => {
       .query({ amount: 10 })
       .send()
 
-    console.log(response.body)
-
     expect(response.statusCode).toEqual(201)
 
     const ticketsOnDatabase = await prisma.customerRaffle.findMany({

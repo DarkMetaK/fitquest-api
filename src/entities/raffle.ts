@@ -4,6 +4,7 @@ import { Optional } from '@/core/types/optional'
 
 export interface RaffleProps {
   name: string
+  description: string
   bannerUrl: string
   price: number
   isPremium: boolean
@@ -29,6 +30,10 @@ export class Raffle extends Entity<RaffleProps> {
 
   get name() {
     return this.props.name
+  }
+
+  get description() {
+    return this.props.description
   }
 
   get bannerUrl() {

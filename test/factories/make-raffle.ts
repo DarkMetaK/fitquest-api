@@ -12,6 +12,7 @@ export function makeRaffle(
   const raffle = Raffle.create(
     {
       name: faker.person.fullName(),
+      description: faker.lorem.paragraph(),
       bannerUrl: faker.image.url(),
       isPremium: false,
       price: faker.number.int({ min: 1, max: 1000 }),

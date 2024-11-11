@@ -5,6 +5,7 @@ export class RafflePresenter {
     return {
       id: raffle.id.toString(),
       name: raffle.name,
+      description: raffle.description,
       bannerUrl: raffle.bannerUrl,
       price: raffle.price,
       isPremium: raffle.isPremium,
