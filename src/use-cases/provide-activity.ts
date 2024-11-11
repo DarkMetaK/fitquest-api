@@ -39,18 +39,18 @@ export class ProvideActivityUseCase {
       return
     }
 
-    await this.customerActivitiesRepository.create(
-      CustomerActivity.create({
-        customerId: new UniqueEntityId(customerId),
-        date: today.toDate(),
-        activityType,
-      }),
-    )
-
     if (activityType === 'STREAK') {
+      await this.customerActivitiesRepository.create(
+        CustomerActivity.create({
+          customerId: new UniqueEntityId(customerId),
+          date: today.toDate(),
+          activityType,
+        }),
+      )
+
       await this.increaseStreak(customerId)
     } else if (activityType === 'INACTIVE') {
-      await this.handleInactive(customerId)
+      await this.handleInactive(customerId, today.toDate())
     }
   }
 
@@ -100,7 +100,7 @@ export class ProvideActivityUseCase {
     await this.streaksRepository.update(userStreak)
   }
 
-  private async handleInactive(customerId: string): Promise<void> {
+  private async handleInactive(customerId: string, date: Date): Promise<void> {
     const userStreak = await this.streaksRepository.findByCustomerId(customerId)
 
     if (!userStreak) {
@@ -108,8 +108,24 @@ export class ProvideActivityUseCase {
     }
 
     if (userStreak.remainingRestDays > 0) {
+      await this.customerActivitiesRepository.create(
+        CustomerActivity.create({
+          customerId: new UniqueEntityId(customerId),
+          date,
+          activityType: 'REST',
+        }),
+      )
+
       userStreak.remainingRestDays -= 1
     } else {
+      await this.customerActivitiesRepository.create(
+        CustomerActivity.create({
+          customerId: new UniqueEntityId(customerId),
+          date,
+          activityType: 'INACTIVE',
+        }),
+      )
+
       userStreak.currentStreak = 0
     }
 

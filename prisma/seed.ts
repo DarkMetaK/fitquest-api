@@ -50,7 +50,6 @@ async function seed() {
       instructions: 'A prancha fortalece o abdômen e a região lombar.',
       estimatedCalories: 70,
       duration: 60,
-      repetitions: 1,
       targetedRegions: ['CORE', 'BACK'],
       previewUrl: `${uploadsUrl}/exercises/example-preview.jpg`,
       demonstrationUrl: `${uploadsUrl}/exercises/example.gif`,
