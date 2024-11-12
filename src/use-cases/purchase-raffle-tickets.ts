@@ -10,6 +10,7 @@ import { MaxTicketsReachedError } from '@/core/errors/max-tickets-reached-error'
 import { PremiumRequiredError } from '@/core/errors/premium-required-error'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { CustomerRaffle } from '@/entities/customer-raffle'
+import { CustomerRaffleTicket } from '@/entities/value-objects/customer-raffle-ticket'
 
 interface PurchaseRaffleTicketsUseCaseRequest {
   customerId: string
@@ -18,7 +19,7 @@ interface PurchaseRaffleTicketsUseCaseRequest {
 }
 
 interface PurchaseRaffleTicketsUseCaseResponse {
-  tickets: CustomerRaffle[]
+  tickets: CustomerRaffleTicket[]
 }
 
 export class PurchaseRaffleTicketsUseCase {
@@ -92,12 +93,13 @@ export class PurchaseRaffleTicketsUseCase {
       tickets.push(ticket)
     }
 
-    await this.customerRafflesRepository.createMany(tickets)
+    const createdTickets =
+      await this.customerRafflesRepository.createMany(tickets)
 
     await this.customersRepository.update(customer)
 
     return {
-      tickets,
+      tickets: createdTickets,
     }
   }
 }

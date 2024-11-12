@@ -17,8 +17,12 @@ export class CustomerBundlePresenter {
           stepsAmount: workout.steps.length,
         }
       }),
-      finishedWorkoutsIds: bundle.finishedWorkouts.map((workout) =>
-        workout.workoutId.toString(),
+      finishedWorkoutsIds: Array.from(
+        new Set(
+          bundle.finishedWorkouts.map((workout) =>
+            workout.workoutId.toString(),
+          ),
+        ),
       ),
     }
   }

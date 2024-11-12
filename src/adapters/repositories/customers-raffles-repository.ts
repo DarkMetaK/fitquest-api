@@ -20,5 +20,5 @@ export interface CustomersRafflesRepository {
 
   create(customerRaffle: CustomerRaffle): Promise<void>
 
-  createMany(customerRaffles: CustomerRaffle[]): Promise<void>
+  createMany(customerRaffles: CustomerRaffle[]): Promise<CustomerRaffleTicket[]>
 }

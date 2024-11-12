@@ -98,11 +98,22 @@ export class PrismaCustomersRafflesRepository
     })
   }
 
-  async createMany(customerRaffles: CustomerRaffle[]): Promise<void> {
+  async createMany(
+    customerRaffles: CustomerRaffle[],
+  ): Promise<CustomerRaffleTicket[]> {
     const data = customerRaffles.map(PrismaCustomerRaffleMapper.toPrisma)
 
-    await prisma.customerRaffle.createMany({
-      data,
-    })
+    const tickets = await prisma.$transaction(
+      data.map((item) =>
+        prisma.customerRaffle.create({
+          data: item,
+          include: {
+            raffle: true,
+          },
+        }),
+      ),
+    )
+
+    return tickets.map(PrismaCustomerRaffleTicketMapper.toDomain)
   }
 }

@@ -3,6 +3,8 @@ import { z } from 'zod'
 
 import { makePurchaseRaffleTicketsUseCase } from '@/infra/database/prisma/factories/make-purchase-raffle-tickets-use-case'
 
+import { CustomerRaffleTicketPresenter } from '../../presenters/customer-raffle-ticket-presenter'
+
 const purchaseRaffleTicketsParamSchema = z.object({
   id: z.string({ message: 'Id is required.' }).uuid(),
 })
@@ -25,11 +27,13 @@ export async function purchaseRaffleTicketsController(
 
   const useCase = makePurchaseRaffleTicketsUseCase.create()
 
-  await useCase.execute({
+  const { tickets } = await useCase.execute({
     customerId,
     raffleId,
     amount,
   })
 
-  return reply.status(201).send()
+  return reply.status(201).send({
+    tickets: tickets.map(CustomerRaffleTicketPresenter.toHTTP),
+  })
 }

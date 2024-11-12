@@ -7,6 +7,7 @@ export class CustomerRaffleTicketPresenter {
       raffleId: ticket.raffleId.toString(),
       hasWon: ticket.hasWon,
       name: ticket.name,
+      description: ticket.description,
       bannerUrl: ticket.bannerUrl,
       price: ticket.price,
       isPremium: ticket.isPremium,

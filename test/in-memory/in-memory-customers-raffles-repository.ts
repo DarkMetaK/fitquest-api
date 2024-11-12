@@ -119,7 +119,35 @@ export class InMemoryCustomersRafflesRepository
     this.items.push(customerRaffle)
   }
 
-  async createMany(customerRaffles: CustomerRaffle[]): Promise<void> {
+  async createMany(
+    customerRaffles: CustomerRaffle[],
+  ): Promise<CustomerRaffleTicket[]> {
     this.items.push(...customerRaffles)
+
+    const tickets = customerRaffles.map((item) => {
+      const raffle = this.rafflesRepository.items.find((raffle) =>
+        raffle.id.equals(item.raffleId),
+      )
+
+      if (!raffle) {
+        throw new Error('Raffle not found')
+      }
+
+      return CustomerRaffleTicket.create({
+        ticketId: item.id,
+        customerId: item.customerId,
+        raffleId: item.raffleId,
+        name: raffle.name,
+        description: raffle.description,
+        bannerUrl: raffle.bannerUrl,
+        price: raffle.price,
+        isPremium: raffle.isPremium,
+        expiresAt: raffle.expiresAt,
+        hasWon: item.hasWon,
+        createdAt: item.createdAt,
+      })
+    })
+
+    return tickets
   }
 }
