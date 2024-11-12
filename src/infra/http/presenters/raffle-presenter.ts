@@ -9,6 +9,7 @@ export class RafflePresenter {
       bannerUrl: raffle.bannerUrl,
       price: raffle.price,
       isPremium: raffle.isPremium,
+      freeTierQuota: raffle.freeTierQuota,
       expiresAt: raffle.expiresAt,
       createdAt: raffle.createdAt,
     }

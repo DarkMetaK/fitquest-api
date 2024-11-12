@@ -3,7 +3,7 @@ import { CustomerRaffleTicket } from '@/entities/value-objects/customer-raffle-t
 export class CustomerRaffleTicketPresenter {
   static toHTTP(ticket: CustomerRaffleTicket) {
     return {
-      id: ticket.raffleId.toString(),
+      id: ticket.ticketId.toString(),
       raffleId: ticket.raffleId.toString(),
       hasWon: ticket.hasWon,
       name: ticket.name,

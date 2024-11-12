@@ -235,14 +235,15 @@ model UserActivity {
 }
 
 model Raffle {
-  id          String   @id @default(uuid())
-  name        String
-  description String
-  bannerUrl   String   @map("banner_url")
-  price       Int
-  isPremium   Boolean  @default(true) @map("is_premium")
-  expiresAt   DateTime @map("expires_at")
-  createdAt   DateTime @default(now()) @map("created_at")
+  id            String   @id @default(uuid())
+  name          String
+  description   String
+  bannerUrl     String   @map("banner_url")
+  price         Int
+  isPremium     Boolean  @default(true) @map("is_premium")
+  freeTierQuota Int      @default(5) @map("free_tier_quota")
+  expiresAt     DateTime @map("expires_at")
+  createdAt     DateTime @default(now()) @map("created_at")
 
   participants CustomerRaffle[]
 

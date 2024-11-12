@@ -8,18 +8,20 @@ export interface RaffleProps {
   bannerUrl: string
   price: number
   isPremium: boolean
+  freeTierQuota: number
   expiresAt: Date
   createdAt: Date
 }
 
 export class Raffle extends Entity<RaffleProps> {
   static create(
-    props: Optional<RaffleProps, 'createdAt'>,
+    props: Optional<RaffleProps, 'createdAt' | 'freeTierQuota'>,
     id?: UniqueEntityId,
   ) {
     const raffle = new Raffle(
       {
         ...props,
+        freeTierQuota: props.freeTierQuota ?? 5,
         createdAt: props.createdAt ?? new Date(),
       },
       id,
@@ -46,6 +48,10 @@ export class Raffle extends Entity<RaffleProps> {
 
   get isPremium() {
     return this.props.isPremium
+  }
+
+  get freeTierQuota() {
+    return this.props.freeTierQuota
   }
 
   get expiresAt() {

@@ -10,6 +10,8 @@ import { InMemoryStreaksRepository } from 'test/in-memory/in-memory-streaks-repo
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { ExpiredRaffleError } from '@/core/errors/expired-raffle-error'
 import { InsufficientBalanceError } from '@/core/errors/insufficient-balance-error'
+import { MaxTicketsReachedError } from '@/core/errors/max-tickets-reached-error'
+import { PremiumRequiredError } from '@/core/errors/premium-required-error'
 
 import { PurchaseRaffleTicketsUseCase } from './purchase-raffle-tickets'
 
@@ -168,5 +170,76 @@ describe('Use Case: Buy Raffle Tickets', () => {
         amount: 1,
       }),
     ).rejects.toBeInstanceOf(ExpiredRaffleError)
+  })
+
+  it('should not be able to purchase a ticket for a premium raffle without premium membership', async () => {
+    customersRepository.create(
+      makeCustomer({}, new UniqueEntityId('regular-customer')),
+    )
+
+    customersMetadataRepository.create(
+      makeCustomerMetadata({
+        customerId: new UniqueEntityId('regular-customer'),
+        currencyAmount: 10,
+        premiumExpiresAt: null,
+      }),
+    )
+
+    rafflesRepository.create(
+      makeRaffle(
+        {
+          price: 10,
+          isPremium: true,
+        },
+        new UniqueEntityId('premium-raffle'),
+      ),
+    )
+
+    await expect(() =>
+      sut.execute({
+        customerId: 'regular-customer',
+        raffleId: 'premium-raffle',
+        amount: 1,
+      }),
+    ).rejects.toBeInstanceOf(PremiumRequiredError)
+  })
+
+  it('should not be able to purchase a ticket beyond the free limit quota without premium membership', async () => {
+    customersRepository.create(
+      makeCustomer({}, new UniqueEntityId('regular-customer')),
+    )
+
+    customersMetadataRepository.create(
+      makeCustomerMetadata({
+        customerId: new UniqueEntityId('regular-customer'),
+        currencyAmount: 20,
+        premiumExpiresAt: null,
+      }),
+    )
+
+    rafflesRepository.create(
+      makeRaffle(
+        {
+          price: 10,
+          isPremium: false,
+          freeTierQuota: 1,
+        },
+        new UniqueEntityId('regular-raffle'),
+      ),
+    )
+
+    await sut.execute({
+      customerId: 'regular-customer',
+      raffleId: 'regular-raffle',
+      amount: 1,
+    })
+
+    await expect(() =>
+      sut.execute({
+        customerId: 'regular-customer',
+        raffleId: 'regular-raffle',
+        amount: 1,
+      }),
+    ).rejects.toBeInstanceOf(MaxTicketsReachedError)
   })
 })

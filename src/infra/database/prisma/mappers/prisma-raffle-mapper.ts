@@ -12,6 +12,7 @@ export class PrismaRaffleMapper {
         bannerUrl: raw.bannerUrl,
         isPremium: raw.isPremium,
         price: raw.price,
+        freeTierQuota: raw.freeTierQuota,
         expiresAt: raw.expiresAt,
         createdAt: raw.createdAt,
       },
@@ -29,6 +30,7 @@ export class PrismaRaffleMapper {
       bannerUrl: raffle.bannerUrl,
       isPremium: raffle.isPremium,
       price: raffle.price,
+      freeTierQuota: raffle.freeTierQuota,
       expiresAt: raffle.expiresAt,
       createdAt: raffle.createdAt,
     }

@@ -6,6 +6,8 @@ import { RafflesRepository } from '@/adapters/repositories/raffles-repository'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { ExpiredRaffleError } from '@/core/errors/expired-raffle-error'
 import { InsufficientBalanceError } from '@/core/errors/insufficient-balance-error'
+import { MaxTicketsReachedError } from '@/core/errors/max-tickets-reached-error'
+import { PremiumRequiredError } from '@/core/errors/premium-required-error'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { CustomerRaffle } from '@/entities/customer-raffle'
 
@@ -42,6 +44,27 @@ export class PurchaseRaffleTicketsUseCase {
 
     if (!raffle) {
       throw new ResourceNotFoundError(raffleId)
+    }
+
+    const customerHasPremiumMembership =
+      customer.premiumExpiresAt &&
+      dayjs(customer.premiumExpiresAt).isAfter(dayjs())
+
+    if (!customerHasPremiumMembership && raffle.isPremium) {
+      throw new PremiumRequiredError()
+    }
+
+    const previousTickets =
+      await this.customerRafflesRepository.findManyByCustomerIdAndRaffleId(
+        customerId,
+        raffleId,
+      )
+
+    if (
+      !customerHasPremiumMembership &&
+      previousTickets.length >= raffle.freeTierQuota
+    ) {
+      throw new MaxTicketsReachedError()
     }
 
     const totalPrice = raffle.price * amount

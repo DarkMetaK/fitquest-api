@@ -45,6 +45,9 @@ export class PrismaCustomersRafflesRepository
       where: {
         customerId,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     })
 
     return tickets.map(PrismaCustomerRaffleMapper.toDomain)
@@ -59,12 +62,32 @@ export class PrismaCustomersRafflesRepository
         customerId,
         raffleId,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
       include: {
         raffle: true,
       },
     })
 
     return tickets.map(PrismaCustomerRaffleTicketMapper.toDomain)
+  }
+
+  async findManyByCustomerIdAndRaffleId(
+    customerId: string,
+    raffleId: string,
+  ): Promise<CustomerRaffle[]> {
+    const tickets = await prisma.customerRaffle.findMany({
+      where: {
+        customerId,
+        raffleId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+
+    return tickets.map(PrismaCustomerRaffleMapper.toDomain)
   }
 
   async create(customerRaffle: CustomerRaffle): Promise<void> {

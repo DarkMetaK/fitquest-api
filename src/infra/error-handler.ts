@@ -9,6 +9,7 @@ import { ExpiredRaffleError } from '@/core/errors/expired-raffle-error'
 import { InsufficientBalanceError } from '@/core/errors/insufficient-balance-error'
 import { InvalidCredentialsError } from '@/core/errors/invalid-credentials-error'
 import { LoginMethodError } from '@/core/errors/login-method-error'
+import { MaxTicketsReachedError } from '@/core/errors/max-tickets-reached-error'
 import { PhoneAlreadyTakenError } from '@/core/errors/phone-already-taken-error'
 import { PremiumRequiredError } from '@/core/errors/premium-required-error'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error'
@@ -79,6 +80,10 @@ export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
 
   if (error instanceof UnauthorizedError) {
     return reply.status(401).send({ message: error.message })
+  }
+
+  if (error instanceof MaxTicketsReachedError) {
+    return reply.status(400).send({ message: error.message })
   }
 
   console.log(error)

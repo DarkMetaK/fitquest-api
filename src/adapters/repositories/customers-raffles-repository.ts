@@ -13,6 +13,11 @@ export interface CustomersRafflesRepository {
     raffleId?: string,
   ): Promise<CustomerRaffleTicket[]>
 
+  findManyByCustomerIdAndRaffleId(
+    customerId: string,
+    raffleId: string,
+  ): Promise<CustomerRaffle[]>
+
   create(customerRaffle: CustomerRaffle): Promise<void>
 
   createMany(customerRaffles: CustomerRaffle[]): Promise<void>

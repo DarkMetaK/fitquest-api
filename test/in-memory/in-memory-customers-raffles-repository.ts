@@ -102,6 +102,19 @@ export class InMemoryCustomersRafflesRepository
     return tickets
   }
 
+  async findManyByCustomerIdAndRaffleId(
+    customerId: string,
+    raffleId: string,
+  ): Promise<CustomerRaffle[]> {
+    const tickets = this.items.filter(
+      (ticket) =>
+        ticket.customerId.equals(new UniqueEntityId(customerId)) &&
+        ticket.raffleId.equals(new UniqueEntityId(raffleId)),
+    )
+
+    return tickets
+  }
+
   async create(customerRaffle: CustomerRaffle): Promise<void> {
     this.items.push(customerRaffle)
   }
