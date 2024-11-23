@@ -9,7 +9,7 @@ interface StepWithExercise {
   targetedRegions: string[]
   estimatedCalories: number
   demonstrationUrl: string
-  instructions?: string | null
+  instructions: string[]
   previewUrl?: string | null
   videoUrl?: string | null
   audioUrl?: string | null

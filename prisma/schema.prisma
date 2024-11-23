@@ -37,6 +37,8 @@ enum BodyRegion {
   LEGS
   TRICEPS
   FULL_BODY
+  OBLIQUES
+  ANKLES
 }
 
 enum WorkoutType {
@@ -117,7 +119,7 @@ model Token {
 model Exercise {
   id                String       @id @default(uuid())
   name              String
-  instructions      String?
+  instructions      String[]
   targetedRegions   BodyRegion[] @map("targeted_regions")
   estimatedCalories Int          @map("estimated_calories")
   demonstrationUrl  String       @map("demonstration_url")
