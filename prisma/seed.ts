@@ -344,7 +344,7 @@ async function seed() {
     data: {
       name: 'Desafio Peitoral',
       type: 'CHALLENGE',
-      bannerUrl: `${uploadsUrl}/workouts/example-banner-2.jpg`,
+      bannerUrl: `${uploadsUrl}/workouts/example-banner-2.jpeg`,
       availableCurrency: 50,
       availableExperience: 50,
       expiresAt: new Date(2024, 10, 30),

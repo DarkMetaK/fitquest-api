@@ -13,6 +13,7 @@ import { errorHandler } from './error-handler'
 import { authRoutes } from './http/controllers/auth/routes'
 import { bundleRoutes } from './http/controllers/bundle/routes'
 import { customerRoutes } from './http/controllers/customer/routes'
+import { premiumRoutes } from './http/controllers/premium/routes'
 import { raffleRoutes } from './http/controllers/raffle/routes'
 import { workoutRoutes } from './http/controllers/workout/routes'
 
@@ -42,3 +43,4 @@ app.register(customerRoutes)
 app.register(workoutRoutes)
 app.register(bundleRoutes)
 app.register(raffleRoutes)
+app.register(premiumRoutes)
