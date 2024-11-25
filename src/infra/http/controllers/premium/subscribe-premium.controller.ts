@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
-import { makeSubscribePremiumUseCase } from '@/infra/database/prisma/factories/make-subscribe-premium-use-case'
+import { makeSubscribePremiumUseCase } from '@/infra/database/prisma/factories/use-cases/make-subscribe-premium-use-case'
 
 export async function subscribePremiumController(
   request: FastifyRequest,

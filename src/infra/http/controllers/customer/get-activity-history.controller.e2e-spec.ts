@@ -1,9 +1,9 @@
 import request from 'supertest'
-import { makePrismaCustomer } from 'test/factories/make-customer'
-import { makePrismaCustomerActivity } from 'test/factories/make-customer-activity'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { app } from '@/infra/app'
+import { makePrismaCustomer } from '@/infra/database/prisma/factories/utils/make-prisma-customer'
+import { makePrismaCustomerActivity } from '@/infra/database/prisma/factories/utils/make-prisma-customer-activity'
 import { JwtEncrypter } from '@/infra/gateways/cryptography/jwt-encrypter'
 
 let jwt: JwtEncrypter

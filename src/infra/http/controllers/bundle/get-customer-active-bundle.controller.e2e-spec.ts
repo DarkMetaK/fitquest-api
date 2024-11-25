@@ -1,12 +1,12 @@
 import request from 'supertest'
-import { makePrismaBundle } from 'test/factories/make-bundle'
-import { makePrismaBundleSubscription } from 'test/factories/make-bundle-subscription'
-import { makePrismaCustomer } from 'test/factories/make-customer'
-import { makePrismaFinishedWorkout } from 'test/factories/make-finished-workout'
-import { makePrismaWorkout } from 'test/factories/make-workout'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { app } from '@/infra/app'
+import { makePrismaBundle } from '@/infra/database/prisma/factories/utils/make-prisma-bundle'
+import { makePrismaBundleSubscription } from '@/infra/database/prisma/factories/utils/make-prisma-bundle-subscription'
+import { makePrismaCustomer } from '@/infra/database/prisma/factories/utils/make-prisma-customer'
+import { makePrismaFinishedWorkout } from '@/infra/database/prisma/factories/utils/make-prisma-finished-workout'
+import { makePrismaWorkout } from '@/infra/database/prisma/factories/utils/make-prisma-workout'
 import { JwtEncrypter } from '@/infra/gateways/cryptography/jwt-encrypter'
 
 let jwt: JwtEncrypter

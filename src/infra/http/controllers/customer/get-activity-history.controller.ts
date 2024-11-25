@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-import { makeGetCustomerActivityHistory } from '@/infra/database/prisma/factories/make-get-customer-activity-history-use-case'
+import { makeGetCustomerActivityHistory } from '@/infra/database/prisma/factories/use-cases/make-get-customer-activity-history-use-case'
 
 import { ActivityPresenter } from '../../presenters/activity-presenter'
 

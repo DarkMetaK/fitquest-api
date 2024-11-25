@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-import { makeAuthenticateWithPasswordUseCase } from '@/infra/database/prisma/factories/make-authenticate-with-password-use-case'
+import { makeAuthenticateWithPasswordUseCase } from '@/infra/database/prisma/factories/use-cases/make-authenticate-with-password-use-case'
 
 const authenticateWithPasswordBodySchema = z.object({
   email: z

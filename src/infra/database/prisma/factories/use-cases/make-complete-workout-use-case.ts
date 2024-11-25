@@ -1,9 +1,9 @@
 import { CompleteWorkoutUseCase } from '@/use-cases/complete-workout'
 
-import { PrismaBundlesSubscriptionRepository } from '../repositories/prisma-bundles-subscription-repository'
-import { PrismaCustomersRepository } from '../repositories/prisma-customers-repository'
-import { PrismaFinishedWorkoutsRepository } from '../repositories/prisma-finished-workouts-repository'
-import { PrismaWorkoutsRepository } from '../repositories/prisma-workouts-repository'
+import { PrismaBundlesSubscriptionRepository } from '../../repositories/prisma-bundles-subscription-repository'
+import { PrismaCustomersRepository } from '../../repositories/prisma-customers-repository'
+import { PrismaFinishedWorkoutsRepository } from '../../repositories/prisma-finished-workouts-repository'
+import { PrismaWorkoutsRepository } from '../../repositories/prisma-workouts-repository'
 
 export class makeCompleteWorkoutUseCase {
   static create(): CompleteWorkoutUseCase {

@@ -1,8 +1,8 @@
 import { hash } from 'bcryptjs'
 import request from 'supertest'
-import { makePrismaCustomer } from 'test/factories/make-customer'
 
 import { app } from '@/infra/app'
+import { makePrismaCustomer } from '@/infra/database/prisma/factories/utils/make-prisma-customer'
 
 describe('Authenticate with password (E2E)', () => {
   beforeAll(async () => {

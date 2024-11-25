@@ -2,8 +2,8 @@ import { BcryptHasher } from '@/infra/gateways/cryptography/bcrypt-hasher'
 import { JwtEncrypter } from '@/infra/gateways/cryptography/jwt-encrypter'
 import { AuthenticateWithPasswordUseCase } from '@/use-cases/authenticate-with-password'
 
-import { PrismaCustomersMetadataRepository } from '../repositories/prisma-customers-metadata-repository'
-import { PrismaCustomersRepository } from '../repositories/prisma-customers-repository'
+import { PrismaCustomersMetadataRepository } from '../../repositories/prisma-customers-metadata-repository'
+import { PrismaCustomersRepository } from '../../repositories/prisma-customers-repository'
 
 export class makeAuthenticateWithPasswordUseCase {
   static create(): AuthenticateWithPasswordUseCase {

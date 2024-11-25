@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-import { makePurchaseRaffleTicketsUseCase } from '@/infra/database/prisma/factories/make-purchase-raffle-tickets-use-case'
+import { makePurchaseRaffleTicketsUseCase } from '@/infra/database/prisma/factories/use-cases/make-purchase-raffle-tickets-use-case'
 
 import { CustomerRaffleTicketPresenter } from '../../presenters/customer-raffle-ticket-presenter'
 

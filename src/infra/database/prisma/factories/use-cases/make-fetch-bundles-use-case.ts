@@ -1,6 +1,6 @@
 import { FetchBundlesUseCase } from '@/use-cases/fetch-bundles'
 
-import { PrismaBundlesRepository } from '../repositories/prisma-bundles-repository'
+import { PrismaBundlesRepository } from '../../repositories/prisma-bundles-repository'
 
 export class makeFetchBundlesUseCase {
   static create(): FetchBundlesUseCase {

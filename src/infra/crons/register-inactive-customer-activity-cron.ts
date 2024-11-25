@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import cron from 'node-cron'
 
-import { makeProvideActivityUseCase } from '../database/prisma/factories/make-provide-activity-use-case'
+import { makeProvideActivityUseCase } from '../database/prisma/factories/use-cases/make-provide-activity-use-case'
 import { prisma } from '../libs/prisma'
 
 export const registerInactiveCustomerActivityCron = cron.schedule(

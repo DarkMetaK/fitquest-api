@@ -1,6 +1,6 @@
 import { VerifyPhoneAvailabilityUseCase } from '@/use-cases/verify-phone-availability'
 
-import { PrismaCustomersMetadataRepository } from '../repositories/prisma-customers-metadata-repository'
+import { PrismaCustomersMetadataRepository } from '../../repositories/prisma-customers-metadata-repository'
 
 export class makeVerifyPhoneAvailabilityUseCase {
   static create(): VerifyPhoneAvailabilityUseCase {

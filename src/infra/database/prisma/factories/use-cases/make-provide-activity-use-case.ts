@@ -1,8 +1,8 @@
 import { ProvideActivityUseCase } from '@/use-cases/provide-activity'
 
-import { PrismaCustomerActivitiesRepository } from '../repositories/prisma-customer-activities-repository'
-import { PrismaCustomersMetadataRepository } from '../repositories/prisma-customers-metadata-repository'
-import { PrismaStreaksRepository } from '../repositories/prisma-streaks-repository'
+import { PrismaCustomerActivitiesRepository } from '../../repositories/prisma-customer-activities-repository'
+import { PrismaCustomersMetadataRepository } from '../../repositories/prisma-customers-metadata-repository'
+import { PrismaStreaksRepository } from '../../repositories/prisma-streaks-repository'
 
 export class makeProvideActivityUseCase {
   static create(): ProvideActivityUseCase {
