@@ -13,6 +13,7 @@ export function makeExercise(
       demonstrationUrl: faker.internet.url(),
       estimatedCalories: faker.number.int(),
       targetedRegions: [faker.lorem.word()],
+      instructions: [faker.lorem.word()],
       ...override,
     },
     id,

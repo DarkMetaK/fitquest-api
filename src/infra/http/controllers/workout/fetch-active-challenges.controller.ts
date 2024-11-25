@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
-import { makeFetchActiveChallengesUseCase } from '@/infra/database/prisma/factories/make-fetch-active-challenges-use-case'
+import { makeFetchActiveChallengesUseCase } from '@/infra/database/prisma/factories/use-cases/make-fetch-active-challenges-use-case'
 
 import { WorkoutPresenter } from '../../presenters/workout-presenter'
 

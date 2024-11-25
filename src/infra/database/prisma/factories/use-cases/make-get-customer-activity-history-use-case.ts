@@ -1,7 +1,7 @@
 import { GetCustomerActivityHistoryUseCase } from '@/use-cases/get-customer-activity-history'
 
-import { PrismaCustomerActivitiesRepository } from '../repositories/prisma-customer-activities-repository'
-import { PrismaCustomersRepository } from '../repositories/prisma-customers-repository'
+import { PrismaCustomerActivitiesRepository } from '../../repositories/prisma-customer-activities-repository'
+import { PrismaCustomersRepository } from '../../repositories/prisma-customers-repository'
 
 export class makeGetCustomerActivityHistory {
   static create(): GetCustomerActivityHistoryUseCase {

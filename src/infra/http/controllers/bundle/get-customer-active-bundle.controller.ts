@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
-import { makeGetCustomerActiveBundleUseCase } from '@/infra/database/prisma/factories/make-get-customer-active-bundle-use-case'
+import { makeGetCustomerActiveBundleUseCase } from '@/infra/database/prisma/factories/use-cases/make-get-customer-active-bundle-use-case'
 
 import { CustomerBundlePresenter } from '../../presenters/customer-bundle-presenter'
 

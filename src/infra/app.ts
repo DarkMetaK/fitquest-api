@@ -7,7 +7,7 @@ import fastify from 'fastify'
 
 import { OnWorkoutCompleted } from '@/events/subscribers/on-workout-completed'
 
-import { makeProvideActivityUseCase } from './database/prisma/factories/make-provide-activity-use-case'
+import { makeProvideActivityUseCase } from './database/prisma/factories/use-cases/make-provide-activity-use-case'
 import { env } from './env'
 import { errorHandler } from './error-handler'
 import { authRoutes } from './http/controllers/auth/routes'

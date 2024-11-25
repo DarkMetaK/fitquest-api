@@ -1,11 +1,11 @@
 import request from 'supertest'
-import { makePrismaCustomer } from 'test/factories/make-customer'
-import { makePrismaCustomerMetadata } from 'test/factories/make-customer-metadata'
-import { makePrismaCustomerRaffle } from 'test/factories/make-customer-raffle'
-import { makePrismaRaffle } from 'test/factories/make-raffle'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { app } from '@/infra/app'
+import { makePrismaCustomer } from '@/infra/database/prisma/factories/utils/make-prisma-customer'
+import { makePrismaCustomerMetadata } from '@/infra/database/prisma/factories/utils/make-prisma-customer-metadata'
+import { makePrismaCustomerRaffle } from '@/infra/database/prisma/factories/utils/make-prisma-customer-raffle'
+import { makePrismaRaffle } from '@/infra/database/prisma/factories/utils/make-prisma-raffle'
 import { JwtEncrypter } from '@/infra/gateways/cryptography/jwt-encrypter'
 
 let jwt: JwtEncrypter

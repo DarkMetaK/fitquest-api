@@ -1,13 +1,13 @@
 import request from 'supertest'
-import { makePrismaBundle } from 'test/factories/make-bundle'
-import { makePrismaBundleSubscription } from 'test/factories/make-bundle-subscription'
-import { makePrismaCustomer } from 'test/factories/make-customer'
-import { makePrismaCustomerMetadata } from 'test/factories/make-customer-metadata'
-import { makePrismaWorkout } from 'test/factories/make-workout'
 import { waitFor } from 'test/utils/waitFor'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { DomainEvents } from '@/core/events/domain-events'
+import { makePrismaBundle } from '@/infra/database/prisma/factories/utils/make-prisma-bundle'
+import { makePrismaBundleSubscription } from '@/infra/database/prisma/factories/utils/make-prisma-bundle-subscription'
+import { makePrismaCustomer } from '@/infra/database/prisma/factories/utils/make-prisma-customer'
+import { makePrismaCustomerMetadata } from '@/infra/database/prisma/factories/utils/make-prisma-customer-metadata'
+import { makePrismaWorkout } from '@/infra/database/prisma/factories/utils/make-prisma-workout'
 import { JwtEncrypter } from '@/infra/gateways/cryptography/jwt-encrypter'
 import { prisma } from '@/infra/libs/prisma'
 

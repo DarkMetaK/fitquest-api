@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
-import { makeFetchBundlesUseCase } from '@/infra/database/prisma/factories/make-fetch-bundles-use-case'
+import { makeFetchBundlesUseCase } from '@/infra/database/prisma/factories/use-cases/make-fetch-bundles-use-case'
 
 import { BundlePresenter } from '../../presenters/bundle-presenter'
 

@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-import { makeCreateCustomerUseCase } from '@/infra/database/prisma/factories/make-create-customer-use-case'
+import { makeCreateCustomerUseCase } from '@/infra/database/prisma/factories/use-cases/make-create-customer-use-case'
 
 const createCustomerBodySchema = z.object({
   name: z.string({ message: 'Name is required.' }),

@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-import { makeCreateCustomerMetadataUseCase } from '@/infra/database/prisma/factories/make-create-customer-metadata-use-case'
+import { makeCreateCustomerMetadataUseCase } from '@/infra/database/prisma/factories/use-cases/make-create-customer-metadata-use-case'
 
 const registerCustomerMetadataBodySchema = z.object({
   phone: z

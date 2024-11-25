@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
-import { makeGetCustomerUseCase } from '@/infra/database/prisma/factories/make-get-customer-use-case'
+import { makeGetCustomerUseCase } from '@/infra/database/prisma/factories/use-cases/make-get-customer-use-case'
 
 import { CustomerPresenter } from '../../presenters/customer-presenter'
 

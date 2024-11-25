@@ -1,6 +1,6 @@
 import { FetchCustomerRafflesTicketsUseCase } from '@/use-cases/fetch-customer-raffles-tickets'
 
-import { PrismaCustomersRafflesRepository } from '../repositories/prisma-customers-raffles-repository'
+import { PrismaCustomersRafflesRepository } from '../../repositories/prisma-customers-raffles-repository'
 
 export class makeFetchCustomerRafflesTicketsUseCase {
   static create(): FetchCustomerRafflesTicketsUseCase {

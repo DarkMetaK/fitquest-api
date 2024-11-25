@@ -1,7 +1,7 @@
 import { BcryptHasher } from '@/infra/gateways/cryptography/bcrypt-hasher'
 import { CreateCustomerUseCase } from '@/use-cases/create-customer'
 
-import { PrismaCustomersRepository } from '../repositories/prisma-customers-repository'
+import { PrismaCustomersRepository } from '../../repositories/prisma-customers-repository'
 
 export class makeCreateCustomerUseCase {
   static create(): CreateCustomerUseCase {

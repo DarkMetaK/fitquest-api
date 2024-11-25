@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-import { makeCompleteWorkoutUseCase } from '@/infra/database/prisma/factories/make-complete-workout-use-case'
+import { makeCompleteWorkoutUseCase } from '@/infra/database/prisma/factories/use-cases/make-complete-workout-use-case'
 
 const completeWorkoutParamSchema = z.object({
   id: z.string({ message: 'Id is required.' }).uuid(),

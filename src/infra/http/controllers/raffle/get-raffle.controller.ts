@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-import { makeGetRaffleUseCase } from '@/infra/database/prisma/factories/make-get-raffle-use-case'
+import { makeGetRaffleUseCase } from '@/infra/database/prisma/factories/use-cases/make-get-raffle-use-case'
 
 import { RafflePresenter } from '../../presenters/raffle-presenter'
 

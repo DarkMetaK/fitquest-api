@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-import { makeSubscribeBundleUseCase } from '@/infra/database/prisma/factories/make-subscribe-bundle-use-case'
+import { makeSubscribeBundleUseCase } from '@/infra/database/prisma/factories/use-cases/make-subscribe-bundle-use-case'
 
 const subscribeBundleParamSchema = z.object({
   bundleId: z.string({ message: 'Bundle id is required.' }).uuid(),

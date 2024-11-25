@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-import { makeGetWorkoutUseCase } from '@/infra/database/prisma/factories/make-get-workout-use-case'
+import { makeGetWorkoutUseCase } from '@/infra/database/prisma/factories/use-cases/make-get-workout-use-case'
 
 import { WorkoutDetailsPresenter } from '../../presenters/workout-details-presenter'
 

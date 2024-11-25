@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-import { makeVerifyPhoneAvailabilityUseCase } from '@/infra/database/prisma/factories/make-verify-phone-availability-use-case'
+import { makeVerifyPhoneAvailabilityUseCase } from '@/infra/database/prisma/factories/use-cases/make-verify-phone-availability-use-case'
 
 const authenticateWithPasswordBodySchema = z.object({
   phone: z

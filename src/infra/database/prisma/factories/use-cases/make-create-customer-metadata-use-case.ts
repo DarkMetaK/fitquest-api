@@ -1,7 +1,7 @@
 import { CreateCustomerMetadataUseCase } from '@/use-cases/create-customer-metadata'
 
-import { PrismaCustomersMetadataRepository } from '../repositories/prisma-customers-metadata-repository'
-import { PrismaCustomersRepository } from '../repositories/prisma-customers-repository'
+import { PrismaCustomersMetadataRepository } from '../../repositories/prisma-customers-metadata-repository'
+import { PrismaCustomersRepository } from '../../repositories/prisma-customers-repository'
 
 export class makeCreateCustomerMetadataUseCase {
   static create(): CreateCustomerMetadataUseCase {

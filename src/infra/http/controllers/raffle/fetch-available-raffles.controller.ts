@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
-import { makeFetchAvailableRafflesUseCase } from '@/infra/database/prisma/factories/make-fetch-available-raffles-use-case'
+import { makeFetchAvailableRafflesUseCase } from '@/infra/database/prisma/factories/use-cases/make-fetch-available-raffles-use-case'
 
 import { RafflePresenter } from '../../presenters/raffle-presenter'
 
