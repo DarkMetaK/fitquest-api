@@ -10,6 +10,7 @@
     "build": "tsup",
     "start": "node build/infra/server.js",
     "dev": "tsx watch src/infra/server.ts",
+    "postinstall": "prisma generate",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
