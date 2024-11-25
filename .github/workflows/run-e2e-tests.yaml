@@ -28,16 +28,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'pnpm'
-      
-      - name: Install pnpm
-        run: npm install -g pnpm
+          cache: 'npm'
       
       - name: Install dependencies
-        run: pnpm install
+        run: npm ci
       
       - name: Run E2E tests
-        run: pnpm run test:e2e
+        run: npm run test:e2e
         env:
           JWT_SECRET: testing
           DATABASE_URL: "postgresql://docker:docker@localhost:5432/fitquest?schema=public"
