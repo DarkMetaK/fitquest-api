@@ -3,7 +3,7 @@
 <!-- PROJECT LOGO -->
 <div align="center">
   <a href="https://github.com/DarkMetaK/fitquest-api">
-    <img src="https://raw.githubusercontent.com/DarkMetaK/fitquest-app/refs/heads/master/public/Logo.svg" alt="Logo" width="160" height="160">
+    <img src="https://raw.githubusercontent.com/DarkMetaK/fitquest-app/refs/heads/master/public/Logo.svg" alt="Logo" width="165" height="30">
   </a>
   
   <h3 align="center">Fitquest - API</h3>
