@@ -3,7 +3,7 @@
 <!-- PROJECT LOGO -->
 <div align="center">
   <a href="https://github.com/DarkMetaK/fitquest-api">
-    <img src="/public/logo.svg" alt="Logo" width="160" height="160">
+    <img src="https://raw.githubusercontent.com/DarkMetaK/fitquest-app/refs/heads/master/public/Logo.svg" alt="Logo" width="160" height="160">
   </a>
   
   <h3 align="center">Fitquest - API</h3>
@@ -35,7 +35,7 @@
 ## Sobre
 
 <a href="https://youtu.be/wAHg-hRq9i8">
-    <img src="/public/preview.png" alt="Fitquest Preview" width=100%>
+    <img src="https://raw.githubusercontent.com/DarkMetaK/fitquest-app/refs/heads/master/public/preview.png" alt="Fitquest Preview" width=100%>
 </a>
 
 ## Sobre o projeto
